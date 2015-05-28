@@ -3,10 +3,9 @@
     <title>Pimatic Angular</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <meta name="viewport" content="initial-scale=1"/>
-    <link rel="stylesheet" href="assets/vendor/angular-material/angular-material.min.css"/>
+    <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
-    <link rel="stylesheet" href="assets/vendor/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
-    <link rel="stylesheet" href="assets/style.css"/>
+    <link rel="stylesheet" href="vendor/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
 </head>
 
 <body ng-app="PimaticApp" ng-controller="MainController" ng-cloak>
@@ -33,6 +32,16 @@
     <md-tab ng-repeat="page in pages"
             label="{{page.name}}">
         {{page}}
+
+        <div layout="row" layout-wrap>
+            <div ng-repeat="device in page.devices" flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
+                <md-card>
+                    <md-card-content>
+                        {{getDevice(device.deviceId).name}}
+                    </md-card-content>
+                </md-card>
+            </div>
+        </div>
     </md-tab>
 </md-tabs>
 <!--/md-toolbar>
@@ -104,21 +113,21 @@
     </md-tabs-->
 
 
-<script src="assets/vendor/angular/angular.min.js"></script>
-<script src="assets/vendor/angular-animate/angular-animate.min.js"></script>
-<script src="assets/vendor/angular-aria/angular-aria.min.js"></script>
-<script src="assets/vendor/angular-material/angular-material.min.js"></script>
-<script src="assets/vendor/socket.io-client/socket.io.js"></script>
+<script src="vendor/angular/angular.min.js"></script>
+<script src="vendor/angular-animate/angular-animate.min.js"></script>
+<script src="vendor/angular-aria/angular-aria.min.js"></script>
+<script src="vendor/angular-material/angular-material.min.js"></script>
+<script src="vendor/socket.io-client/socket.io.js"></script>
 <!--script src="assets/vendor/angular-route/angular-route.min.js"></script-->
 
 <!-- App -->
-<script src="assets/app.js"></script>
+<script src="app.js"></script>
 
 <!-- Services -->
-<script src="assets/services/apiService.js"></script>
+<script src="services/apiService.js"></script>
 
 <!-- Controller -->
-<script src="assets/controllers/main.js"></script>
+<script src="controllers/main.js"></script>
 
 </body>
 </html>
