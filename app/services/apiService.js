@@ -27,7 +27,6 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
         variables: []
     };
 
-
     var apiService = {
         socket: null,
 
@@ -85,10 +84,6 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
 
             this.socket.on('connect', function(){
                 console.log('connect');
-                this.socket.emit('call', {
-                    username: 'admin',
-                    password: 'admin'
-                })
             });
         },
 
