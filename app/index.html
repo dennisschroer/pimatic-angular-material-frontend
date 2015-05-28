@@ -6,14 +6,18 @@
     <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
     <link rel="stylesheet" href="vendor/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 
 <body ng-app="PimaticApp" ng-controller="MainController" ng-cloak>
 
+<md-sidenav md-component-id="left" class="md-sidenav-left">
+    Left Nav!
+</md-sidenav>
 
 <md-toolbar>
     <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Menu">
+        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()">
             <i class="mdi mdi-menu"></i>
         </md-button>
         <h2>Pimatic</h2>
@@ -28,20 +32,18 @@
         </md-button>
     </div>
 </md-toolbar>
-<md-tabs class="md-primary md-w" layout-align="center end">
+<md-tabs md-dynamic-height md-center-tabs class="md-primary md-w" layout-align="center end">
     <md-tab ng-repeat="page in pages"
             label="{{page.name}}">
-        {{page}}
+        <md-content>
+            {{page}}
 
-        <div layout="row" layout-wrap>
-            <div ng-repeat="device in page.devices" flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                <md-card>
-                    <md-card-content>
-                        {{getDevice(device.deviceId).name}}
-                    </md-card-content>
-                </md-card>
+            <div layout="row" layout-wrap>
+                <div ng-repeat="device in page.devices" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
+                    <device-card device="getDevice(device.deviceId)" variables="variables"></device-card>
+                </div>
             </div>
-        </div>
+        </md-content>
     </md-tab>
 </md-tabs>
 <!--/md-toolbar>
@@ -128,6 +130,9 @@
 
 <!-- Controller -->
 <script src="controllers/main.js"></script>
+
+<!-- Directives -->
+<script src="directives/deviceCard.js"></script>
 
 </body>
 </html>

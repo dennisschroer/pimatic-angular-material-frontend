@@ -1,0 +1,18 @@
+.device-icon{
+    width: 40px;
+    height: 40px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 16px;
+    border-radius: 50%;
+    box-sizing: content-box;
+    background-color: #ff0000;
+}
+
+.device-icon i {
+    font-size: 24px;
+}
+
+.device-values .device-value{
+    padding-left: 8px;
+}

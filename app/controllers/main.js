@@ -1,4 +1,4 @@
-angular.module('PimaticApp').controller('MainController', function($scope, apiService){
+angular.module('PimaticApp').controller('MainController', function($scope, $mdSidenav, apiService){
     $scope.init = function(){
         /*var socket = io.connect('http://localhost:8080', {
             query: 'username=admin&password=admin'
@@ -12,6 +12,7 @@ angular.module('PimaticApp').controller('MainController', function($scope, apiSe
         apiService.setupSocket();
         $scope.pages = apiService.getPages();
         $scope.devices = apiService.getDevices();
+        $scope.variables = apiService.getVariables();
     };
 
     $scope.getDevice = function(id){
@@ -20,6 +21,12 @@ angular.module('PimaticApp').controller('MainController', function($scope, apiSe
             if(value.id == id) device = value;
         });
         return device;
+    };
+
+
+
+    $scope.toggleMenu = function(){
+        $mdSidenav('left').toggle();
     }
 
     $scope.init();

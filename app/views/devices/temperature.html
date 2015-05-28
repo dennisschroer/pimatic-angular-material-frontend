@@ -1,0 +1,33 @@
+<md-card>
+    <md-card-content>
+        <div layout="row">
+            <div flex>
+                <h2 class="md-subhead">{{device.name}}</h2>
+            </div>
+            <div layout="row" layout-align="center center" class="device-values">
+                <span class="md-headline device-value">
+                    {{getVariable(device.id, 'temperature').value | number:1}} {{getVariable(device.id, 'temperature').unit}}
+                </span>
+                <span class="md-headline device-value">
+                    {{getVariable(device.id, 'humidity').value | number:1}} {{getVariable(device.id, 'humidity').unit}}
+                </span>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>
+
+<!--md-card>
+    <md-card-content>
+        <div layout="column">
+            <h3 class="md-title">{{device.name}}</h3>
+            <div layout="row" ng-repeat="attribute in device.attributes">
+                <div flex layout="row" layout-align="start center">
+                    {{attribute.label}}
+                </div>
+                <div class="md-body-2">
+                    {{getVariable(device.id, attribute.name).value | number:1}} {{getVariable(device.id, attribute.name).unit}}
+                </div>
+            </div>
+        </div>
+    </md-card-content>
+</md-card-->

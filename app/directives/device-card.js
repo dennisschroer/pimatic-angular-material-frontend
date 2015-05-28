@@ -1,1 +1,0 @@
-angular.module('PimaticApp').directory('deviceCard', )
