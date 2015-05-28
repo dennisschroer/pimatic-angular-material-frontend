@@ -1,0 +1,17 @@
+{
+  "name": "Pimatic AngularJS frontend",
+  "version": "0.0.0",
+  "authors": [
+    "Dennis Schroer <dennisschroer@hotmail.com>"
+  ],
+  "description": "Responsive frontend for pimatic, written using AngularJS",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.3",
+    "angular-material": "~0.8",
+    "angular-route": "~1.3",
+    "mdi": "~1",
+    "angular-material-icons": "~0.4.0",
+    "socket.io-client": "~1.3.5"
+  }
+}
