@@ -33,11 +33,8 @@
     </div>
 </md-toolbar>
 <md-tabs md-dynamic-height md-center-tabs class="md-primary md-w" layout-align="center end">
-    <md-tab ng-repeat="page in pages"
-            label="{{page.name}}">
+    <md-tab ng-repeat="page in pages" label="{{page.name}}">
         <md-content>
-            {{page}}
-
             <div layout="row" layout-wrap>
                 <div ng-repeat="device in page.devices" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
                     <device-card device="getDevice(device.deviceId)" variables="variables"></device-card>

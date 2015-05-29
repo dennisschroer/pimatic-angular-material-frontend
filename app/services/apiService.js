@@ -1,4 +1,4 @@
-angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScope, $mdToast, pimaticHost){
+angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScope, $mdToast, $filter, pimaticHost){
     $http({
         method: 'POST',
         url: pimaticHost + '/login',
@@ -95,87 +95,91 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
             });
 
             this.socket.on("deviceChanged", function(device) {
-                console.log(device)
+                console.log("deviceChanged", device)
             });
             this.socket.on("deviceRemoved", function(device) {
-                console.log(device.id)
+                console.log("deviceRemoved", device.id)
             });
             this.socket.on("deviceAdded", function(device) {
-                console.log(device)
+                console.log("deviceAdded", device)
             });
 
 
             this.socket.on("pageChanged", function(page) {
-                console.log(page)
+                console.log("pageChanged", page)
             });
             this.socket.on("pageRemoved", function(page) {
-                console.log(page.id)
+                console.log("pageRemoved", page.id)
             });
             this.socket.on("pageAdded", function(page) {
-                console.log(page)
+                console.log("pageAdded", page)
             });
             this.socket.on("pageOrderChanged", function(order) {
-                console.log(order)
+                console.log("pageOrderChanged", order)
             });
 
 
             this.socket.on("groupChanged", function(group) {
-                console.log(group)
+                console.log("groupChanged", group)
             });
             this.socket.on("groupRemoved", function(group) {
-                console.log(group.id)
+                console.log("groupRemoved", group.id)
             });
             this.socket.on("groupAdded", function(group) {
-                console.log(group)
+                console.log("groupAdded", group)
             });
             this.socket.on("groupOrderChanged", function(order) {
-                console.log(order)
+                console.log("groupOrderChanged", order)
             });
 
 
             this.socket.on("ruleAdded", function(rule) {
-                console.log(rule)
+                console.log("ruleAdded", rule)
             });
             this.socket.on("ruleChanged", function(rule) {
-                console.log(rule)
+                console.log("ruleChanged", rule)
             });
             this.socket.on("ruleRemoved", function(rule) {
-                console.log(rule.id)
+                console.log("ruleRemoved", rule.id)
             });
             this.socket.on("ruleOrderChanged", function(order) {
-                console.log(order)
+                console.log("ruleOrderChanged", order)
             });
 
             this.socket.on("variableAdded", function(variable) {
-                console.log(variable)
+                console.log("variableAdded", variable)
             });
             this.socket.on("variableChanged", function(variable) {
-                console.log(variable)
+                console.log("variableChanged", variable)
             });
             this.socket.on("variableValueChanged", function(varValEvent) {
-                console.log(varValEvent.variableName, varValEvent.variableValue)
+                console.log("variableValueChanged", varValEvent);
+                $rootScope.$apply(function() {
+                    var v = apiService.getVariable(varValEvent.variableName);
+                    if (v != null) v.value = varValEvent.variableValue;
+                });
             });
             this.socket.on("variableRemoved", function(variable) {
-                console.log(variable.name)
+                console.log("variableRemoved", variable.name)
             });
             this.socket.on("variableOrderChanged", function(order) {
-                console.log(order)
+                console.log("variableOrderChanged", order)
             });
 
             this.socket.on("updateProcessStatus", function(statusEvent) {
-                console.log(statusEvent.status)
+                console.log("updateProcessStatus", statusEvent.status)
             });
             this.socket.on("updateProcessMessage", function(msgEvent) {
-                console.log(msgEvent);
+                console.log("updateProcessMessage", msgEvent);
             });
 
             this.socket.on('messageLogged', function(entry) {
-                console.log(entry);
-                if(entry.level != debug){
+                console.log("messageLogged", entry);
+                if(entry.level != 'debug'){
                     // Show toast
                     $mdToast.show($mdToast.simple().content(entry.msg));
                 }
-                if(entry.level == error){
+                if(entry.level == 'error'){
 
                 }
             });
@@ -195,6 +199,11 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
         },
         getVariables: function(){
             return data.variables;
+        },
+
+        getVariable: function(name){
+            var found = $filter('filter')(data.variables, {name: name}, true);
+            return found.length ? found[0] : null;
         }
     };
 
