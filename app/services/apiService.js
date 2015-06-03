@@ -1,5 +1,5 @@
-angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScope, $mdToast, $filter, pimaticHost){
-    $http({
+angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScope, $mdToast, $filter, pimaticHost, simulate){
+    /*$http({
         method: 'POST',
         url: pimaticHost + '/login',
         data: {
@@ -17,7 +17,7 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
         }
     }).success(function(data){
         console.log(data);
-    });
+    });*/
 
     var data = {
         devices: [],
@@ -29,6 +29,29 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
 
     var apiService = {
         socket: null,
+
+        init: function(){
+            if(simulate){
+                // Simulate by loading fixtures
+                $http.get('fixtures/devices.json').success(function(devices){
+                    angular.extend(data.devices, devices);
+                });
+                $http.get('fixtures/groups.json').success(function(groups){
+                    angular.extend(data.groups, groups);
+                });
+                $http.get('fixtures/pages.json').success(function(pages){
+                    angular.extend(data.pages, pages);
+                });
+                $http.get('fixtures/rules.json').success(function(rules){
+                    angular.extend(data.rules, rules);
+                });
+                $http.get('fixtures/variables.json').success(function(variables){
+                    angular.extend(data.variables, variables);
+                });
+            }else{
+                this.setupSocket();
+            }
+        },
 
         setupSocket: function(){
             this.socket = io();

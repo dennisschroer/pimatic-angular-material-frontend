@@ -1,0 +1,1 @@
+[{"id":"temperature","name":"Temperature","devices":[{"deviceId":"temperature-humidity"},{"deviceId":"thermostat"},{"deviceId":"cvcontrol"},{"deviceId":"cv"},{"deviceId":"rfswitch"}]},{"id":"system","name":"System","devices":[{"deviceId":"www"},{"deviceId":"sysram"},{"deviceId":"sysdisk"},{"deviceId":"systemp"},{"deviceId":"syscpu"}]}]

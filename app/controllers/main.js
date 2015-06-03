@@ -9,7 +9,7 @@ angular.module('PimaticApp').controller('MainController', function($scope, $mdSi
             socket.emit('test', {query:1});
         })*/
 
-        apiService.setupSocket();
+        apiService.init();
         $scope.pages = apiService.getPages();
         $scope.devices = apiService.getDevices();
         $scope.variables = apiService.getVariables();
