@@ -1,4 +1,4 @@
-<md-card>
+<md-card ng-controller="SwitchController">
     <md-card-content>
         <div layout="row">
             <div flex>
@@ -6,7 +6,8 @@
             </div>
             <div layout="row" layout-align="end center">
                 <span class="md-headline">
-                    <md-switch ng-model="getVariable(device.id, 'state').value" aria-label="Switch">
+                    <md-switch ng-model="getAttribute('state').value" ng-change="updateValue(getAttribute('state'))"
+                               aria-label="Switch">
                     </md-switch>
                 </span>
             </div>
@@ -15,6 +16,4 @@
     <div class="md-actions" layout="row" layout-align="left center">
 
     </div>
-
-
 </md-card>

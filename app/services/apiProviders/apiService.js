@@ -1,4 +1,4 @@
-angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScope, $mdToast, $filter, pimaticHost, simulate){
+angular.module('pimaticApp').factory('ApiService', function ($http, $q, $rootScope, toastService, $filter, pimaticHost, simulate) {
     /*$http({
         method: 'POST',
         url: pimaticHost + '/login',
@@ -54,7 +54,8 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
         },
 
         setupSocket: function(){
-            this.socket = io();
+            var service = this;
+            this.socket = io(pimaticHost);
 
             this.socket.on('connect', function(){
                 console.log('connect');
@@ -75,6 +76,7 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
                 $rootScope.$apply(function(){
                     angular.extend(data.devices, devices);
                 });
+                service.watchDeviceAttributes();
             });
 
             this.socket.on('rules', function(rules){
@@ -111,6 +113,19 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
             // Change
             this.socket.on('deviceAttributeChanged', function(attrEvent){
                 console.log('deviceAttributeChanged', attrEvent);
+                $rootScope.$apply(function () {
+                    var device = apiService.getDevice(attrEvent.deviceId);
+                    if (device != null) {
+                        // Find attribute
+                        angular.forEach(device.attributes, function (attribute) {
+                            if (attribute.name == attrEvent.attributeName) {
+                                attribute.$skipUpload = true;
+                                attribute.value = attrEvent.value;
+                                attribute.lastUpdate = attrEvent.time;
+                            }
+                        });
+                    }
+                });
             });
 
             this.socket.on("deviceOrderChanged", function(order) {
@@ -154,7 +169,6 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
             this.socket.on("groupOrderChanged", function(order) {
                 console.log("groupOrderChanged", order)
             });
-
 
             this.socket.on("ruleAdded", function(rule) {
                 console.log("ruleAdded", rule)
@@ -200,7 +214,7 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
                 console.log("messageLogged", entry);
                 if(entry.level != 'debug'){
                     // Show toast
-                    $mdToast.show($mdToast.simple().content(entry.msg));
+                    toastService.show(entry.msg);
                 }
                 if(entry.level == 'error'){
 
@@ -208,8 +222,51 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
             });
         },
 
+        /**
+         * Add a watch to each variable. This watch watches the value of the variable.
+         * If it is changed and it is not readonly, we need to send the value to the backend
+         */
+        watchDeviceAttributes: function () {
+            /*var self = this;
+             angular.forEach(data.devices, function(device){
+             angular.forEach(device.attributes, function(attribute){
+             // Assign the unregister function to the variable, so we can use it later
+             attribute.$watcher = $rootScope.$watch(function(){return attribute.value}, function(oldValue, newValue){
+             if(oldValue === newValue) return;
+             if(!attribute.$skipUpload){
+             // Upload change
+             //console.log('updateDeviceAttribute', attribute, newValue);
+             //self.updateVariable(variable, newValue);
+             }
+             attribute.$skipUpload = false;
+             });
+             });
+             })*/
+        },
+
+        deviceAction: function (deviceId, actionName, params) {
+            return $q(function (resolve, reject) {
+                $http.get('/api/device/' + deviceId + '/' + actionName)
+                    .success(function (data) {
+                        if (data.success) {
+                            resolve();
+                        } else {
+                            toastService.show('Failed to exectute ' + actionName + ' of ' + deviceId + ': ' + data.message);
+                            reject();
+                        }
+                    }).error(function (data) {
+                        toastService.show('Failed to exectute ' + actionName + ' of ' + deviceId + ': ' + data.message);
+                        reject();
+                    });
+            });
+        },
+
         getDevices: function(){
             return data.devices;
+        },
+        getDevice: function (id) {
+            var found = $filter('filter')(data.devices, {id: id}, true);
+            return found.length ? found[0] : null;
         },
         getGroups: function(){
             return data.groups;
@@ -227,6 +284,19 @@ angular.module('PimaticApp').factory('apiService', function($http, $q, $rootScop
         getVariable: function(name){
             var found = $filter('filter')(data.variables, {name: name}, true);
             return found.length ? found[0] : null;
+        },
+
+        /**
+         * Send the variable update to the backend
+         * @param variable
+         * @param value
+         */
+        updateVariable: function (variable, value) {
+            this.socket.emit('updateVariable', {
+                name: variable.name,
+                type: variable.type,
+                value: value
+            });
         }
     };
 

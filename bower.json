@@ -8,7 +8,7 @@
   "private": true,
   "dependencies": {
     "angular": "~1",
-    "angular-material": "~0.9",
+    "angular-material": "~0.10",
     "angular-route": "~1",
     "mdi": "~1",
     "socket.io-client": "~1"

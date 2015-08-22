@@ -9,40 +9,48 @@
     <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 
-<body ng-app="PimaticApp" ng-controller="MainController" ng-cloak>
+<body ng-app="pimaticApp" ng-controller="MainController" ng-cloak>
 
 <md-sidenav md-component-id="left" class="md-sidenav-left">
-    Left Nav!
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Menu</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="toggleMenu()">
+                <md-icon md-font-icon="mdi mdi-close" style="font-size: 24px"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div class="menu" layout="column">
+        <md-button href="#/home">Home</md-button>
+        <md-subheader>Automation</md-subheader>
+        <md-button ng-disabled="true" href="#/automation/rules">Rules</md-button>
+        <md-button ng-disabled="true" href="#/automation/variables">Variables</md-button>
+        <md-subheader>Settings</md-subheader>
+        <md-button ng-disabled="true" href="#/settings/pages">Pages</md-button>
+        <md-button ng-disabled="true" href="#/settings/devices">Devices</md-button>
+        <md-button ng-disabled="true" href="#/settings/groups">Groups</md-button>
+        <md-button ng-disabled="true" href="#/settings/plugins">Plugins</md-button>
+        <md-button ng-disabled="true" href="#/settings/updates">Updates</md-button>
+    </div>
 </md-sidenav>
 
 <md-toolbar>
     <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()">
-            <i class="mdi mdi-menu"></i>
+            <md-icon md-font-icon="mdi mdi-menu" style="font-size: 24px;"></md-icon>
         </md-button>
         <h2>Pimatic</h2>
         <!-- fill up the space between left and right area -->
         <span flex></span>
-        <md-button>
-
-            <ng-md-icon icon="settings"></ng-md-icon>
-        </md-button>
-        <md-button>
-            <i class="mdi mdi-settings"></i>
+        <md-button class="md-icon-button" aria-label="Settings">
+            <md-icon md-font-icon="mdi mdi-settings" style="font-size: 24px;"></md-icon>
         </md-button>
     </div>
 </md-toolbar>
-<md-tabs md-dynamic-height md-center-tabs class="md-primary md-w" layout-align="center end">
-    <md-tab ng-repeat="page in pages" label="{{page.name}}">
-        <md-content>
-            <div layout="row" layout-wrap>
-                <div ng-repeat="device in page.devices" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
-                    <device-card device="getDevice(device.deviceId)" variables="variables"></device-card>
-                </div>
-            </div>
-        </md-content>
-    </md-tab>
-</md-tabs>
+<ng-view></ng-view>
+
+
 <!--/md-toolbar>
     <md-tabs md-stretch-tabs class="md-primary">
         <md-tab label="Temperature">
@@ -116,6 +124,7 @@
 <script src="vendor/angular-animate/angular-animate.min.js"></script>
 <script src="vendor/angular-aria/angular-aria.min.js"></script>
 <script src="vendor/angular-material/angular-material.min.js"></script>
+<script src="vendor/angular-route/angular-route.min.js"></script>
 <script src="vendor/socket.io-client/socket.io.js"></script>
 <!--script src="assets/vendor/angular-route/angular-route.min.js"></script-->
 
@@ -123,10 +132,15 @@
 <script src="app.js"></script>
 
 <!-- Services -->
-<script src="services/apiService.js"></script>
+<script src="services/store.js"></script>
+<script src="services/apiProviders/baseProvider.js"></script>
+<script src="services/apiProviders/fixtureProvider.js"></script>
+<script src="services/toast.js"></script>
 
 <!-- Controller -->
 <script src="controllers/main.js"></script>
+<script src="controllers/home.js"></script>
+<script src="controllers/devices/switch.js"></script>
 
 <!-- Directives -->
 <script src="directives/deviceCard.js"></script>

@@ -25,7 +25,7 @@
                     {{attribute.label}}
                 </div>
                 <div class="md-body-2">
-                    {{getVariable(device.id, attribute.name).value | number:1}} {{getVariable(device.id, attribute.name).unit}}
+                    {{attribute.value | number:1}} {{attribute.unit}}
                 </div>
             </div>
         </div>
