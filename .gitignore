@@ -1,5 +1,4 @@
 app/vendor
-app/build
 node_modules
 .idea
 .js
