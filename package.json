@@ -36,6 +36,6 @@
     "grunt-contrib-uglify": "^0.9.1"
   },
   "scripts": {
-    "prepublish": "bower install"
+    "postinstall": "bower install"
   }
 }
