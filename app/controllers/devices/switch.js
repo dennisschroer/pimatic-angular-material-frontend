@@ -10,18 +10,4 @@ angular.module('pimaticApp.devices').controller('SwitchController', function ($s
             toast.deviceActionFail($scope.device, action);
         });
     };
-
-
-    $scope.$on('deviceAttributeChange', function (event, attribute, newVal, oldVal) {
-        if (attribute.name == 'state') {
-            store.provider.deviceAction($scope.device.id, newVal ? 'turnOn' : 'turnOff').then(function () {
-            }, function () {
-                // Reset value
-                attribute.$skipUpload = true;
-                attribute.value = oldVal;
-                //event.preventDefault();
-            });
-        }
-
-    });
 });

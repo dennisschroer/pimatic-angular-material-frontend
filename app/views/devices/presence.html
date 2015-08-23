@@ -1,19 +1,19 @@
 <md-card>
-    <md-card-content>
-        <div layout="row">
-            <div flex>
-                <h2 class="md-subhead">{{device.name}}</h2>
-            </div>
-            <div layout="row" layout-align="end center">
-                <span class="md-headline">
-                    <span class="presence-indicator"
-                          ng-class="{'presence-indicator-present': getAttribute('presence').value}"></span>
-                </span>
-            </div>
+    <div layout="row" class="device-header">
+        <div class="device-icon-wrapper">
+            <span class="device-icon">
+                <i class="mdi mdi-pulse"></i>
+            </span>
         </div>
-    </md-card-content>
-    <div class="md-actions" layout="row" layout-align="left center">
+        <div class="device-titles" layout="column" flex>
+            <h1>{{device.name}}</h1>
 
+            <h2>{{device.template}}</h2>
+        </div>
+        <div class="device-header-values" layout="row" layout-align="end center">
+           <span class="presence-indicator"
+                 ng-class="{'presence-indicator-present': getAttribute('presence').value}"></span>
+        </div>
     </div>
 </md-card>
 

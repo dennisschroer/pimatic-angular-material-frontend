@@ -17,11 +17,22 @@
 </md-card-->
 
 <md-card>
+    <div layout="row" class="device-header">
+        <div class="device-icon-wrapper">
+            <span class="device-icon">
+                <i class="mdi mdi-thermometer"></i>
+            </span>
+        </div>
+        <div class="device-titles" layout="column" flex>
+            <h1>{{device.name}}</h1>
+
+            <h2>{{device.template}}</h2>
+        </div>
+    </div>
     <md-card-content>
         <div layout="column">
-            <h3 class="md-title">{{device.name}}</h3>
             <div layout="row" ng-repeat="attribute in device.attributes">
-                <div flex layout="row" layout-align="start center">
+                <div flex layout="row" layout-align="start center" class="md-body-1">
                     {{attribute.label}}
                 </div>
                 <div class="md-body-2">

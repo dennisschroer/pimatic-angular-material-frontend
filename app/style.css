@@ -1,18 +1,60 @@
-.device-icon{
-    width: 40px;
-    height: 40px;
-    margin-top: 8px;
-    margin-bottom: 8px;
+.device-header .device-icon-wrapper {
     margin-right: 16px;
-    border-radius: 50%;
-    box-sizing: content-box;
-    background-color: #ff0000;
 }
 
-.device-icon i {
-    font-size: 24px;
+.device-header .device-icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+    border-radius: 50%;
+    box-sizing: content-box;
+    background-color: rgba(0, 0, 0, 0.54);
+    text-align: center;
+}
+
+/* See http://www.google.com/design/spec/components/cards.html#cards-content-blocks */
+.device-header {
+    padding: 16px;
+}
+
+.device-header:last-child {
+    padding-bottom: 24px;
+}
+
+.device-header .device-icon i {
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.device-header .device-titles h1 {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    margin: 0;
+}
+
+.device-header .device-titles h2 {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+    line-height: 20px;
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    margin: 0;
+}
+
+.device-header .device-header-values {
+    margin-left: 16px;
+}
+
+.device-header .device-header-values .device-switch {
+    margin: 0;
 }
 
 .device-values .device-value{
     padding-left: 8px;
+}
+
+md-card-content:last-child {
+    padding-bottom: 24px;
 }
