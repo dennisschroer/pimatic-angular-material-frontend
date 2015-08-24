@@ -1,3 +1,8 @@
+#toolbar-top {
+    position: fixed;
+}
+
+
 .device-header .device-icon-wrapper {
     margin-right: 16px;
 }
@@ -57,4 +62,35 @@
 
 md-card-content:last-child {
     padding-bottom: 24px;
+}
+
+md-icon.mdi {
+    font-size: 24px;
+}
+
+md-icon.mdi.mdi-large {
+    font-size: 32px;
+}
+
+/** Fix for vertical allign */
+a.md-fab md-icon {
+    line-height: inherit;
+}
+
+/*
+The floating action button should be placed 16dp minimum from the edge on mobile and 24dp minimum on tablet/desktop.
+http://www.google.com/design/spec/components/buttons-floating-action-button.html#buttons-floating-action-button-floating-action-button
+*/
+.md-button.md-fab-fixed {
+    position: absolute;
+    display: inline-block;
+    bottom: 16px;
+    right: 16px;
+    -webkit-transition-property: background-color, box-shadow, bottom, right;
+    transition-property: background-color, box-shadow, bottom, right;
+}
+
+.md-button.md-fab-fixed-desktop {
+    bottom: 24px;
+    right: 24px;
 }

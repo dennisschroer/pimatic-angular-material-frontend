@@ -7,7 +7,7 @@ module.exports = (env) ->
     # ###init the frontend:
     init: (@app, @framework, @config) ->
       # * Static assets
-      @app.use '/material', express.static(__dirname + "/app")
+      @app.use @config.path, express.static(__dirname + "/app")
 
   plugin = new MobileMaterialFrontend
   return plugin

@@ -1,0 +1,37 @@
+<div class="md-padding">
+    <h1 class="md-headline">Create group</h1>
+
+    <form name="form" ng-submit="save()">
+        <md-input-container>
+            <label>Id</label>
+            <input name="id" ng-model="group.id" required pattern="[a-z0-9_\-]*" type="text">
+
+            <div ng-messages="form.id.$error" ng-show="form.id.$dirty">
+                <div ng-message="pattern">Only lowercase alphanumeric characters, '-' and '_'</div>
+                <div ng-message="required">Required</div>
+            </div>
+        </md-input-container>
+
+        <md-input-container>
+            <label>Name</label>
+            <input name="name" ng-model="group.name" required type="text">
+
+            <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
+                <div ng-message="required">Required</div>
+            </div>
+        </md-input-container>
+
+        <md-button class="md-raised md-primary">
+            Save
+        </md-button>
+        <md-button class="md-raised" ng-click="cancel($event)">
+            Cancel
+        </md-button>
+    </form>
+
+    {{form.id}}
+
+    {{group}}
+</div>
+
+

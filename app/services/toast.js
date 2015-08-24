@@ -4,12 +4,16 @@ angular.module('pimaticApp').factory('toast', function ($mdToast) {
             $mdToast.show($mdToast.simple().content(message));
         },
 
+        error: function (message) {
+            $mdToast.show($mdToast.simple().content(message));
+        },
+
         deviceActionDone: function (device, action) {
             this.show('Done: ' + action + ' ' + device.id);
         },
 
         deviceActionFail: function (device, action) {
-            this.show('Fail: ' + action + ' ' + device.id);
+            this.error('Fail: ' + action + ' ' + device.id);
         }
     };
 });

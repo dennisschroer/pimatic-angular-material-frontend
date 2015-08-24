@@ -3,6 +3,10 @@ module.exports = {
   title: "pimatic-angular-material-frontend config"
   type: "object"
   properties:
+    path:
+      description: "The path in the URL on which the frontend is mounted"
+      type: "string"
+      default: "/material"
     customTitle:
       description: "Custimg title to use for the pimatic installation"
       type: "string"

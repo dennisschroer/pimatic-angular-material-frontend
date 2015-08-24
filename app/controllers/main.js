@@ -1,4 +1,6 @@
-angular.module('pimaticApp').controller('MainController', function ($scope, $mdSidenav, store) {
+angular.module('pimaticApp').controller('MainController', function ($scope, $mdSidenav, $mdMedia, store) {
+    $scope.$mdMedia = $mdMedia;
+
     $scope.init = function(){
         store.init();
         /*var socket = io.connect('http://localhost:8080', {

@@ -9,7 +9,24 @@
     <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 
-<body ng-app="pimaticApp" ng-controller="MainController" ng-cloak>
+<body ng-app="pimaticApp" ng-controller="MainController" layout="column" ng-cloak>
+
+<md-toolbar>
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()">
+            <md-icon md-font-icon="mdi mdi-menu"></md-icon>
+        </md-button>
+        <h2>Pimatic</h2>
+        <!-- fill up the space between left and right area -->
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Settings">
+            <md-icon md-font-icon="mdi mdi-settings"></md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+
+<md-content flex ng-view>
+</md-content>
 
 <md-sidenav md-component-id="left" class="md-sidenav-left">
     <md-toolbar>
@@ -17,112 +34,31 @@
             <h2>Menu</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="toggleMenu()">
-                <md-icon md-font-icon="mdi mdi-close" style="font-size: 24px"></md-icon>
+                <md-icon md-font-icon="mdi mdi-close"></md-icon>
             </md-button>
         </div>
     </md-toolbar>
     <div class="menu" layout="column">
-        <md-button href="#/home">Home</md-button>
+        <md-button href="#/home" ng-click="toggleMenu()">Home</md-button>
         <md-subheader>Automation</md-subheader>
-        <md-button ng-disabled="true" href="#/automation/rules">Rules</md-button>
-        <md-button ng-disabled="true" href="#/automation/variables">Variables</md-button>
+        <md-button ng-disabled="true" href="#/automation/rules" ng-click="toggleMenu()">Rules</md-button>
+        <md-button ng-disabled="true" href="#/automation/variables" ng-click="toggleMenu()">Variables</md-button>
         <md-subheader>Settings</md-subheader>
-        <md-button ng-disabled="true" href="#/settings/pages">Pages</md-button>
-        <md-button ng-disabled="true" href="#/settings/devices">Devices</md-button>
-        <md-button ng-disabled="true" href="#/settings/groups">Groups</md-button>
-        <md-button ng-disabled="true" href="#/settings/plugins">Plugins</md-button>
-        <md-button ng-disabled="true" href="#/settings/updates">Updates</md-button>
+        <md-button ng-disabled="true" href="#/settings/pages" ng-click="toggleMenu()">Pages</md-button>
+        <md-button href="#/settings/devices" ng-click="toggleMenu()">Devices</md-button>
+        <md-button href="#/settings/groups" ng-click="toggleMenu()">Groups</md-button>
+        <md-button ng-disabled="true" href="#/settings/plugins" ng-click="toggleMenu()">Plugins</md-button>
+        <md-button ng-disabled="true" href="#/settings/updates" ng-click="toggleMenu()">Updates</md-button>
     </div>
 </md-sidenav>
 
-<md-toolbar>
-    <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()">
-            <md-icon md-font-icon="mdi mdi-menu" style="font-size: 24px;"></md-icon>
-        </md-button>
-        <h2>Pimatic</h2>
-        <!-- fill up the space between left and right area -->
-        <span flex></span>
-        <md-button class="md-icon-button" aria-label="Settings">
-            <md-icon md-font-icon="mdi mdi-settings" style="font-size: 24px;"></md-icon>
-        </md-button>
-    </div>
-</md-toolbar>
-<ng-view></ng-view>
 
-
-<!--/md-toolbar>
-    <md-tabs md-stretch-tabs class="md-primary">
-        <md-tab label="Temperature">
-            <md-content class="md-padding">
-                {{pages}}
-                <md-subheader>Main</md-subheader>
-                <div layout="row" layout-wrap>
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                Temperature
-                                21,7 C
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                Temperature
-                                21,7 C
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                Temperature
-                                21,7 C
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                Temperature
-                                21,7 C
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                Temperature
-                                21,7 C
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                </div>
-
-                <md-subheader>Ungrouped</md-subheader>
-                <div layout="row" layout-wrap>
-
-                    <div flex-sm="100" flex-md="50" flex-lg="33" flex-gt-lg="25">
-                        <md-card>
-                            <md-card-content>
-                                <h1>CV</h1>
-                                <md-switch ng-model="data.test" aria-label="Switch 1">
-                                </md-switch>
-                            </md-card-content>
-                        </md-card>
-                    </div>
-                </div>
-            </md-content>
-        </md-tab>
-
-        <md-tab label="System"></md-tab>
-    </md-tabs-->
 
 
 <script src="vendor/angular/angular.min.js"></script>
 <script src="vendor/angular-animate/angular-animate.min.js"></script>
 <script src="vendor/angular-aria/angular-aria.min.js"></script>
+<script src="vendor/angular-messages/angular-messages.min.js"></script>
 <script src="vendor/angular-material/angular-material.min.js"></script>
 <script src="vendor/angular-route/angular-route.min.js"></script>
 <script src="vendor/socket.io-client/socket.io.js"></script>

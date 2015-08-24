@@ -1,0 +1,28 @@
+<md-content>
+    <section ng-repeat="group in store.get('groups')">
+        <md-subheader class="md-primary">{{group.name}}</md-subheader>
+        <md-list>
+            <md-list-item class="md-2-line" ng-repeat="deviceId in group.devices">
+                <div class="md-list-item-text">
+                    <h3>{{store.get('devices', deviceId).name}}</h3>
+
+                    <p>{{store.get('devices', deviceId).id}} ({{store.get('devices', deviceId).config.class}})</p>
+                </div>
+                <md-divider ng-if="!$last"></md-divider>
+            </md-list-item>
+        </md-list>
+    </section>
+    <section>
+        <md-subheader class="md-primary">Ungrouped</md-subheader>
+        <md-list>
+            <md-list-item class="md-2-line" ng-repeat="deviceId in ungroupedDevices()">
+                <div class="md-list-item-text">
+                    <h3>{{store.get('devices', deviceId).name}}</h3>
+
+                    <p>{{store.get('devices', deviceId).id}} ({{store.get('devices', deviceId).config.class}})</p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </section>
+</md-content>
+

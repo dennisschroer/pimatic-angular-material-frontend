@@ -1,0 +1,29 @@
+<div class="md-padding">
+    <h1 class="md-headline">Edit group</h1>
+
+    <form ng-submit="save()">
+        <md-input-container>
+            <label>Id</label>
+            <input disabled ng-model="group.id" required type="text">
+        </md-input-container>
+
+        <md-input-container>
+            <label>Name</label>
+            <input ng-model="group.name" required type="text">
+        </md-input-container>
+
+        <md-button class="md-raised md-primary">
+            Save
+        </md-button>
+        <md-button class="md-raised md-warn" ng-click="delete($event)">
+            Delete
+        </md-button>
+        <md-button class="md-raised" ng-click="cancel($event)">
+            Cancel
+        </md-button>
+    </form>
+
+    {{group}}
+</div>
+
+
