@@ -94,3 +94,11 @@ http://www.google.com/design/spec/components/buttons-floating-action-button.html
     bottom: 24px;
     right: 24px;
 }
+
+.login-card{
+    text-align: center;
+}
+
+.login-card md-input-container{
+    text-align: left;
+}

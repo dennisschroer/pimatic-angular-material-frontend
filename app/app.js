@@ -8,39 +8,63 @@ angular.module('pimaticApp.settings', []);
 angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.devices', 'pimaticApp.settings']);
 
 /**
- * The hostname of the device running the pimatic API
+ * The hostname of the device running the pimatic API. Leave empty if the pimatic API is running on the same machine.
  */
-angular.module('pimaticApp').constant('pimaticHost', 'http://localhost:8080');
+angular.module('pimaticApp').constant('pimaticHost', '');
 
 /**
- * If true, the app will uses fixtures as responses on API calls, instead of calling the API
+ * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
-angular.module('pimaticApp').constant('apiProvider', 'apiProvider');
+angular.module('pimaticApp').constant('apiProviderName', 'apiProvider');
 
 angular.module('pimaticApp').config(function ($routeProvider) {
     $routeProvider.when('/home', {
-        templateUrl: 'views/home.html',
+        templateUrl: 'partials/home.html',
         controller: 'HomeController'
+    }).when('/login', {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginController'
     }).when('/home/:pageId', {
-        templateUrl: 'views/home.html',
+        templateUrl: 'partials/home.html',
         controller: 'HomeController'
     }).when('/settings/groups', {
-        templateUrl: 'views/settings/groups/index.html',
+        templateUrl: 'partials/settings/groups/index.html',
         controller: 'GroupsController'
     }).when('/settings/groups/create', {
-        templateUrl: 'views/settings/groups/create.html',
+        templateUrl: 'partials/settings/groups/create.html',
         controller: 'GroupsCreateController'
     }).when('/settings/groups/:id', {
-        templateUrl: 'views/settings/groups/edit.html',
+        templateUrl: 'partials/settings/groups/edit.html',
         controller: 'GroupsEditController'
     }).when('/settings/devices', {
-        templateUrl: 'views/settings/devices.html',
+        templateUrl: 'partials/settings/devices.html',
         controller: 'DevicesController'
     }).otherwise({
         redirectTo: '/home'
     });
+});
 
+angular.module('pimaticApp').run(function ($rootScope, $location, $injector, store, auth, apiProviderName) {
+    $rootScope.store = store;
+    $rootScope.auth = auth;
 
+    var apiProvider = $injector.get(apiProviderName);
+    apiProvider.init(store, auth);
+
+    // register listener to watch route changes
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+        if (!auth.isLoggedIn()) {
+            // no logged user, we should be going to #login
+            if (next.originalPath == "/login") {
+                // already going to #login, no redirect needed
+            } else {
+                // not going to #login, we should redirect now
+                console.log('pimaticApp', 'Redirecting to login...');
+                auth.setRedirectedFrom(next.originalPath);
+                $location.path("/login");
+            }
+        }
+    });
 });
 
 

@@ -1,0 +1,42 @@
+<div layout="row">
+    <div flex-sm="100" flex-md="50" flex-gt-md="33" offset-sm="0" offset-md="25" offset-gt-md="33">
+        <md-card class="login-card">
+            <md-card-content>
+                <h2>Login</h2>
+                <form name="loginForm" ng-submit="login()">
+                    <div ng-show="form.message">
+                        {{form.message}}
+                    </div>
+                    <md-input-container>
+                        <label>Username</label>
+                        <input name="username" ng-model="form.username" required type="text">
+                        <div ng-messages="loginForm.username.$error" ng-show="loginForm.username.$dirty">
+                            <div ng-message="required">Required</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>Password</label>
+                        <input name="password" ng-model="form.password" required type="password">
+                        <div ng-messages="loginForm.password.$error" ng-show="loginForm.password.$dirty">
+                            <div ng-message="required">Required</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <md-checkbox ng-model="form.rememberMe" aria-label="Remember me">
+                            Remember me
+                        </md-checkbox>
+                    </md-input-container>
+
+
+                    <md-button class="md-raised md-primary" ng-disabled="form.busy">
+                        Login
+                    </md-button>
+                </form>
+            </md-card-content>
+        </md-card>
+    </div>
+
+</div>
+

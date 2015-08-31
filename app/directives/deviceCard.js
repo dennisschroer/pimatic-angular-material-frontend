@@ -3,7 +3,7 @@ angular.module('pimaticApp').directive('deviceCard', function (toast) {
         scope: {
             device: '='
         },
-        template: '<ng-include src="\'views/devices/\' + device.template + \'.html\'"></ng-include>',
+        template: '<ng-include src="\'partials/devices/\' + device.template + \'.html\'"></ng-include>',
         //template: '<ng-include src="\'views/devices/device.html\'"></ng-include>',
         controller: function ($scope) {
             $scope.getAttribute = function(name) {

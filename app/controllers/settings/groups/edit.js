@@ -1,7 +1,7 @@
 angular.module('pimaticApp.settings').controller('GroupsEditController', function ($scope, $location, $routeParams, $mdDialog, toast) {
     $scope.group = angular.copy($scope.store.get('groups', $routeParams.id));
 
-    if ($scope.group['$dummy']) {
+    if ($scope.group == null ) {
         $location.path('settings/groups');
     }
 

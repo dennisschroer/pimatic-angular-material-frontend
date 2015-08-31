@@ -1,4 +1,4 @@
-app/vendor
+lib/bower
 node_modules
 .idea
 .js
