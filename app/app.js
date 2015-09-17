@@ -53,9 +53,18 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store
     $rootScope.auth = auth;
 
     $rootScope.state = 'starting';
+    $rootScope.redirectedFrom = null;
 
     $rootScope.setState = function(state){
         $rootScope.state = state;
+        if(state == 'done'){
+            if($rootScope.redirectedFrom !== null){
+                $location.path(this.redirectedFrom);
+                $rootScope.redirectedFrom = null;
+            }else{
+                $location.path("home");
+            }
+        }
     };
 
     // Initialize the apiProvider, so that it can make callbacks
@@ -63,13 +72,14 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store
     //apiProvider.init(store, auth);
 
     // Start the store
-    store.reset();
+    store.reload();
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
         if($rootScope.state == 'starting'){
             if (next.originalPath != "/landing") {
                 console.log('App', 'Application is loading, redirecting to the landing page');
+                $rootScope.redirectedFrom = next.originalPath;
                 $location.path("/landing");
             }
         }else{
@@ -80,7 +90,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store
                 } else {
                     // not going to #login, we should redirect now
                     console.log('pimaticApp', 'Redirecting to login...');
-                    auth.setRedirectedFrom(next.originalPath);
+                    $rootScope.redirectedFrom = next.originalPath;
                     $location.path("/login");
                 }
             }
@@ -92,6 +102,6 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store
 
 angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
-        .primaryPalette('green')
-        .accentPalette('indigo');
+        .primaryPalette('blue')
+        .accentPalette('orange');
 }]);

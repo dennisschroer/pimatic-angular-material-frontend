@@ -71,9 +71,9 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             this.socket.on('hello', function (msg) {
                 console.log('apiProvider', 'hello', msg);
                 $rootScope.$apply(function(){
-                    $rootScope.setState('loaded');
-                    // This triggers a redirect
                     self.store.setUser(msg);
+                    // This triggers a redirect
+                    $rootScope.setState('done');
                 });
             });
 

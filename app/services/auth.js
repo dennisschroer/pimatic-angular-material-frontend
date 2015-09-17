@@ -14,7 +14,6 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
         },
 
         setupWatchers: function(){
-            var a = this;
             $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
                 if(newUser === oldUser) return;
 
@@ -22,12 +21,7 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
 
                 // New user or logout, reset the store
                 if(oldUser !== null){
-                    store.reset();
-                }
-
-                // Redirect the user
-                if (newUser !== null) {
-                    a.redirect();
+                    store.reload();
                 }
             }, true)
         },
@@ -66,17 +60,6 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
                     resolve(user);
                 }, reject);
             });
-        },
-
-        redirect: function(){
-            if(this.redirectedFrom !== null){
-                $location.path(this.redirectedFrom);
-                console.log('auth', 'Logged in, redirecting to ', this.redirectedFrom);
-                this.redirectedFrom = null;
-            }else{
-                $location.path("home");
-                console.log('auth', 'Logged in, redirecting to /home (default)');
-            }
         },
 
         setRedirectedFrom: function(path){
