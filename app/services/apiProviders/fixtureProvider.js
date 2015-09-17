@@ -1,4 +1,4 @@
-angular.module('pimaticApp').factory('fixtureProvider', function ($http, $q, baseProvider) {
+angular.module('pimaticApp.data').factory('fixtureProvider', ['$http', '$q', 'baseProvider', function ($http, $q, baseProvider) {
 
     var data = {};
 
@@ -39,10 +39,10 @@ angular.module('pimaticApp').factory('fixtureProvider', function ($http, $q, bas
 
         load: function (name) {
             return $q(function (resolve) {
-                while (!name in data) {
+                while (!(name in data)) {
                 }
                 resolve(data[name]);
-            })
+            });
         }
     });
-});
+}]);

@@ -1,9 +1,12 @@
 /**
  * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
  */
-angular.module('pimaticApp').factory('baseProvider', function ($q) {
+angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
     return {
-        init: function () {
+        store: null,
+
+        setStore: function (store) {
+            this.store = store;
         },
 
         /**
@@ -88,5 +91,5 @@ angular.module('pimaticApp').factory('baseProvider', function ($q) {
                 reject("Not implemented");
             });
         },
-    }
-});
+    };
+}]);

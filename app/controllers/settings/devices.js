@@ -1,4 +1,4 @@
-angular.module('pimaticApp.settings').controller('DevicesController', function ($scope) {
+angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", function ($scope) {
     // Get a list of ids of devices which are not in a group
     $scope.ungroupedDevices = function () {
         var groups = $scope.store.get('groups');
@@ -18,10 +18,10 @@ angular.module('pimaticApp.settings').controller('DevicesController', function (
                 if (index >= 0) {
                     ungrouped.splice(index, 1);
                 }
-            })
+            });
         });
 
         // Return the result
         return ungrouped;
     };
-});
+}]);

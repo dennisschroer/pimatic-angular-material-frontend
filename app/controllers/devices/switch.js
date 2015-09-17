@@ -1,4 +1,4 @@
-angular.module('pimaticApp.devices').controller('SwitchController', function ($scope, store, toast) {
+angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "toast", function ($scope, store, toast) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
 
@@ -10,4 +10,4 @@ angular.module('pimaticApp.devices').controller('SwitchController', function ($s
             toast.deviceActionFail($scope.device, action);
         });
     };
-});
+}]);

@@ -1,26 +1,37 @@
+/*! 
+ * Name:        pimatic-angular-material-frontend 
+ * Description: Provides an AngularJS webinterface for pimatic with material design. 
+ * Version:     0.0.1 
+ * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
+ * Date:        2015-09-17 
+ */
 /**
  * Create the different modules.
  * The pimaticApp module is the main module.
  * The pimaticApp.devices module contains device specific controllers or directives.
  */
-angular.module('pimaticApp.devices', []);
-angular.module('pimaticApp.settings', []);
-angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.devices', 'pimaticApp.settings']);
+angular.module('pimaticApp.configuration', []);
 
 /**
  * The hostname of the device running the pimatic API. Leave empty if the pimatic API is running on the same machine.
  */
-angular.module('pimaticApp').constant('pimaticHost', '');
-
+angular.module('pimaticApp.configuration').constant('pimaticHost', '');
 /**
  * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
-angular.module('pimaticApp').constant('apiProviderName', 'apiProvider');
+angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvider');
 
-angular.module('pimaticApp').config(function ($routeProvider) {
+angular.module('pimaticApp.devices', []);
+angular.module('pimaticApp.settings', []);
+angular.module('pimaticApp.data', ['pimaticApp.configuration']);
+angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data']);
+
+
+angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
+    }).when('/landing', {
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController'
@@ -40,40 +51,58 @@ angular.module('pimaticApp').config(function ($routeProvider) {
         templateUrl: 'partials/settings/devices.html',
         controller: 'DevicesController'
     }).otherwise({
-        redirectTo: '/home'
+        redirectTo: '/landing'
     });
-});
+}]);
 
-angular.module('pimaticApp').run(function ($rootScope, $location, $injector, store, auth, apiProviderName) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store", "auth", "apiProviderName", function ($rootScope, $location, $injector, store, auth, apiProviderName) {
     $rootScope.store = store;
     $rootScope.auth = auth;
 
-    var apiProvider = $injector.get(apiProviderName);
-    apiProvider.init(store, auth);
+    $rootScope.state = 'starting';
+
+    $rootScope.setState = function(state){
+        $rootScope.state = state;
+    };
+
+    // Initialize the apiProvider, so that it can make callbacks
+    //var apiProvider = $injector.get(apiProviderName);
+    //apiProvider.init(store, auth);
+
+    // Start the store
+    store.reset();
 
     // register listener to watch route changes
-    $rootScope.$on("$routeChangeStart", function (event, next, current) {
-        if (!auth.isLoggedIn()) {
-            // no logged user, we should be going to #login
-            if (next.originalPath == "/login") {
-                // already going to #login, no redirect needed
-            } else {
-                // not going to #login, we should redirect now
-                console.log('pimaticApp', 'Redirecting to login...');
-                auth.setRedirectedFrom(next.originalPath);
-                $location.path("/login");
+    $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
+        if($rootScope.state == 'starting'){
+            if (next.originalPath != "/landing") {
+                console.log('App', 'Application is loading, redirecting to the landing page');
+                $location.path("/landing");
+            }
+        }else{
+            if (!auth.isLoggedIn()) {
+                // no logged user, we should be going to #login
+                if (next.originalPath == "/login") {
+                    // already going to #login, no redirect needed
+                } else {
+                    // not going to #login, we should redirect now
+                    console.log('pimaticApp', 'Redirecting to login...');
+                    auth.setRedirectedFrom(next.originalPath);
+                    $location.path("/login");
+                }
             }
         }
+
     });
-});
+}]);
 
 
-angular.module('pimaticApp').config(function ($mdThemingProvider) {
+angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('green')
         .accentPalette('indigo');
-});
-angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootScope, baseProvider, pimaticHost, toast) {
+}]);
+angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootScope', 'baseProvider', 'pimaticHost', 'toast', function ($http, $q, $rootScope, baseProvider, pimaticHost, toast) {
 
     /*
      * Data via this provider comes asynchronously via a websocket, while the data is requested by the application
@@ -93,16 +122,6 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
     return angular.extend({}, baseProvider, {
         socket: null,
 
-        /** Initialize a this API Provider.
-         * The store and auth service are needed for when messages are received via the websocket
-         * @param store
-         * @param auth
-         */
-        init: function (store, auth) {
-            this.store = store;
-            this.auth = auth;
-        },
-
         /**
          * Start the provider and reset all caches
          */
@@ -115,7 +134,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             var store = this.store;
             var self = this;
 
-            if(this.socket!=null){
+            if(this.socket!==null){
                 this.socket.disconnect();
             }
 
@@ -155,7 +174,11 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             });
             this.socket.on('hello', function (msg) {
                 console.log('apiProvider', 'hello', msg);
-                self.auth.setUser(msg);
+                $rootScope.$apply(function(){
+                    $rootScope.setState('loaded');
+                    // This triggers a redirect
+                    self.store.setUser(msg);
+                });
             });
 
             // Call result
@@ -164,7 +187,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
 
                 switch(msg.id) {
                     case 'errorMessageCount':
-                        if(msg.success)
+                        //if(msg.success)
                             //pimatic.errorCount(msg.result.count);
                         break;
                     case 'guiSettings':
@@ -217,7 +240,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 console.log('apiProvider', 'deviceAttributeChanged', attrEvent);
                 $rootScope.$apply(function () {
                     var device = store.get('devices', attrEvent.deviceId);
-                    if (device != null) {
+                    if (device !== null) {
                         // Find attribute
                         angular.forEach(device.attributes, function (attribute) {
                             if (attribute.name == attrEvent.attributeName) {
@@ -232,7 +255,9 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 console.log('apiProvider', "variableValueChanged", varValEvent);
                 //$rootScope.$apply(function () {
                 var v = store.get('variables', varValEvent.variableName);
-                if (v != null) v.value = varValEvent.variableValue;
+                if (v !== null){
+                    v.value = varValEvent.variableValue;
+                }
                 //});
             });
 
@@ -303,7 +328,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("groupOrderChanged", function (order) {
-                console.log('apiProvider', "groupOrderChanged", order)
+                console.log('apiProvider', "groupOrderChanged", order);
             });
 
 
@@ -327,7 +352,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("ruleOrderChanged", function (order) {
-                console.log('apiProvider', "ruleOrderChanged", order)
+                console.log('apiProvider', "ruleOrderChanged", order);
             });
 
             // Variables
@@ -350,11 +375,11 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("variableOrderChanged", function (order) {
-                console.log('apiProvider', "variableOrderChanged", order)
+                console.log('apiProvider', "variableOrderChanged", order);
             });
 
             this.socket.on("updateProcessStatus", function (statusEvent) {
-                console.log('apiProvider', "updateProcessStatus", statusEvent)
+                console.log('apiProvider', "updateProcessStatus", statusEvent);
             });
             this.socket.on("updateProcessMessage", function (msgEvent) {
                 console.log('apiProvider', "updateProcessMessage", msgEvent);
@@ -386,7 +411,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                     password: password
                 };
                 if(rememberMe){
-                    data['rememberMe'] = true;
+                    data.rememberMe = true;
                 }
 
                 $http.post(pimaticHost + '/login', data)
@@ -409,7 +434,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
         handleIncomingData: function(type, data) {
             if(type in cache && 'promises' in cache[type]){
                 // Resolve promises
-                angular.forEach(cache[type]['promises'], function(deffered){
+                angular.forEach(cache[type].promises, function(deffered){
                     deffered.resolve(data);
                 });
 
@@ -418,7 +443,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             }else{
                 // Cache data
                 cache[type] = {};
-                cache[type]['data'] = data;
+                cache[type].data = data;
             }
         },
 
@@ -486,7 +511,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
         remove: function (type, object) {
             return $q(function (resolve, reject) {
                 $http.delete(pimaticHost + '/api/' + type + '/' + object.id).then(function (response) {
-                    resolve(response['removed']);
+                    resolve(response.removed);
                 }, function (response) {
                     reject(response.message);
                 });
@@ -503,7 +528,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             if(type in cache && 'data' in cache[type]){
                 var promise = $q(function(resolve){
                     // Resolve immediately
-                    resolve(cache[type]['data']);
+                    resolve(cache[type].data);
                 });
 
                 // Clear cache
@@ -518,326 +543,29 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 var deffered = $q.defer();
 
                 // Add the promise
-                if(angular.isUndefined(cache[type])) cache[type] = {};
-                if(angular.isUndefined(cache[type]['promises'])) cache[type]['promises'] = [];
-                cache[type]['promises'].push(deffered);
+                if(angular.isUndefined(cache[type])){
+                    cache[type] = {};
+                }
+                if(angular.isUndefined(cache[type].promises)){
+                    cache[type].promises = [];
+                }
+                cache[type].promises.push(deffered);
 
                 // Return the promise
                 return deffered.promise;
             }
         }
     });
-});
-angular.module('pimaticApp').factory('ApiService', function ($http, $q, $rootScope, toastService, $filter, pimaticHost, simulate) {
-    /*$http({
-        method: 'POST',
-        url: pimaticHost + '/login',
-        data: {
-            username: 'admin',
-            password: 'admin'
-        },
-        transformRequest: function(obj) {
-            var str = [];
-            for(var p in obj)
-                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-            return str.join("&");
-        },
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }).success(function(data){
-        console.log(data);
-    });*/
-
-    var data = {
-        devices: [],
-        groups: [],
-        pages: [],
-        rules: [],
-        variables: []
-    };
-
-    var apiService = {
-        socket: null,
-
-        init: function(){
-            if(simulate){
-                // Simulate by loading fixtures
-                $http.get('fixtures/devices.json').success(function(devices){
-                    angular.extend(data.devices, devices);
-                });
-                $http.get('fixtures/groups.json').success(function(groups){
-                    angular.extend(data.groups, groups);
-                });
-                $http.get('fixtures/pages.json').success(function(pages){
-                    angular.extend(data.pages, pages);
-                });
-                $http.get('fixtures/rules.json').success(function(rules){
-                    angular.extend(data.rules, rules);
-                });
-                $http.get('fixtures/variables.json').success(function(variables){
-                    angular.extend(data.variables, variables);
-                });
-            }else{
-                this.setupSocket();
-            }
-        },
-
-        setupSocket: function(){
-            var service = this;
-            this.socket = io(pimaticHost);
-
-            this.socket.on('connect', function(){
-                console.log('connect');
-            });
-
-            this.socket.on('callResult', function(msg){
-                console.log('callResult', msg);
-            });
-
-            this.socket.on('hello', function(msg){
-                console.log('hello', msg);
-            });
-
-
-            // Models
-            this.socket.on('devices', function(devices){
-                console.log('devices', devices);
-                $rootScope.$apply(function(){
-                    angular.extend(data.devices, devices);
-                });
-                service.watchDeviceAttributes();
-            });
-
-            this.socket.on('rules', function(rules){
-                console.log('rules', rules);
-                $rootScope.$apply(function(){
-                    angular.extend(data.rules, rules);
-                });
-            });
-
-            this.socket.on('variables', function(variables){
-                console.log('variables', variables);
-                $rootScope.$apply(function(){
-                    angular.extend(data.variables, variables);
-                });
-            });
-
-            this.socket.on('pages', function(pages){
-                console.log('pages', pages);
-                // TODO remove pages first
-                $rootScope.$apply(function(){
-                    angular.extend(data.pages, pages);
-                });
-
-            });
-
-            this.socket.on('groups', function(groups){
-                console.log('groups', groups);
-                $rootScope.$apply(function(){
-                    angular.extend(data.groups, groups);
-                });
-            });
-
-
-            // Change
-            this.socket.on('deviceAttributeChanged', function(attrEvent){
-                console.log('deviceAttributeChanged', attrEvent);
-                $rootScope.$apply(function () {
-                    var device = apiService.getDevice(attrEvent.deviceId);
-                    if (device != null) {
-                        // Find attribute
-                        angular.forEach(device.attributes, function (attribute) {
-                            if (attribute.name == attrEvent.attributeName) {
-                                attribute.$skipUpload = true;
-                                attribute.value = attrEvent.value;
-                                attribute.lastUpdate = attrEvent.time;
-                            }
-                        });
-                    }
-                });
-            });
-
-            this.socket.on("deviceOrderChanged", function(order) {
-                console.log("deviceOrderChanged", order);
-            });
-
-            this.socket.on("deviceChanged", function(device) {
-                console.log("deviceChanged", device)
-            });
-            this.socket.on("deviceRemoved", function(device) {
-                console.log("deviceRemoved", device.id)
-            });
-            this.socket.on("deviceAdded", function(device) {
-                console.log("deviceAdded", device)
-            });
-
-
-            this.socket.on("pageChanged", function(page) {
-                console.log("pageChanged", page)
-            });
-            this.socket.on("pageRemoved", function(page) {
-                console.log("pageRemoved", page.id)
-            });
-            this.socket.on("pageAdded", function(page) {
-                console.log("pageAdded", page)
-            });
-            this.socket.on("pageOrderChanged", function(order) {
-                console.log("pageOrderChanged", order)
-            });
-
-
-            this.socket.on("groupChanged", function(group) {
-                console.log("groupChanged", group)
-            });
-            this.socket.on("groupRemoved", function(group) {
-                console.log("groupRemoved", group.id)
-            });
-            this.socket.on("groupAdded", function(group) {
-                console.log("groupAdded", group)
-            });
-            this.socket.on("groupOrderChanged", function(order) {
-                console.log("groupOrderChanged", order)
-            });
-
-            this.socket.on("ruleAdded", function(rule) {
-                console.log("ruleAdded", rule)
-            });
-            this.socket.on("ruleChanged", function(rule) {
-                console.log("ruleChanged", rule)
-            });
-            this.socket.on("ruleRemoved", function(rule) {
-                console.log("ruleRemoved", rule.id)
-            });
-            this.socket.on("ruleOrderChanged", function(order) {
-                console.log("ruleOrderChanged", order)
-            });
-
-            this.socket.on("variableAdded", function(variable) {
-                console.log("variableAdded", variable)
-            });
-            this.socket.on("variableChanged", function(variable) {
-                console.log("variableChanged", variable)
-            });
-            this.socket.on("variableValueChanged", function(varValEvent) {
-                console.log("variableValueChanged", varValEvent);
-                $rootScope.$apply(function() {
-                    var v = apiService.getVariable(varValEvent.variableName);
-                    if (v != null) v.value = varValEvent.variableValue;
-                });
-            });
-            this.socket.on("variableRemoved", function(variable) {
-                console.log("variableRemoved", variable.name)
-            });
-            this.socket.on("variableOrderChanged", function(order) {
-                console.log("variableOrderChanged", order)
-            });
-
-            this.socket.on("updateProcessStatus", function(statusEvent) {
-                console.log("updateProcessStatus", statusEvent.status)
-            });
-            this.socket.on("updateProcessMessage", function(msgEvent) {
-                console.log("updateProcessMessage", msgEvent);
-            });
-
-            this.socket.on('messageLogged', function(entry) {
-                console.log("messageLogged", entry);
-                if(entry.level != 'debug'){
-                    // Show toast
-                    toastService.show(entry.msg);
-                }
-                if(entry.level == 'error'){
-
-                }
-            });
-        },
-
-        /**
-         * Add a watch to each variable. This watch watches the value of the variable.
-         * If it is changed and it is not readonly, we need to send the value to the backend
-         */
-        watchDeviceAttributes: function () {
-            /*var self = this;
-             angular.forEach(data.devices, function(device){
-             angular.forEach(device.attributes, function(attribute){
-             // Assign the unregister function to the variable, so we can use it later
-             attribute.$watcher = $rootScope.$watch(function(){return attribute.value}, function(oldValue, newValue){
-             if(oldValue === newValue) return;
-             if(!attribute.$skipUpload){
-             // Upload change
-             //console.log('updateDeviceAttribute', attribute, newValue);
-             //self.updateVariable(variable, newValue);
-             }
-             attribute.$skipUpload = false;
-             });
-             });
-             })*/
-        },
-
-        deviceAction: function (deviceId, actionName, params) {
-            return $q(function (resolve, reject) {
-                $http.get('/api/device/' + deviceId + '/' + actionName)
-                    .success(function (data) {
-                        if (data.success) {
-                            resolve();
-                        } else {
-                            toastService.show('Failed to exectute ' + actionName + ' of ' + deviceId + ': ' + data.message);
-                            reject();
-                        }
-                    }).error(function (data) {
-                        toastService.show('Failed to exectute ' + actionName + ' of ' + deviceId + ': ' + data.message);
-                        reject();
-                    });
-            });
-        },
-
-        getDevices: function(){
-            return data.devices;
-        },
-        getDevice: function (id) {
-            var found = $filter('filter')(data.devices, {id: id}, true);
-            return found.length ? found[0] : null;
-        },
-        getGroups: function(){
-            return data.groups;
-        },
-        getPages: function(){
-            return data.pages;
-        },
-        getRules: function(){
-            return data.rules;
-        },
-        getVariables: function(){
-            return data.variables;
-        },
-
-        getVariable: function(name){
-            var found = $filter('filter')(data.variables, {name: name}, true);
-            return found.length ? found[0] : null;
-        },
-
-        /**
-         * Send the variable update to the backend
-         * @param variable
-         * @param value
-         */
-        updateVariable: function (variable, value) {
-            this.socket.emit('updateVariable', {
-                name: variable.name,
-                type: variable.type,
-                value: value
-            });
-        }
-    };
-
-    return apiService;
-});
+}]);
 /**
  * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
  */
-angular.module('pimaticApp').factory('baseProvider', function ($q) {
+angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
     return {
-        init: function () {
+        store: null,
+
+        setStore: function (store) {
+            this.store = store;
         },
 
         /**
@@ -922,9 +650,9 @@ angular.module('pimaticApp').factory('baseProvider', function ($q) {
                 reject("Not implemented");
             });
         },
-    }
-});
-angular.module('pimaticApp').factory('fixtureProvider', function ($http, $q, baseProvider) {
+    };
+}]);
+angular.module('pimaticApp.data').factory('fixtureProvider', ['$http', '$q', 'baseProvider', function ($http, $q, baseProvider) {
 
     var data = {};
 
@@ -965,44 +693,63 @@ angular.module('pimaticApp').factory('fixtureProvider', function ($http, $q, bas
 
         load: function (name) {
             return $q(function (resolve) {
-                while (!name in data) {
+                while (!(name in data)) {
                 }
                 resolve(data[name]);
-            })
+            });
         }
     });
-});
+}]);
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
  * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp').factory('auth', function (store, $injector, $location, $q) {
-    return {
+angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location', '$q', '$rootScope', function (store, $injector, $location, $q, $rootScope) {
+    var auth = {
         store: store,
-
-        user: null,
         redirectedFrom: null,
 
         isLoggedIn: function () {
-            return this.user != null;
+            return store.getUser() !== null;
         },
 
-        setUser: function (user, reset) {
+        setupWatchers: function(){
+            var a = this;
+            $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
+                if(newUser === oldUser) return;
+
+                console.log('auth', 'New user: ', newUser);
+
+                // New user or logout, reset the store
+                if(oldUser !== null){
+                    store.reset();
+                }
+
+                // Redirect the user
+                if (newUser !== null) {
+                    a.redirect();
+                }
+            }, true)
+        },
+
+        /*setUser: function (user, reset) {
             console.log('auth', 'New user: ', user);
 
             // Set the user
             this.user = user;
 
             // Reset the store, so it can re-request all objects
-            if(reset) store.reset();
+            if(reset){
+                store.reset();
+            }
 
             // Redirect the user
-            if (user != null) {
+            if (user !== null) {
                 this.redirect();
             }
-        },
+        },*/
 
         /**
          * Attempt to login with the given credentials
@@ -1015,14 +762,16 @@ angular.module('pimaticApp').factory('auth', function (store, $injector, $locati
             var self = this;
             return $q(function(resolve, reject){
                 self.store.provider.login(username, password, rememberMe).then(function(user){
-                    self.setUser(user, true);
+                    store.setUser(user);
+                    //store.add('user',user);
+                    //self.setUser(user, true);
                     resolve(user);
                 }, reject);
             });
         },
 
         redirect: function(){
-            if(this.redirectedFrom != null){
+            if(this.redirectedFrom !== null){
                 $location.path(this.redirectedFrom);
                 console.log('auth', 'Logged in, redirecting to ', this.redirectedFrom);
                 this.redirectedFrom = null;
@@ -1036,14 +785,18 @@ angular.module('pimaticApp').factory('auth', function (store, $injector, $locati
             this.redirectedFrom = path;
         },
     };
-});
+
+    auth.setupWatchers();
+
+    return auth;
+}]);
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
  * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp').factory('store', function ($q, $injector, apiProviderName) {
+angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProviderName', function ($q, $injector, apiProviderName) {
     var store = {
         // Retrieve the provider instance from the injector
         provider: $injector.get(apiProviderName),
@@ -1054,9 +807,10 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * Reset the store and retreive all objects from the API provider again
          */
         reset: function(){
-            console.log('STORE RESET');
+            console.log('=== STORE RESET ===');
 
             this.store =  {
+                user: {timestamp: 0, data: null},
                 devices: {timestamp: 0, data: []},
                 groups: {timestamp: 0, data: []},
                 pages: {timestamp: 0, data: []},
@@ -1064,7 +818,17 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                 variables: {timestamp: 0, data: []}
             };
 
+            this.provider.setStore(this);
+
             this.provider.start();
+        },
+
+        getUser: function(){
+            return this.store.user.data;
+        },
+
+        setUser: function(user){
+            this.store.user.data = user;
         },
 
         /**
@@ -1072,13 +836,18 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * an empty list or an empty object is returned which is filled when the models are provided by the apiProvider.
          * @param type The type of the model to load.
          * @param id Optional the id of the model to load. If undefined, all instances will be returned.
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          * @returns list|object A list of models or a single instance.
          */
-        get: function (type, id) {
+        get: function (type, id, identifier) {
             var self = this;
+
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
             if (type in self.store) {
                 // Check if data is already fetched
-                if (self.store[type].timestamp == 0 && !self.store[type].loading) {
+                if (self.store[type].timestamp === 0 && !self.store[type].loading) {
                     self.store[type].loading = true;
 
                     // Fetch data via the API
@@ -1092,10 +861,13 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                         self.store[type].timestamp = date.getTime();
 
                         // Remove dummy flag
-                        angular.forEach(self.store[type].data, function (value) {
-                            value['$dummy'] = false;
-                        });
+                        //angular.forEach(self.store[type].data, function (value) {
+                        //    value.$dummy = false;
+                        //});
 
+                        self.store[type].loading = false;
+                    }, function(){
+                        // Set to false, so it can be retried
                         self.store[type].loading = false;
                     });
                 }
@@ -1107,7 +879,9 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     // Return single item, or null
                     var item = null;
                     angular.forEach(self.store[type].data, function (value) {
-                        if (value.id == id) item = value;
+                        if (value[identifier] == id) {
+                            item = value;
+                        }
                     });
 
                     //if (item == null) {
@@ -1118,8 +892,8 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     return item;
                 }
             } else {
-                // Not valid, return null
-                return null;
+                // Not valid, return null or empty list
+                return angular.isUndefined(id) ? [] : null;
             }
         },
 
@@ -1128,25 +902,30 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object to add
          * @param object The object to add
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the addition is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        add: function (type, object, skipApi) {
+        add: function (type, object, skipApi, identifier) {
             var provider = this.provider;
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'add()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
             var add = function(){
-                var current = self.get(type, object.id);
-                if(angular.isUndefined(current)){
+                var current = self.get(type, object[identifier], identifier);
+                if(current === null){
                     // Really new
                     self.get(type).push(object);
                 }else{
                     // Not new, update instead
                     self.update(type, object, skipApi);
                 }
-            }
+            };
 
             return $q(function (resolve, reject) {
                 if(skipApi){
@@ -1155,7 +934,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else{
                     // Call the API provider
-                    provider.add(type, object).then(function (resultingObject) {
+                    provider.add(type, object, identifier).then(function (resultingObject) {
                         // Succesfully added -> add to store
                         add(resultingObject);
                         resolve(resultingObject);
@@ -1172,14 +951,21 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object which is updated
          * @param object The updated object
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the update is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        update: function (type, object, skipApi) {
+        update: function (type, object, skipApi, identifier) {
             var provider = this.provider;
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'update()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
+
+
             return $q(function (resolve, reject) {
-                var current = self.get(type, object.id);
-                if(current == null){
+                var current = self.get(type, object[identifier]);
+                if(current === null){
                     reject("Fatal: update called, but object does not exist");
                 }
 
@@ -1189,7 +975,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else {
                     // Call the API provider
-                    provider.update(type, object).then(function (resultingObject) {
+                    provider.update(type, object, identifier).then(function (resultingObject) {
                         // Succesfully updated -> update in store
                         angular.merge(current, resultingObject);
                         resolve(resultingObject);
@@ -1206,10 +992,15 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object which is removed
          * @param object The to be removed object
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the removal is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        remove: function (type, object, skipApi) {
+        remove: function (type, object, skipApi, identifier) {
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'remove()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             var remove = function(){
@@ -1227,7 +1018,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else {
                     // Call the API provider
-                    self.provider.remove(type, object).then(function (resultingObject) {
+                    self.provider.remove(type, object, identifier).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
                         resolve(resultingObject);
@@ -1258,10 +1049,9 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
         }*/
     };
 
-    store.reset();
     return store;
-});
-angular.module('pimaticApp').factory('toast', function ($mdToast) {
+}]);
+angular.module('pimaticApp').factory('toast', ['$mdToast', function ($mdToast) {
     return {
         show: function (message) {
             $mdToast.show($mdToast.simple().content(message));
@@ -1279,8 +1069,8 @@ angular.module('pimaticApp').factory('toast', function ($mdToast) {
             this.error('Fail: ' + action + ' ' + device.id);
         }
     };
-});
-angular.module('pimaticApp.devices').controller('SwitchController', function ($scope, store, toast) {
+}]);
+angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "toast", function ($scope, store, toast) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
 
@@ -1292,11 +1082,11 @@ angular.module('pimaticApp.devices').controller('SwitchController', function ($s
             toast.deviceActionFail($scope.device, action);
         });
     };
-});
-angular.module('pimaticApp.devices').controller('ThermostatController', function ($scope, store, toast) {
+}]);
+angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", function ($scope) {
 
-});
-angular.module('pimaticApp').controller('HomeController', function ($scope) {
+}]);
+angular.module('pimaticApp').controller('HomeController', ["$scope", function ($scope) {
     $scope.selectedTab = 0;
 
     /*$scope.selectPage = function(){
@@ -1318,11 +1108,14 @@ angular.module('pimaticApp').controller('HomeController', function ($scope) {
      $scope.$watch($scope.pages, function(newVal, oldVal){
      $scope.selectPage();
      }, true);*/
-});
-angular.module('pimaticApp').controller('LoginController', function ($scope, auth) {
-    if (auth.user != null) {
+}]);
+angular.module('pimaticApp').controller('LandingController', ["$scope", "store", function ($scope, store) {
+    console.log('You landed!');
+}]);
+angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", function ($scope, auth) {
+    if (auth.user !== null) {
         auth.redirect();
-    };
+    }
 
     $scope.form = {};
 
@@ -1338,25 +1131,17 @@ angular.module('pimaticApp').controller('LoginController', function ($scope, aut
             $scope.form.busy = false;
         });
     };
-});
-angular.module('pimaticApp').controller('MainController', function ($scope, $mdSidenav, $mdMedia, store) {
+}]);
+angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav", "$mdMedia", function ($scope, $mdSidenav, $mdMedia) {
     $scope.$mdMedia = $mdMedia;
-
-    /*$scope.getDevice = function(id){
-        var device = null
-        angular.forEach($scope.devices, function(value){
-            if(value.id == id) device = value;
-        });
-        return device;
-     };*/
 
 
 
     $scope.toggleMenu = function(){
         $mdSidenav('left').toggle();
     };
-});
-angular.module('pimaticApp.settings').controller('DevicesController', function ($scope) {
+}]);
+angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", function ($scope) {
     // Get a list of ids of devices which are not in a group
     $scope.ungroupedDevices = function () {
         var groups = $scope.store.get('groups');
@@ -1376,20 +1161,20 @@ angular.module('pimaticApp.settings').controller('DevicesController', function (
                 if (index >= 0) {
                     ungrouped.splice(index, 1);
                 }
-            })
+            });
         });
 
         // Return the result
         return ungrouped;
     };
-});
-angular.module('pimaticApp.settings').controller('GroupsCreateController', function ($scope, $location, toast) {
+}]);
+angular.module('pimaticApp.settings').controller('GroupsCreateController', ["$scope", "$location", "toast", function ($scope, $location, toast) {
     $scope.group = {};
 
     $scope.cancel = function ($event) {
         $event.preventDefault();
         $location.path('settings/groups');
-    }
+    };
 
     $scope.save = function () {
         $scope.store.add('groups', $scope.group).then(function () {
@@ -1397,12 +1182,12 @@ angular.module('pimaticApp.settings').controller('GroupsCreateController', funct
         }, function (message) {
             toast.error('Saving group failed: ' + message);
         });
-    }
-});
-angular.module('pimaticApp.settings').controller('GroupsEditController', function ($scope, $location, $routeParams, $mdDialog, toast) {
+    };
+}]);
+angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scope", "$location", "$routeParams", "$mdDialog", "toast", function ($scope, $location, $routeParams, $mdDialog, toast) {
     $scope.group = angular.copy($scope.store.get('groups', $routeParams.id));
 
-    if ($scope.group == null ) {
+    if ($scope.group === null) {
         $location.path('settings/groups');
     }
 
@@ -1438,13 +1223,13 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', functio
             toast.error('Saving group failed: ' + message);
         });
     };
-});
-angular.module('pimaticApp.settings').controller('GroupsController', function ($scope, $location) {
+}]);
+angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", "$location", function ($scope, $location) {
     $scope.edit = function (id) {
         $location.path('settings/groups/' + id);
-    }
-});
-angular.module('pimaticApp').directive('deviceCard', function (toast) {
+    };
+}]);
+angular.module('pimaticApp').directive('deviceCard', ['toast', function (toast) {
     return {
         scope: {
             device: '='
@@ -1455,7 +1240,9 @@ angular.module('pimaticApp').directive('deviceCard', function (toast) {
             $scope.getAttribute = function(name) {
                 var attribute = null;
                 angular.forEach($scope.device.attributes, function(value){
-                    if(value.name == name) attribute = value;
+                    if(value.name == name) {
+                        attribute = value;
+                    }
                 });
                 return attribute;
             };
@@ -1493,4 +1280,4 @@ angular.module('pimaticApp').directive('deviceCard', function (toast) {
              $scope.initAttributeWatchers();*/
         }
     };
-});
+}]);

@@ -1,4 +1,4 @@
-angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootScope, baseProvider, pimaticHost, toast) {
+angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootScope', 'baseProvider', 'pimaticHost', 'toast', function ($http, $q, $rootScope, baseProvider, pimaticHost, toast) {
 
     /*
      * Data via this provider comes asynchronously via a websocket, while the data is requested by the application
@@ -18,16 +18,6 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
     return angular.extend({}, baseProvider, {
         socket: null,
 
-        /** Initialize a this API Provider.
-         * The store and auth service are needed for when messages are received via the websocket
-         * @param store
-         * @param auth
-         */
-        init: function (store, auth) {
-            this.store = store;
-            this.auth = auth;
-        },
-
         /**
          * Start the provider and reset all caches
          */
@@ -40,7 +30,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             var store = this.store;
             var self = this;
 
-            if(this.socket!=null){
+            if(this.socket!==null){
                 this.socket.disconnect();
             }
 
@@ -80,7 +70,11 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             });
             this.socket.on('hello', function (msg) {
                 console.log('apiProvider', 'hello', msg);
-                self.auth.setUser(msg);
+                $rootScope.$apply(function(){
+                    $rootScope.setState('loaded');
+                    // This triggers a redirect
+                    self.store.setUser(msg);
+                });
             });
 
             // Call result
@@ -89,7 +83,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
 
                 switch(msg.id) {
                     case 'errorMessageCount':
-                        if(msg.success)
+                        //if(msg.success)
                             //pimatic.errorCount(msg.result.count);
                         break;
                     case 'guiSettings':
@@ -142,7 +136,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 console.log('apiProvider', 'deviceAttributeChanged', attrEvent);
                 $rootScope.$apply(function () {
                     var device = store.get('devices', attrEvent.deviceId);
-                    if (device != null) {
+                    if (device !== null) {
                         // Find attribute
                         angular.forEach(device.attributes, function (attribute) {
                             if (attribute.name == attrEvent.attributeName) {
@@ -157,7 +151,9 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 console.log('apiProvider', "variableValueChanged", varValEvent);
                 //$rootScope.$apply(function () {
                 var v = store.get('variables', varValEvent.variableName);
-                if (v != null) v.value = varValEvent.variableValue;
+                if (v !== null){
+                    v.value = varValEvent.variableValue;
+                }
                 //});
             });
 
@@ -228,7 +224,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("groupOrderChanged", function (order) {
-                console.log('apiProvider', "groupOrderChanged", order)
+                console.log('apiProvider', "groupOrderChanged", order);
             });
 
 
@@ -252,7 +248,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("ruleOrderChanged", function (order) {
-                console.log('apiProvider', "ruleOrderChanged", order)
+                console.log('apiProvider', "ruleOrderChanged", order);
             });
 
             // Variables
@@ -275,11 +271,11 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 });
             });
             this.socket.on("variableOrderChanged", function (order) {
-                console.log('apiProvider', "variableOrderChanged", order)
+                console.log('apiProvider', "variableOrderChanged", order);
             });
 
             this.socket.on("updateProcessStatus", function (statusEvent) {
-                console.log('apiProvider', "updateProcessStatus", statusEvent)
+                console.log('apiProvider', "updateProcessStatus", statusEvent);
             });
             this.socket.on("updateProcessMessage", function (msgEvent) {
                 console.log('apiProvider', "updateProcessMessage", msgEvent);
@@ -311,7 +307,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                     password: password
                 };
                 if(rememberMe){
-                    data['rememberMe'] = true;
+                    data.rememberMe = true;
                 }
 
                 $http.post(pimaticHost + '/login', data)
@@ -334,7 +330,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
         handleIncomingData: function(type, data) {
             if(type in cache && 'promises' in cache[type]){
                 // Resolve promises
-                angular.forEach(cache[type]['promises'], function(deffered){
+                angular.forEach(cache[type].promises, function(deffered){
                     deffered.resolve(data);
                 });
 
@@ -343,7 +339,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             }else{
                 // Cache data
                 cache[type] = {};
-                cache[type]['data'] = data;
+                cache[type].data = data;
             }
         },
 
@@ -411,7 +407,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
         remove: function (type, object) {
             return $q(function (resolve, reject) {
                 $http.delete(pimaticHost + '/api/' + type + '/' + object.id).then(function (response) {
-                    resolve(response['removed']);
+                    resolve(response.removed);
                 }, function (response) {
                     reject(response.message);
                 });
@@ -428,7 +424,7 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
             if(type in cache && 'data' in cache[type]){
                 var promise = $q(function(resolve){
                     // Resolve immediately
-                    resolve(cache[type]['data']);
+                    resolve(cache[type].data);
                 });
 
                 // Clear cache
@@ -443,13 +439,17 @@ angular.module('pimaticApp').factory('apiProvider', function ($http, $q, $rootSc
                 var deffered = $q.defer();
 
                 // Add the promise
-                if(angular.isUndefined(cache[type])) cache[type] = {};
-                if(angular.isUndefined(cache[type]['promises'])) cache[type]['promises'] = [];
-                cache[type]['promises'].push(deffered);
+                if(angular.isUndefined(cache[type])){
+                    cache[type] = {};
+                }
+                if(angular.isUndefined(cache[type].promises)){
+                    cache[type].promises = [];
+                }
+                cache[type].promises.push(deffered);
 
                 // Return the promise
                 return deffered.promise;
             }
         }
     });
-});
+}]);

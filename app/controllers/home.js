@@ -1,4 +1,4 @@
-angular.module('pimaticApp').controller('HomeController', function ($scope) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", function ($scope) {
     $scope.selectedTab = 0;
 
     /*$scope.selectPage = function(){
@@ -20,4 +20,4 @@ angular.module('pimaticApp').controller('HomeController', function ($scope) {
      $scope.$watch($scope.pages, function(newVal, oldVal){
      $scope.selectPage();
      }, true);*/
-});
+}]);

@@ -1,5 +1,9 @@
-describe("store", function(){
-    beforeEach(module('pimaticApp'));
+describe('store', function(){
+    beforeEach(module("pimaticApp.configuration", function ($provide) {
+        // Attempt to override the myConstant value that gets passed to config
+        $provide.constant("apiProviderName", "fixtureProvider");
+    }));
+    beforeEach(module('pimaticApp.data'));
 
     var store;
 
@@ -7,7 +11,12 @@ describe("store", function(){
         store = _store_;
     }));
 
+
+
     it('should not contain data at the start', function(){
-        //fail('This is some reason why it failed');
+        console.log('test list');
+        expect(store.get('devices')).toEqual([]);
+        console.log('test item');
+        expect(store.get('devices', 1)).toBe(null);
     });
 });

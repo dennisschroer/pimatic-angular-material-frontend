@@ -1,7 +1,7 @@
-angular.module('pimaticApp').controller('LoginController', function ($scope, auth) {
-    if (auth.user != null) {
+angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", function ($scope, auth) {
+    if (auth.user !== null) {
         auth.redirect();
-    };
+    }
 
     $scope.form = {};
 
@@ -17,4 +17,4 @@ angular.module('pimaticApp').controller('LoginController', function ($scope, aut
             $scope.form.busy = false;
         });
     };
-});
+}]);

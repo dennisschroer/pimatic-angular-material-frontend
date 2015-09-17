@@ -1,7 +1,7 @@
-angular.module('pimaticApp.settings').controller('GroupsEditController', function ($scope, $location, $routeParams, $mdDialog, toast) {
+angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scope", "$location", "$routeParams", "$mdDialog", "toast", function ($scope, $location, $routeParams, $mdDialog, toast) {
     $scope.group = angular.copy($scope.store.get('groups', $routeParams.id));
 
-    if ($scope.group == null ) {
+    if ($scope.group === null) {
         $location.path('settings/groups');
     }
 
@@ -37,4 +37,4 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', functio
             toast.error('Saving group failed: ' + message);
         });
     };
-});
+}]);

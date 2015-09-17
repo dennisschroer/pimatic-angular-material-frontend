@@ -4,31 +4,50 @@
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp').factory('auth', function (store, $injector, $location, $q) {
-    return {
+angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location', '$q', '$rootScope', function (store, $injector, $location, $q, $rootScope) {
+    var auth = {
         store: store,
-
-        user: null,
         redirectedFrom: null,
 
         isLoggedIn: function () {
-            return this.user != null;
+            return store.getUser() !== null;
         },
 
-        setUser: function (user, reset) {
+        setupWatchers: function(){
+            var a = this;
+            $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
+                if(newUser === oldUser) return;
+
+                console.log('auth', 'New user: ', newUser);
+
+                // New user or logout, reset the store
+                if(oldUser !== null){
+                    store.reset();
+                }
+
+                // Redirect the user
+                if (newUser !== null) {
+                    a.redirect();
+                }
+            }, true)
+        },
+
+        /*setUser: function (user, reset) {
             console.log('auth', 'New user: ', user);
 
             // Set the user
             this.user = user;
 
             // Reset the store, so it can re-request all objects
-            if(reset) store.reset();
+            if(reset){
+                store.reset();
+            }
 
             // Redirect the user
-            if (user != null) {
+            if (user !== null) {
                 this.redirect();
             }
-        },
+        },*/
 
         /**
          * Attempt to login with the given credentials
@@ -41,14 +60,16 @@ angular.module('pimaticApp').factory('auth', function (store, $injector, $locati
             var self = this;
             return $q(function(resolve, reject){
                 self.store.provider.login(username, password, rememberMe).then(function(user){
-                    self.setUser(user, true);
+                    store.setUser(user);
+                    //store.add('user',user);
+                    //self.setUser(user, true);
                     resolve(user);
                 }, reject);
             });
         },
 
         redirect: function(){
-            if(this.redirectedFrom != null){
+            if(this.redirectedFrom !== null){
                 $location.path(this.redirectedFrom);
                 console.log('auth', 'Logged in, redirecting to ', this.redirectedFrom);
                 this.redirectedFrom = null;
@@ -62,4 +83,8 @@ angular.module('pimaticApp').factory('auth', function (store, $injector, $locati
             this.redirectedFrom = path;
         },
     };
-});
+
+    auth.setupWatchers();
+
+    return auth;
+}]);

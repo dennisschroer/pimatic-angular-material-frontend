@@ -4,7 +4,7 @@
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp').factory('store', function ($q, $injector, apiProviderName) {
+angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProviderName', function ($q, $injector, apiProviderName) {
     var store = {
         // Retrieve the provider instance from the injector
         provider: $injector.get(apiProviderName),
@@ -15,9 +15,10 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * Reset the store and retreive all objects from the API provider again
          */
         reset: function(){
-            console.log('STORE RESET');
+            console.log('=== STORE RESET ===');
 
             this.store =  {
+                user: {timestamp: 0, data: null},
                 devices: {timestamp: 0, data: []},
                 groups: {timestamp: 0, data: []},
                 pages: {timestamp: 0, data: []},
@@ -25,7 +26,17 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                 variables: {timestamp: 0, data: []}
             };
 
+            this.provider.setStore(this);
+
             this.provider.start();
+        },
+
+        getUser: function(){
+            return this.store.user.data;
+        },
+
+        setUser: function(user){
+            this.store.user.data = user;
         },
 
         /**
@@ -33,13 +44,18 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * an empty list or an empty object is returned which is filled when the models are provided by the apiProvider.
          * @param type The type of the model to load.
          * @param id Optional the id of the model to load. If undefined, all instances will be returned.
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          * @returns list|object A list of models or a single instance.
          */
-        get: function (type, id) {
+        get: function (type, id, identifier) {
             var self = this;
+
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
             if (type in self.store) {
                 // Check if data is already fetched
-                if (self.store[type].timestamp == 0 && !self.store[type].loading) {
+                if (self.store[type].timestamp === 0 && !self.store[type].loading) {
                     self.store[type].loading = true;
 
                     // Fetch data via the API
@@ -53,10 +69,13 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                         self.store[type].timestamp = date.getTime();
 
                         // Remove dummy flag
-                        angular.forEach(self.store[type].data, function (value) {
-                            value['$dummy'] = false;
-                        });
+                        //angular.forEach(self.store[type].data, function (value) {
+                        //    value.$dummy = false;
+                        //});
 
+                        self.store[type].loading = false;
+                    }, function(){
+                        // Set to false, so it can be retried
                         self.store[type].loading = false;
                     });
                 }
@@ -68,7 +87,9 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     // Return single item, or null
                     var item = null;
                     angular.forEach(self.store[type].data, function (value) {
-                        if (value.id == id) item = value;
+                        if (value[identifier] == id) {
+                            item = value;
+                        }
                     });
 
                     //if (item == null) {
@@ -79,8 +100,8 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     return item;
                 }
             } else {
-                // Not valid, return null
-                return null;
+                // Not valid, return null or empty list
+                return angular.isUndefined(id) ? [] : null;
             }
         },
 
@@ -89,25 +110,30 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object to add
          * @param object The object to add
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the addition is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        add: function (type, object, skipApi) {
+        add: function (type, object, skipApi, identifier) {
             var provider = this.provider;
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'add()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
             var add = function(){
-                var current = self.get(type, object.id);
-                if(angular.isUndefined(current)){
+                var current = self.get(type, object[identifier], identifier);
+                if(current === null){
                     // Really new
                     self.get(type).push(object);
                 }else{
                     // Not new, update instead
                     self.update(type, object, skipApi);
                 }
-            }
+            };
 
             return $q(function (resolve, reject) {
                 if(skipApi){
@@ -116,7 +142,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else{
                     // Call the API provider
-                    provider.add(type, object).then(function (resultingObject) {
+                    provider.add(type, object, identifier).then(function (resultingObject) {
                         // Succesfully added -> add to store
                         add(resultingObject);
                         resolve(resultingObject);
@@ -133,14 +159,21 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object which is updated
          * @param object The updated object
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the update is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        update: function (type, object, skipApi) {
+        update: function (type, object, skipApi, identifier) {
             var provider = this.provider;
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'update()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
+
+
             return $q(function (resolve, reject) {
-                var current = self.get(type, object.id);
-                if(current == null){
+                var current = self.get(type, object[identifier]);
+                if(current === null){
                     reject("Fatal: update called, but object does not exist");
                 }
 
@@ -150,7 +183,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else {
                     // Call the API provider
-                    provider.update(type, object).then(function (resultingObject) {
+                    provider.update(type, object, identifier).then(function (resultingObject) {
                         // Succesfully updated -> update in store
                         angular.merge(current, resultingObject);
                         resolve(resultingObject);
@@ -167,10 +200,15 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
          * @param type The type of the object which is removed
          * @param object The to be removed object
          * @param skipApi bool Optional, whether to skip the call to the api or not. Typical use case for this is when
-         * the removal is originated from the server.
+         * the addition is originated from the server. Defaults to false
+         * @param identifier string Optional, the name of the attribute which uniquely identifies the object. Defaults to 'id'.
          */
-        remove: function (type, object, skipApi) {
+        remove: function (type, object, skipApi, identifier) {
             var self = this;
+            // Determine the name of the identifying attribute
+            identifier = angular.isUndefined(identifier) ? 'id' : identifier;
+
+            console.log('store', 'remove()', 'type=', type, 'identifier=', identifier, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             var remove = function(){
@@ -188,7 +226,7 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
                     resolve(object);
                 }else {
                     // Call the API provider
-                    self.provider.remove(type, object).then(function (resultingObject) {
+                    self.provider.remove(type, object, identifier).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
                         resolve(resultingObject);
@@ -219,6 +257,5 @@ angular.module('pimaticApp').factory('store', function ($q, $injector, apiProvid
         }*/
     };
 
-    store.reset();
     return store;
-});
+}]);

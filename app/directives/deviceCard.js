@@ -1,4 +1,4 @@
-angular.module('pimaticApp').directive('deviceCard', function (toast) {
+angular.module('pimaticApp').directive('deviceCard', ['toast', function (toast) {
     return {
         scope: {
             device: '='
@@ -9,7 +9,9 @@ angular.module('pimaticApp').directive('deviceCard', function (toast) {
             $scope.getAttribute = function(name) {
                 var attribute = null;
                 angular.forEach($scope.device.attributes, function(value){
-                    if(value.name == name) attribute = value;
+                    if(value.name == name) {
+                        attribute = value;
+                    }
                 });
                 return attribute;
             };
@@ -47,4 +49,4 @@ angular.module('pimaticApp').directive('deviceCard', function (toast) {
              $scope.initAttributeWatchers();*/
         }
     };
-});
+}]);

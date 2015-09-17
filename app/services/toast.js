@@ -1,4 +1,4 @@
-angular.module('pimaticApp').factory('toast', function ($mdToast) {
+angular.module('pimaticApp').factory('toast', ['$mdToast', function ($mdToast) {
     return {
         show: function (message) {
             $mdToast.show($mdToast.simple().content(message));
@@ -16,4 +16,4 @@ angular.module('pimaticApp').factory('toast', function ($mdToast) {
             this.error('Fail: ' + action + ' ' + device.id);
         }
     };
-});
+}]);

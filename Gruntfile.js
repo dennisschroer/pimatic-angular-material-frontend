@@ -5,7 +5,13 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                banner: '/*! \n' +
+                ' * Name:        <%= pkg.name %> \n' +
+                ' * Description: <%= pkg.description %> \n' +
+                ' * Version:     <%= pkg.version %> \n' +
+                ' * Homepage:    <%= pkg.homepage %> \n' +
+                ' * Date:        <%= grunt.template.today("yyyy-mm-dd") %> \n' +
+                ' */\n'
             },
             build: {
                 src: 'dist/<%= pkg.name %>.js',
@@ -13,6 +19,15 @@ module.exports = function (grunt) {
             }
         },
         concat: {
+            options: {
+                banner: '/*! \n' +
+                ' * Name:        <%= pkg.name %> \n' +
+                ' * Description: <%= pkg.description %> \n' +
+                ' * Version:     <%= pkg.version %> \n' +
+                ' * Homepage:    <%= pkg.homepage %> \n' +
+                ' * Date:        <%= grunt.template.today("yyyy-mm-dd") %> \n' +
+                ' */\n'
+            },
             build: {
                 src: [
                     'app/app.js',
@@ -44,16 +59,39 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        jshint: {
+            all: [
+                'app/**/*.js',
+                'Gruntfile.js'
+            ],
+            options: {
+                curly: true,
+                latedef: true,
+                //undef: true,
+                //unused: true,
+                globals: {
+                    angular: true,
+                    console: true,
+                    module: true,
+                    describe: true,
+                    it: true,
+                    beforeEach: true,
+                }
+            }
         }
     });
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
 
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify']);
+    grunt.registerTask('default', ['dev']);
+    grunt.registerTask('dev', ['concat']);
     grunt.registerTask('test', ['karma']);
+    grunt.registerTask('build', ['jshint', 'karma', 'concat', 'uglify'])
 
 };
