@@ -25,14 +25,17 @@ First make sure all development dependencies are installed:
 
 	npm install
 
-A Grunt task is specified which should build the production files. Simply run the following command in the project root:
+A Grunt task is specified which should test the scripts and build the production files. Simply run the following command in the project root:
 
-    grunt
+    grunt build
 
 ## Testing
 Jasmine is used to unit test the frontend. Running the following command should run all tests:
 
     grunt test
+
+## Developing
+The
 
 ## References
 Pimatic: [http://pimatic.org/](http://pimatic.org/)

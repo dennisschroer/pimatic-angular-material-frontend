@@ -29,7 +29,17 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @param rememberMe bool Whether the user should be remembered. Defaults to false.
          * @returns promise A promise which will be resolved with the user object, or rejected with a message
          */
-        login: function(username, password, rememberMe) {
+        login: function (username, password, rememberMe) {
+            return $q(function (resolve, reject) {
+                reject("Not implemented");
+            });
+        },
+
+        /**
+         * Attempt to logout
+         * @returns promise A promise which will be resolved, or rejected with a message
+         */
+        logout: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
@@ -38,7 +48,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
         /**
          * Start the provider and reset all caches
          */
-        start: function(){
+        start: function () {
 
         },
 

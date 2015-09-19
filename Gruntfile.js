@@ -79,6 +79,36 @@ module.exports = function (grunt) {
                     beforeEach: true,
                 }
             }
+        },
+        replace: {
+            // Replace the version tag
+            buildJS: {
+                options: {
+                    patterns: [
+                        {
+                            match: 'version',
+                            replacement: '<%= pkg.version %>'
+                        }
+                    ]
+                },
+                files: [
+                    {expand: true, flatten: true, src: 'dist/<%= pkg.name %>.js', dest: 'dist'},
+                ]
+            },
+            // Build index.html which uses the minified versions of the scripts
+            buildHTML: {
+                options: {
+                    patterns: [
+                        {
+                            match: /(?!\.min)([\w]{4})(\.js)/g,
+                            replacement: '$1.min.js'
+                        }
+                    ]
+                },
+                files: [
+                    {flatten: true, src: 'dev.html', dest: 'index.html'}
+                ]
+            }
         }
     });
 
@@ -87,11 +117,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-replace');
 
     // Default task(s).
     grunt.registerTask('default', ['dev']);
-    grunt.registerTask('dev', ['concat']);
+    grunt.registerTask('dev', ['concat', 'replace']);
     grunt.registerTask('test', ['karma']);
-    grunt.registerTask('build', ['jshint', 'karma', 'concat', 'uglify'])
-
+    grunt.registerTask('build', ['jshint', 'karma', 'concat', 'replace', 'uglify']);
 };

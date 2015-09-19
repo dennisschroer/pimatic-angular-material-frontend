@@ -1,6 +1,5 @@
 describe('store', function(){
     beforeEach(module("pimaticApp.configuration", function ($provide) {
-        // Attempt to override the myConstant value that gets passed to config
         $provide.constant("apiProviderName", "fixtureProvider");
     }));
     beforeEach(module('pimaticApp.data'));
@@ -11,19 +10,18 @@ describe('store', function(){
     beforeEach(inject(function(_store_, _$rootScope_){
         store = _store_;
         $rootScope = _$rootScope_;
+        store.reset();
     }));
 
     it('should not contain data at the start', function(){
-        expect(store.get('devices')).toEqual([]);
-        expect(store.get('devices', 1)).toBe(null);
+        expect(store.get('devices', undefined, true)).toEqual([]);
+        expect(store.get('devices', 1, true)).toBe(null);
     });
 
     it('should contain added data', function(done){
-        store.reset();
         // Add some data
         var data = {name:'dummy', id:1};
         store.add('devices', data, true).then(function(){
-            console.log(store.get('devices'));
             expect(store.get('devices', 1)).toEqual(data);
             expect(store.get('devices', 2)).toBeNull();
             expect(store.get('devices')).toEqual([data]);
@@ -42,19 +40,19 @@ describe('store', function(){
                 done();
             }, function(){
                 done.fail();
-            })
+            });
             $rootScope.$digest();
         });
 
         it('should correctly update data', function(done) {
-            var data2 = {name: 'dummy', foo: 'foo', id: 1}
+            var data2 = {name: 'dummy', foo: 'foo', id: 1};
             store.update('devices', data2, true).then(function () {
                 expect(store.get('devices', 1)).toEqual(data2);
                 done();
             }, function () {
                 done.fail();
             });
-            $rootScope.$digest();
+            //$rootScope.$digest();
         });
 
         it('should correctly update partial data', function(done) {
@@ -64,7 +62,7 @@ describe('store', function(){
             }, function(){
                 done.fail();
             });
-            $rootScope.$digest();
+            //$rootScope.$digest();
         });
 
         it('should fail when updating non-existing data', function(done) {
@@ -83,7 +81,6 @@ describe('store', function(){
             }, function(){
                 done.fail();
             });
-            $rootScope.$digest();
         });
     });
 

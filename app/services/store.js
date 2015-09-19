@@ -4,7 +4,7 @@
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProviderName', function ($q, $injector, apiProviderName) {
+angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', 'apiProviderName', function ($q, $injector, $log, apiProviderName) {
     var store = {
         // Retrieve the provider instance from the injector
         provider: $injector.get(apiProviderName),
@@ -15,9 +15,9 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
          * Reset the store and retreive all objects from the API provider again
          */
         reset: function(){
-            console.log('=== STORE RESET ===');
+            $log.debug('=== STORE RESET ===');
 
-            this.store =  {
+            this.store = {
                 user: {timestamp: 0, loading: false, data: null},
                 devices: {timestamp: 0, loading: false, data: []},
                 groups: {timestamp: 0, loading: false, data: []},
@@ -51,9 +51,10 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
          * an empty list or an empty object is returned which is filled when the models are provided by the apiProvider.
          * @param type The type of the model to load.
          * @param id Optional the id of the model to load. If undefined, all instances will be returned.
+         * @param skipApi Optional indicates if the call to the API should be skipped. Defaults to false;
          * @returns list|object A list of models or a single instance.
          */
-        get: function (type, id) {
+        get: function (type, id, skipApi) {
             var self = this;
 
             if (type in self.store) {
@@ -62,20 +63,20 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
                     self.store[type].loading = true;
 
                     // Fetch data via the API
-                    self.provider.load(type).then(function (data) {
-                        console.log(type, data);
-
+                    if (!skipApi) {
+                        self.provider.load(type).then(function (data) {
                         // Merge the objects
-                        self.store[type].data =  data;
+                        self.store[type].data = data;
 
                         var date = new Date();
                         self.store[type].timestamp = date.getTime();
 
                         self.store[type].loading = false;
-                    }, function(){
+                    }, function () {
                         // Set to false, so it can be retried
                         self.store[type].loading = false;
                     });
+                }
                 }
 
                 if (angular.isUndefined(id)) {
@@ -114,33 +115,38 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
             var provider = this.provider;
             var self = this;
 
-            console.log('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
+            $log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
             var add = function(){
-                var current = self.get(type, object.id);
+                var current = self.get(type, object.id, skipApi);
                 if(current === null){
                     // Really new
-                    self.get(type).push(object);
+                    return $q(function(resolve){
+                        self.get(type, undefined, skipApi).push(object);
+                        resolve(object);
+                    });
                 }else{
                     // Not new, update instead
-                    self.update(type, object, skipApi);
+                    return self.update(type, object, skipApi);
                 }
             };
 
             return $q(function (resolve, reject) {
                 if(skipApi){
                     // Add directly
-                    add(object);
-                    resolve(object);
+                    add(object).then(function(result){
+                        resolve(result);
+                    });
                 }else{
                     // Call the API provider
                     provider.add(type, object).then(function (resultingObject) {
                         // Succesfully added -> add to store
-                        add(resultingObject);
-                        resolve(resultingObject);
+                        add(resultingObject).then(function(result){
+                            resolve(result);
+                        });
                     }, function (message) {
                         // Not added
                         reject(message);
@@ -161,13 +167,14 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
             var provider = this.provider;
             var self = this;
 
-            console.log('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
+            $log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
 
             return $q(function (resolve, reject) {
                 var current = self.get(type, object.id);
                 if(current === null){
                     reject("Fatal: update called, but object does not exist");
+                    return;
                 }
 
                 if(skipApi){
@@ -198,9 +205,7 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', 'apiProvi
         remove: function (type, object, skipApi) {
             var self = this;
 
-            console.log('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
-
-            console.log(self.store);
+            $log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             if(!(type in self.store)){
                 return $q(function(resolve, reject){

@@ -13,6 +13,14 @@ angular.module('pimaticApp.configuration').constant('pimaticHost', '');
  * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
 angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvider');
+/**
+ * If debug is true, debug messages will be
+ */
+angular.module('pimaticApp.configuration').constant('debug', true);
+/**
+ * The title of the application.
+ */
+angular.module('pimaticApp.configuration').constant('title', 'Pimatic Material');
 
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
@@ -20,11 +28,13 @@ angular.module('pimaticApp.data', ['pimaticApp.configuration']);
 angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data']);
 
 
-angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider) {
+angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', function ($routeProvider, $logProvider, debug) {
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
     }).when('/landing', {
+    }).when('/about', {
+        templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
         controller: 'LoginController'
@@ -41,28 +51,36 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
         templateUrl: 'partials/settings/groups/edit.html',
         controller: 'GroupsEditController'
     }).when('/settings/devices', {
-        templateUrl: 'partials/settings/devices.html',
+        templateUrl: 'partials/settings/devices/index.html',
         controller: 'DevicesController'
     }).otherwise({
         redirectTo: '/landing'
     });
+
+    $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store", "auth", "apiProviderName", function ($rootScope, $location, $injector, store, auth, apiProviderName) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "title", function ($rootScope, $location, $injector, $log, store, auth, title) {
     $rootScope.store = store;
     $rootScope.auth = auth;
+    $rootScope.title = title;
+    // Version
+    $rootScope.version = '@@version';
+    if($rootScope.version.substr(0,2) == '@@'){
+        $rootScope.version = 'dev';
+    }
 
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;
 
     $rootScope.setState = function(state){
         $rootScope.state = state;
-        if(state == 'done'){
+        if(state == 'done' || state == 'unauthenticated'){
             if($rootScope.redirectedFrom !== null){
                 $location.path(this.redirectedFrom);
                 $rootScope.redirectedFrom = null;
             }else{
-                $location.path("home");
+                $location.path(state=='unauthenticated' ? 'login' : 'home');
             }
         }
     };
@@ -78,20 +96,20 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "store
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
         if($rootScope.state == 'starting'){
             if (next.originalPath != "/landing") {
-                console.log('App', 'Application is loading, redirecting to the landing page');
+                $log.debug('App', 'Application is loading, redirecting to the landing page');
                 $rootScope.redirectedFrom = next.originalPath;
                 $location.path("/landing");
             }
         }else{
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
-                if (next.originalPath == "/login") {
+                if (next.originalPath == "login") {
                     // already going to #login, no redirect needed
                 } else {
                     // not going to #login, we should redirect now
-                    console.log('pimaticApp', 'Redirecting to login...');
+                    $log.debug('pimaticApp', 'Redirecting to login...');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("/login");
+                    $location.path("login");
                 }
             }
         }

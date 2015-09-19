@@ -1,4 +1,4 @@
-angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootScope', 'baseProvider', 'pimaticHost', 'toast', function ($http, $q, $rootScope, baseProvider, pimaticHost, toast) {
+angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootScope', '$log', 'baseProvider', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseProvider, pimaticHost, toast) {
 
     /*
      * Data via this provider comes asynchronously via a websocket, while the data is requested by the application
@@ -21,7 +21,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
         /**
          * Start the provider and reset all caches
          */
-        start: function(){
+        start: function () {
             cache = {};
             this.setupSocket();
         },
@@ -30,7 +30,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             var store = this.store;
             var self = this;
 
-            if(this.socket!==null){
+            if (this.socket !== null) {
                 this.socket.disconnect();
             }
 
@@ -44,7 +44,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             // Handshaking messages
             this.socket.on('connect', function () {
-                console.log('apiProvider', 'connect');
+                $log.debug('apiProvider', 'connect');
 
                 self.socket.emit('call', {
                     id: 'errorMessageCount',
@@ -68,9 +68,24 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
                     params: {}
                 });
             });
+
+            this.socket.on('error', function (error) {
+                $log.debug('apiProvider', 'error', error);
+                $rootScope.$apply(function () {
+                    //self.store.setUser(msg);
+                    // This triggers a redirect
+                    $rootScope.setState('unauthenticated');
+                });
+            });
+
+            this.socket.on('disconnect', function () {
+                $log.debug('apiProvider', 'disconnect');
+            });
+
+
             this.socket.on('hello', function (msg) {
-                console.log('apiProvider', 'hello', msg);
-                $rootScope.$apply(function(){
+                $log.debug('apiProvider', 'hello', msg);
+                $rootScope.$apply(function () {
                     self.store.setUser(msg);
                     // This triggers a redirect
                     $rootScope.setState('done');
@@ -79,26 +94,26 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             // Call result
             this.socket.on('callResult', function (msg) {
-                console.log('apiProvider', 'callResult', msg);
+                $log.debug('apiProvider', 'callResult', msg);
 
-                switch(msg.id) {
+                switch (msg.id) {
                     case 'errorMessageCount':
                         //if(msg.success)
-                            //pimatic.errorCount(msg.result.count);
+                        //pimatic.errorCount(msg.result.count);
                         break;
                     case 'guiSettings':
                         /*if(msg.success)
-                            guiSettings = msg.result.guiSettings
-                        angular.forEach(guiSettings.defaults, function(value, key){
-                            unless guiSettings.config[k]?
-                                guiSettings.config[k] = v
-                        }
-                        pimatic.guiSettings(guiSettings.config)*/
+                         guiSettings = msg.result.guiSettings
+                         angular.forEach(guiSettings.defaults, function(value, key){
+                         unless guiSettings.config[k]?
+                         guiSettings.config[k] = v
+                         }
+                         pimatic.guiSettings(guiSettings.config)*/
                         break;
                     case 'updateProcessStatus':
                         /*info = msg.result.info
-                        pimatic.updateProcessStatus(info.status)
-                        pimatic.updateProcessMessages(info.messages)*/
+                         pimatic.updateProcessStatus(info.status)
+                         pimatic.updateProcessMessages(info.messages)*/
                         break;
                 }
             });
@@ -106,34 +121,34 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             // Incoming models
             this.socket.on('devices', function (devices) {
-                console.log('apiProvider', 'devices', devices);
+                $log.debug('apiProvider', 'devices', devices);
                 self.handleIncomingData('devices', devices);
             });
 
             this.socket.on('rules', function (rules) {
-                console.log('apiProvider', 'rules', rules);
+                $log.debug('apiProvider', 'rules', rules);
                 self.handleIncomingData('rules', rules);
             });
 
             this.socket.on('variables', function (variables) {
-                console.log('apiProvider', 'variables', variables);
+                $log.debug('apiProvider', 'variables', variables);
                 self.handleIncomingData('variables', variables);
             });
 
             this.socket.on('pages', function (pages) {
-                console.log('apiProvider', 'pages', pages);
+                $log.debug('apiProvider', 'pages', pages);
                 self.handleIncomingData('pages', pages);
             });
 
             this.socket.on('groups', function (groups) {
-                console.log('apiProvider', 'groups', groups);
+                $log.debug('apiProvider', 'groups', groups);
                 self.handleIncomingData('groups', groups);
             });
 
 
             // Changes
             this.socket.on('deviceAttributeChanged', function (attrEvent) {
-                console.log('apiProvider', 'deviceAttributeChanged', attrEvent);
+                $log.debug('apiProvider', 'deviceAttributeChanged', attrEvent);
                 $rootScope.$apply(function () {
                     var device = store.get('devices', attrEvent.deviceId);
                     if (device !== null) {
@@ -148,10 +163,10 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
                 });
             });
             this.socket.on("variableValueChanged", function (varValEvent) {
-                console.log('apiProvider', "variableValueChanged", varValEvent);
+                $log.debug('apiProvider', "variableValueChanged", varValEvent);
                 //$rootScope.$apply(function () {
                 var v = store.get('variables', varValEvent.variableName);
-                if (v !== null){
+                if (v !== null) {
                     v.value = varValEvent.variableValue;
                 }
                 //});
@@ -159,130 +174,130 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             // Devices
             this.socket.on("deviceChanged", function (device) {
-                console.log('apiProvider', "deviceChanged", device);
+                $log.debug('apiProvider', "deviceChanged", device);
                 $rootScope.$apply(function () {
                     store.update('devices', device, true);
                 });
             });
             this.socket.on("deviceRemoved", function (device) {
-                console.log('apiProvider', "deviceRemoved", device);
+                $log.debug('apiProvider', "deviceRemoved", device);
                 $rootScope.$apply(function () {
                     store.remove('devices', device, true);
                 });
             });
             this.socket.on("deviceAdded", function (device) {
-                console.log('apiProvider', "deviceAdded", device);
+                $log.debug('apiProvider', "deviceAdded", device);
                 $rootScope.$apply(function () {
                     store.add('devices', device, true);
                 });
             });
             this.socket.on("deviceOrderChanged", function (order) {
-                console.log('apiProvider', "deviceOrderChanged", order);
+                $log.debug('apiProvider', "deviceOrderChanged", order);
             });
 
             // Pages
             this.socket.on("pageChanged", function (page) {
-                console.log('apiProvider', "pageChanged", page);
+                $log.debug('apiProvider', "pageChanged", page);
                 $rootScope.$apply(function () {
                     store.update('pages', page, true);
                 });
             });
             this.socket.on("pageRemoved", function (page) {
-                console.log('apiProvider', "pageRemoved", page);
+                $log.debug('apiProvider', "pageRemoved", page);
                 $rootScope.$apply(function () {
                     store.remove('pages', page, true);
                 });
             });
             this.socket.on("pageAdded", function (page) {
-                console.log('apiProvider', "pageAdded", page);
+                $log.debug('apiProvider', "pageAdded", page);
                 $rootScope.$apply(function () {
                     store.add('pages', page, true);
                 });
             });
             this.socket.on("pageOrderChanged", function (order) {
-                console.log('apiProvider', "pageOrderChanged", order);
+                $log.debug('apiProvider', "pageOrderChanged", order);
             });
 
 
             // Groups
             this.socket.on("groupChanged", function (group) {
-                console.log('apiProvider', "groupChanged", group);
+                $log.debug('apiProvider', "groupChanged", group);
                 $rootScope.$apply(function () {
                     store.update('groups', group, true);
                 });
             });
             this.socket.on("groupRemoved", function (group) {
-                console.log('apiProvider', "groupRemoved", group);
+                $log.debug('apiProvider', "groupRemoved", group);
                 $rootScope.$apply(function () {
                     store.remove('groups', group, true);
                 });
             });
             this.socket.on("groupAdded", function (group) {
-                console.log('apiProvider', "groupAdded", group);
+                $log.debug('apiProvider', "groupAdded", group);
                 $rootScope.$apply(function () {
                     store.add('groups', group, true);
                 });
             });
             this.socket.on("groupOrderChanged", function (order) {
-                console.log('apiProvider', "groupOrderChanged", order);
+                $log.debug('apiProvider', "groupOrderChanged", order);
             });
 
 
             // Rules
             this.socket.on("ruleChanged", function (rule) {
-                console.log('apiProvider', "ruleChanged", rule);
+                $log.debug('apiProvider', "ruleChanged", rule);
                 $rootScope.$apply(function () {
                     store.update('rules', rule, true);
                 });
             });
             this.socket.on("ruleAdded", function (rule) {
-                console.log('apiProvider', "ruleAdded", rule);
+                $log.debug('apiProvider', "ruleAdded", rule);
                 $rootScope.$apply(function () {
                     store.add('rules', rule, true);
                 });
             });
             this.socket.on("ruleRemoved", function (rule) {
-                console.log('apiProvider', "ruleRemoved", rule);
+                $log.debug('apiProvider', "ruleRemoved", rule);
                 $rootScope.$apply(function () {
                     store.remove('rules', rule, true);
                 });
             });
             this.socket.on("ruleOrderChanged", function (order) {
-                console.log('apiProvider', "ruleOrderChanged", order);
+                $log.debug('apiProvider', "ruleOrderChanged", order);
             });
 
             // Variables
             this.socket.on("variableChanged", function (variable) {
-                console.log('apiProvider', "variableChanged", variable);
+                $log.debug('apiProvider', "variableChanged", variable);
                 $rootScope.$apply(function () {
                     store.update('variables', variable, true);
                 });
             });
             this.socket.on("variableAdded", function (variable) {
-                console.log('apiProvider', "variableAdded", variable);
+                $log.debug('apiProvider', "variableAdded", variable);
                 $rootScope.$apply(function () {
                     store.add('variables', variable, true);
                 });
             });
             this.socket.on("variableRemoved", function (variable) {
-                console.log('apiProvider', "variableRemoved", variable);
+                $log.debug('apiProvider', "variableRemoved", variable);
                 $rootScope.$apply(function () {
                     store.remove('variables', variable, true);
                 });
             });
             this.socket.on("variableOrderChanged", function (order) {
-                console.log('apiProvider', "variableOrderChanged", order);
+                $log.debug('apiProvider', "variableOrderChanged", order);
             });
 
             this.socket.on("updateProcessStatus", function (statusEvent) {
-                console.log('apiProvider', "updateProcessStatus", statusEvent);
+                $log.debug('apiProvider', "updateProcessStatus", statusEvent);
             });
             this.socket.on("updateProcessMessage", function (msgEvent) {
-                console.log('apiProvider', "updateProcessMessage", msgEvent);
+                $log.debug('apiProvider', "updateProcessMessage", msgEvent);
             });
 
             this.socket.on('messageLogged', function (entry) {
-                console.log('apiProvider', "messageLogged", entry);
+                $log.debug('apiProvider', "messageLogged", entry);
                 if (entry.level != 'debug') {
                     // Show toast
                     toast.show(entry.msg);
@@ -300,13 +315,13 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
          * @param rememberMe bool Whether the user should be remembered. Defaults to false.
          * @returns promise A promise which will be resolved with the user object, or rejected with a message
          */
-        login: function(username, password, rememberMe) {
+        login: function (username, password, rememberMe) {
             return $q(function (resolve, reject) {
                 var data = {
                     username: username,
                     password: password
                 };
-                if(rememberMe){
+                if (rememberMe) {
                     data.rememberMe = true;
                 }
 
@@ -327,16 +342,32 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             });
         },
 
-        handleIncomingData: function(type, data) {
-            if(type in cache && 'promises' in cache[type]){
+        /**
+         * Attempt to logout
+         * @returns promise A promise which will be resolved, or rejected with a message
+         */
+        logout: function () {
+            return $q(function (resolve, reject) {
+                $http.get(pimaticHost + '/logout')
+                    .success(function () {
+                        resolve();
+                    }).error(function () {
+                        // Succesfull logout gives a 401
+                        resolve();
+                    });
+            });
+        },
+
+        handleIncomingData: function (type, data) {
+            if (type in cache && 'promises' in cache[type]) {
                 // Resolve promises
-                angular.forEach(cache[type].promises, function(deffered){
+                angular.forEach(cache[type].promises, function (deffered) {
                     deffered.resolve(data);
                 });
 
                 // Clear cache
                 delete cache[type];
-            }else{
+            } else {
                 // Cache data
                 cache[type] = {};
                 cache[type].data = data;
@@ -421,8 +452,8 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
          */
         load: function (type) {
             // Check if the data is cached
-            if(type in cache && 'data' in cache[type]){
-                var promise = $q(function(resolve){
+            if (type in cache && 'data' in cache[type]) {
+                var promise = $q(function (resolve) {
                     // Resolve immediately
                     resolve(cache[type].data);
                 });
@@ -432,17 +463,17 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
                 // Return the promise
                 return promise;
-            }else{
+            } else {
                 // Data is not cached. We will create a promise and store this promise
 
                 // Create a promise
                 var deffered = $q.defer();
 
                 // Add the promise
-                if(angular.isUndefined(cache[type])){
+                if (angular.isUndefined(cache[type])) {
                     cache[type] = {};
                 }
-                if(angular.isUndefined(cache[type].promises)){
+                if (angular.isUndefined(cache[type].promises)) {
                     cache[type].promises = [];
                 }
                 cache[type].promises.push(deffered);

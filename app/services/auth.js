@@ -7,24 +7,21 @@
 angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location', '$q', '$rootScope', function (store, $injector, $location, $q, $rootScope) {
     var auth = {
         store: store,
-        redirectedFrom: null,
 
         isLoggedIn: function () {
             return store.getUser() !== null;
         },
 
-        setupWatchers: function(){
+        /*setupWatchers: function(){
             $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
                 if(newUser === oldUser) return;
-
-                console.log('auth', 'New user: ', newUser);
 
                 // New user or logout, reset the store
                 if(oldUser !== null){
                     store.reload();
                 }
             }, true)
-        },
+        },*/
 
         /*setUser: function (user, reset) {
             console.log('auth', 'New user: ', user);
@@ -54,6 +51,7 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
             var self = this;
             return $q(function(resolve, reject){
                 self.store.provider.login(username, password, rememberMe).then(function(user){
+                    store.reload();
                     store.setUser(user);
                     //store.add('user',user);
                     //self.setUser(user, true);
@@ -62,12 +60,21 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
             });
         },
 
-        setRedirectedFrom: function(path){
-            this.redirectedFrom = path;
+        logout: function(){
+            var self = this;
+            return $q(function(resolve, reject) {
+                self.store.provider.logout().then(function(user){
+                    // Remove user
+                    store.setUser(null);
+                    // Reset store
+                    store.reset();
+                    // Resolve
+                    resolve();
+                }, reject);
+
+            });
         },
     };
-
-    auth.setupWatchers();
 
     return auth;
 }]);

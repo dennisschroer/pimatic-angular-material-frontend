@@ -6,7 +6,7 @@
                 <div class="md-list-item-text">
                     <h3>{{store.get('devices', deviceId).name}}</h3>
 
-                    <p>{{store.get('devices', deviceId).id}} ({{store.get('devices', deviceId).config.class}})</p>
+                    <p>id: {{store.get('devices', deviceId).id}} (class: {{store.get('devices', deviceId).config.class}})</p>
                 </div>
                 <md-divider ng-if="!$last"></md-divider>
             </md-list-item>
@@ -19,7 +19,7 @@
                 <div class="md-list-item-text">
                     <h3>{{store.get('devices', deviceId).name}}</h3>
 
-                    <p>{{store.get('devices', deviceId).id}} ({{store.get('devices', deviceId).config.class}})</p>
+                    <p>id: {{store.get('devices', deviceId).id}} (class: {{store.get('devices', deviceId).config.class}})</p>
                 </div>
             </md-list-item>
         </md-list>
