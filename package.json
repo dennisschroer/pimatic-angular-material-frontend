@@ -7,7 +7,7 @@
     "assets",
     "dist",
     "partials",
-    "index.html",
+    "index.tmpl.html",
     "angular-material-frontend.coffee",
     "angular-material-frontend-config-schema.coffee",
     "bower.json",

@@ -2,3 +2,4 @@ lib/bower
 node_modules
 .idea
 .js
+index.html

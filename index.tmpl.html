@@ -65,7 +65,8 @@
     <script src="lib/bower/socket.io-client/socket.io.js"></script>
 
     <script src="dist/pimatic-angular-material-frontend.min.js"></script>
-    <script src="assets/config.min.js"></script>
-
+    <script>
+        angular.module('pimaticApp.configuration').constant('debug', '{{debug}}');
+    </script>
 </body>
 </html>

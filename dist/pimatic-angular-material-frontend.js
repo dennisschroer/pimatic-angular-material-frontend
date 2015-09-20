@@ -23,11 +23,11 @@ angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvi
 /**
  * If debug is true, debug messages will be
  */
-angular.module('pimaticApp.configuration').constant('debug', true);
+//angular.module('pimaticApp.configuration').constant('debug', true);
 /**
  * The title of the application.
  */
-angular.module('pimaticApp.configuration').constant('title', 'Pimatic Material');
+//angular.module('pimaticApp.configuration').constant('title', 'Pimatic Material');
 
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
@@ -64,6 +64,7 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
         redirectTo: '/landing'
     });
 
+    debug = debug != 'false';
     $logProvider.debugEnabled(debug);
 }]);
 

@@ -106,7 +106,7 @@ module.exports = function (grunt) {
                     ]
                 },
                 files: [
-                    {flatten: true, src: 'dev.html', dest: 'index.html'}
+                    {flatten: true, src: 'dev.html', dest: 'index.tmpl.html'}
                 ]
             }
         }

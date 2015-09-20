@@ -7,14 +7,15 @@ module.exports = (env) ->
   class MobileMaterialFrontend extends env.plugins.Plugin
     # ###init the frontend:
     init: (@app, @framework, @config) ->
-      content = "angular.module('pimaticApp.configuration').constant('title', '" + @config.customTitle + "');" +
-        "angular.module('pimaticApp.configuration').constant('debug', " + @config.debug + ");"
-
-      fs.writeFile __dirname + "/assets/config.min.js", content,  (err) ->
-        if err
-          env.logger.error err
-        else
-          env.logger.info "Configuration loaded"
+      # Prepare index.html
+      fs.readFile __dirname + '/index.tmpl.html', 'utf8', (err,data) =>
+        if (err)
+          return env.logger.error err
+        data = data.replace('{{title}}', @config.customTitle);
+        data = data.replace('{{debug}}', @config.debug);
+        fs.writeFile __dirname + '/index.html', data, 'utf8', (err) ->
+          if (err)
+            return env.logger.error err
 
       # * Static assets
       @app.use @config.mountPath, express.static(__dirname)
