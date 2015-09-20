@@ -1,7 +1,7 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
  * Description: Provides an AngularJS webinterface for pimatic with material design. 
- * Version:     0.0.1 
+ * Version:     0.1.0 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
  * Date:        2015-09-20 
  */
@@ -72,7 +72,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
-    $rootScope.version = '0.0.1';
+    $rootScope.version = '0.1.0';
     if($rootScope.version.substr(0,2) == '@@'){
         $rootScope.version = 'dev';
     }
