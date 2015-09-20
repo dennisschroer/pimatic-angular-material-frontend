@@ -16,6 +16,7 @@ module.exports = (env) ->
         fs.writeFile __dirname + '/index.html', data, 'utf8', (err) ->
           if (err)
             return env.logger.error err
+          env.logger.info "Generated index.html"
 
       # * Static assets
       @app.use @config.mountPath, express.static(__dirname)
@@ -25,7 +26,7 @@ module.exports = (env) ->
           # SocketIO
           req.url.match(/^\/socket\.io\/.*$/)? or
           # Application
-          req.url.match(new RegExp('^' + @config.path + '.*'))?
+          req.url.match(new RegExp('^' + @config.mountPath + '.*'))?
         )
       )
 

@@ -3,7 +3,7 @@
  * Description: Provides an AngularJS webinterface for pimatic with material design. 
  * Version:     0.0.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-09-19 
+ * Date:        2015-09-20 
  */
 /**
  * Create the different modules.
@@ -68,10 +68,9 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "title", function ($rootScope, $location, $injector, $log, store, auth, title) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth, title) {
     $rootScope.store = store;
     $rootScope.auth = auth;
-    $rootScope.title = title;
     // Version
     $rootScope.version = '0.0.1';
     if($rootScope.version.substr(0,2) == '@@'){
@@ -84,11 +83,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.setState = function(state){
         $rootScope.state = state;
         if(state == 'done' || state == 'unauthenticated'){
-            if($rootScope.redirectedFrom !== null){
-                $location.path(this.redirectedFrom);
+            if(!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null){
+                $location.path($rootScope.redirectedFrom);
+                $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
                 $rootScope.redirectedFrom = null;
             }else{
-                $location.path(state=='unauthenticated' ? 'login' : 'home');
+                $log.debug('New state:', state, 'Redirecting to ', state=='unauthenticated' ? '/login' : '/home');
+                $location.path(state=='unauthenticated' ? '/login' : '/home');
             }
         }
     };
@@ -111,13 +112,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
         }else{
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
-                if (next.originalPath == "login") {
+                if (next.originalPath == "/login") {
                     // already going to #login, no redirect needed
                 } else {
                     // not going to #login, we should redirect now
                     $log.debug('pimaticApp', 'Redirecting to login...');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("login");
+                    $location.path("/login");
                 }
             }
         }
@@ -157,6 +158,25 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
         start: function () {
             cache = {};
             this.setupSocket();
+        },
+
+        /**
+         * Apply changes by executing the given function
+         * @param fn
+         */
+        apply: function (fn) {
+            // This is a little hack which makes sure that $digest is only called if it is not already running
+            // This is based on the solution found here:
+            // http://stackoverflow.com/questions/14700865/node-js-angularjs-socket-io-connect-state-and-manually-disconnect
+            //
+            // It seems that sometimes after executing a device action (for example by calling GET api/device/dummy/turnOn),
+            // the response of this call comes at the same time (or in the same cycle) as the received updated via the
+            // socket, resulting in errors if you call $apply there. I'm not sure if it also happens in other cases.
+            if($rootScope.$$phase){
+                fn();
+            }else{
+                $rootScope.$apply(fn);
+            }
         },
 
         setupSocket: function () {
@@ -204,7 +224,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             this.socket.on('error', function (error) {
                 $log.debug('apiProvider', 'error', error);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     //self.store.setUser(msg);
                     // This triggers a redirect
                     $rootScope.setState('unauthenticated');
@@ -218,7 +238,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
             this.socket.on('hello', function (msg) {
                 $log.debug('apiProvider', 'hello', msg);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     self.store.setUser(msg);
                     // This triggers a redirect
                     $rootScope.setState('done');
@@ -282,7 +302,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             // Changes
             this.socket.on('deviceAttributeChanged', function (attrEvent) {
                 $log.debug('apiProvider', 'deviceAttributeChanged', attrEvent);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     var device = store.get('devices', attrEvent.deviceId);
                     if (device !== null) {
                         // Find attribute
@@ -297,30 +317,30 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             });
             this.socket.on("variableValueChanged", function (varValEvent) {
                 $log.debug('apiProvider', "variableValueChanged", varValEvent);
-                //$rootScope.$apply(function () {
-                var v = store.get('variables', varValEvent.variableName);
-                if (v !== null) {
-                    v.value = varValEvent.variableValue;
-                }
-                //});
+                self.apply(function () {
+                    var v = store.get('variables', varValEvent.variableName);
+                    if (v !== null) {
+                        v.value = varValEvent.variableValue;
+                    }
+                });
             });
 
             // Devices
             this.socket.on("deviceChanged", function (device) {
                 $log.debug('apiProvider', "deviceChanged", device);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.update('devices', device, true);
                 });
             });
             this.socket.on("deviceRemoved", function (device) {
                 $log.debug('apiProvider', "deviceRemoved", device);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.remove('devices', device, true);
                 });
             });
             this.socket.on("deviceAdded", function (device) {
                 $log.debug('apiProvider', "deviceAdded", device);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.add('devices', device, true);
                 });
             });
@@ -331,19 +351,19 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             // Pages
             this.socket.on("pageChanged", function (page) {
                 $log.debug('apiProvider', "pageChanged", page);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.update('pages', page, true);
                 });
             });
             this.socket.on("pageRemoved", function (page) {
                 $log.debug('apiProvider', "pageRemoved", page);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.remove('pages', page, true);
                 });
             });
             this.socket.on("pageAdded", function (page) {
                 $log.debug('apiProvider', "pageAdded", page);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.add('pages', page, true);
                 });
             });
@@ -355,19 +375,19 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             // Groups
             this.socket.on("groupChanged", function (group) {
                 $log.debug('apiProvider', "groupChanged", group);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.update('groups', group, true);
                 });
             });
             this.socket.on("groupRemoved", function (group) {
                 $log.debug('apiProvider', "groupRemoved", group);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.remove('groups', group, true);
                 });
             });
             this.socket.on("groupAdded", function (group) {
                 $log.debug('apiProvider', "groupAdded", group);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.add('groups', group, true);
                 });
             });
@@ -379,19 +399,19 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             // Rules
             this.socket.on("ruleChanged", function (rule) {
                 $log.debug('apiProvider', "ruleChanged", rule);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.update('rules', rule, true);
                 });
             });
             this.socket.on("ruleAdded", function (rule) {
                 $log.debug('apiProvider', "ruleAdded", rule);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.add('rules', rule, true);
                 });
             });
             this.socket.on("ruleRemoved", function (rule) {
                 $log.debug('apiProvider', "ruleRemoved", rule);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.remove('rules', rule, true);
                 });
             });
@@ -402,19 +422,19 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             // Variables
             this.socket.on("variableChanged", function (variable) {
                 $log.debug('apiProvider', "variableChanged", variable);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.update('variables', variable, true);
                 });
             });
             this.socket.on("variableAdded", function (variable) {
                 $log.debug('apiProvider', "variableAdded", variable);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.add('variables', variable, true);
                 });
             });
             this.socket.on("variableRemoved", function (variable) {
                 $log.debug('apiProvider', "variableRemoved", variable);
-                $rootScope.$apply(function () {
+                self.apply(function () {
                     store.remove('variables', variable, true);
                 });
             });

@@ -61,10 +61,9 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "title", function ($rootScope, $location, $injector, $log, store, auth, title) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth, title) {
     $rootScope.store = store;
     $rootScope.auth = auth;
-    $rootScope.title = title;
     // Version
     $rootScope.version = '@@version';
     if($rootScope.version.substr(0,2) == '@@'){
@@ -77,11 +76,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.setState = function(state){
         $rootScope.state = state;
         if(state == 'done' || state == 'unauthenticated'){
-            if($rootScope.redirectedFrom !== null){
-                $location.path(this.redirectedFrom);
+            if(!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null){
+                $location.path($rootScope.redirectedFrom);
+                $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
                 $rootScope.redirectedFrom = null;
             }else{
-                $location.path(state=='unauthenticated' ? 'login' : 'home');
+                $log.debug('New state:', state, 'Redirecting to ', state=='unauthenticated' ? '/login' : '/home');
+                $location.path(state=='unauthenticated' ? '/login' : '/home');
             }
         }
     };
@@ -104,13 +105,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
         }else{
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
-                if (next.originalPath == "login") {
+                if (next.originalPath == "/login") {
                     // already going to #login, no redirect needed
                 } else {
                     // not going to #login, we should redirect now
                     $log.debug('pimaticApp', 'Redirecting to login...');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("login");
+                    $location.path("/login");
                 }
             }
         }
