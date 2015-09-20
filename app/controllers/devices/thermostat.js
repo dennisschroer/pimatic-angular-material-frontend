@@ -1,3 +1,3 @@
-angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", function ($scope) {
+angular.module('pimaticApp.devices').controller('ThermostatController', [/*$scope",*/ function (/*$scope*/) {
 
 }]);

@@ -69,7 +69,7 @@ module.exports = function (grunt) {
                 curly: true,
                 latedef: true,
                 //undef: true,
-                //unused: true,
+                unused: true,
                 globals: {
                     angular: true,
                     console: true,

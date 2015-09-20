@@ -366,7 +366,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
          * @returns promise A promise which will be resolved, or rejected with a message
          */
         logout: function () {
-            return $q(function (resolve, reject) {
+            return $q(function (resolve) {
                 $http.get(pimaticHost + '/logout')
                     .success(function () {
                         resolve();
@@ -393,7 +393,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
             }
         },
 
-        deviceAction: function (deviceId, actionName, params) {
+        deviceAction: function (deviceId, actionName/*, params*/) {
             return $q(function (resolve, reject) {
                 $http.get(pimaticHost + '/api/device/' + deviceId + '/' + actionName)
                     .success(function (data) {
@@ -402,7 +402,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
                         } else {
                             reject();
                         }
-                    }).error(function (data) {
+                    }).error(function () {
                         reject();
                     });
             });

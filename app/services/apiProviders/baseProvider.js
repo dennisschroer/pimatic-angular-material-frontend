@@ -16,7 +16,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @param params object Additional parameters of the action.
          * @return promise A promise.
          */
-        deviceAction: function (deviceId, actionName, params) {
+        deviceAction: function () {
             return $q(function (resolve, reject) {
                 reject();
             });
@@ -29,7 +29,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @param rememberMe bool Whether the user should be remembered. Defaults to false.
          * @returns promise A promise which will be resolved with the user object, or rejected with a message
          */
-        login: function (username, password, rememberMe) {
+        login: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
@@ -57,7 +57,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @param type The type to load the objects of.
          * @return promise A promise which is resolved when the data is loaded.
          */
-        load: function (type) {
+        load: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
@@ -70,7 +70,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
-        add: function (type, object) {
+        add: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
@@ -83,7 +83,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
-        update: function (type, object) {
+        update: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
@@ -96,7 +96,7 @@ angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
          * @return promise A promise. When resolved, the removed should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
-        remove: function (type, object) {
+        remove: function () {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });

@@ -35,7 +35,7 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
         },
 
         isLoading: function(type){
-            return this.store.loading;
+            return this.store[type].loading;
         },
 
         getUser: function(){

@@ -1,4 +1,4 @@
-angular.module('pimaticApp').directive('deviceCard', ['toast', function (toast) {
+angular.module('pimaticApp').directive('deviceCard', function () {
     return {
         scope: {
             device: '='
@@ -16,4 +16,4 @@ angular.module('pimaticApp').directive('deviceCard', ['toast', function (toast) 
             };
         }]
     };
-}]);
+});

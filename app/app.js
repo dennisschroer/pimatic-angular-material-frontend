@@ -61,7 +61,7 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth, title) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth) {
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
