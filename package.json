@@ -1,8 +1,9 @@
 {
   "name": "pimatic-angular-material-frontend",
-  "description": "Provides an AngularJS webinterface for pimatic with material design.",
-  "author": "Dennis Schroer <dennisschroer@hotmail.com> (http://dennisschroer.nl)",
+  "description": "Provides an AngularJS webinterface for Pimatic with material design.",
+  "author": "Dennis Schroer <mail@dennisschroer.nl> (http://dennisschroer.nl)",
   "main": "angular-material-frontend.coffee",
+  "keywords": ["pimatic"],
   "files": [
     "assets",
     "dist",
@@ -48,6 +49,6 @@
     "phantomjs": "^1.9.18"
   },
   "scripts": {
-    "postinstall": "bower install"
+    "postinstall": "bower install -p"
   }
 }

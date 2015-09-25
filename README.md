@@ -1,10 +1,24 @@
 # Pimatic Angular Material Frontend
 A web frontend build for the pimatic framework using angular and material design (angular material).
 
-*screenshots will be included.*
+![](screenshot.png)
+
+## Configuration
+Example configuration:
+	
+	{
+      	"plugin": "angular-material-frontend",
+		"mountPoint": "/material",
+		"customTitle": "Pimatic Material",
+		"debug": false
+    }
+
+By default, the webinterface wil be available via `http://<hostname>/material`. You can change this by setting the `mountPoint` option.
+
+If the `debug` setting is set to true, the web app will print additional debug information to the console of the browser.
 
 ## Installation
-For now, you can only use git to manually install the plugin. It will be made available via npm when it is more stable.
+You can install the plugin either via npm or via git.
 
 1. Add the plugin to the plugins section of the `config.json` file of your pimatic app:
 
@@ -12,30 +26,49 @@ For now, you can only use git to manually install the plugin. It will be made av
 	      "plugin": "angular-material-frontend"
 	    }
 
-2. Browse to the pimatic app root and install the plugin using NPM:
+2. Now you can do one of two steps:
+   - Start pimatic. The plugin will be downloaded automatically
+   - Install the plugin manually by executing the following command in the pimatic app root:
 
-    	npm install git://github.com/denniss17/pimatic-angular-material-frontend
+    		npm install pimatic-angular-material-frontend
 
-	This should also automatically download all dependencies of bower. If not, run the following command in the root of the plugin:
+		or
 
-    	bower install
+			npm install git://github.com/denniss17/pimatic-angular-material-frontend
 
-## Building
+		This should also automatically download all dependencies of bower. If not, run the following command in the root of the plugin:
+
+    		bower install -p
+
+
+## Developing
 First make sure all development dependencies are installed:
 
 	npm install
 
+The full source code is available at the git repository. Download the source by cloning the repository.
+
+The application itself is in the `app/` directory. After a change in the application, you should update the file used in the `dev.html` page. This can be done by executing the following command:
+
+	grunt dev
+
+or simply
+
+	grunt
+
+This command wil update the `dist/pimatic-angular-material-frontend.js` file. I recommend creating some kind of file watcher to do this automatically after a file change.
+
+### Testing
+Jasmine is used to unit test the frontend. Running the following command should run all tests (all files ending with `.test.js`):
+
+    grunt test
+
+### Building
 A Grunt task is specified which should test the scripts and build the production files. Simply run the following command in the project root:
 
     grunt build
 
-## Testing
-Jasmine is used to unit test the frontend. Running the following command should run all tests:
-
-    grunt test
-
-## Developing
-The
+This command will run tests, execute a jshint inspection and update the `dist/pimatic-angular-material-frontend.min.js` and `index.tmpl.html` files.
 
 ## References
 Pimatic: [http://pimatic.org/](http://pimatic.org/)
