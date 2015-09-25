@@ -20,6 +20,7 @@ module.exports = (env) ->
 
       # * Static assets
       @app.use @config.mountPath, express.static(__dirname)
+      env.logger.info "Mounted material frontend on '" + @config.mountPath + "'"
 
       @framework.userManager.addAllowPublicAccessCallback( (req) =>
         return (
