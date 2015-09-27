@@ -82,7 +82,7 @@ module.exports = function (grunt) {
         },
         replace: {
             // Replace the version tag
-            buildJS: {
+            /*buildJS: {
                 options: {
                     patterns: [
                         {
@@ -94,11 +94,15 @@ module.exports = function (grunt) {
                 files: [
                     {expand: true, flatten: true, src: 'dist/<%= pkg.name %>.js', dest: 'dist'},
                 ]
-            },
+            },*/
             // Build index.html which uses the minified versions of the scripts
             buildHTML: {
                 options: {
                     patterns: [
+                        {
+                            match: 'version',
+                            replacement: '<%= pkg.version %>'
+                        },
                         {
                             match: /(?!\.min)([\w]{4})(\.js)/g,
                             replacement: '$1.min.js'

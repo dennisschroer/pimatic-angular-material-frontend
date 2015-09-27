@@ -1,9 +1,9 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
- * Description: Provides an AngularJS webinterface for pimatic with material design. 
- * Version:     0.1.0 
+ * Description: Provides an AngularJS webinterface for Pimatic with material design. 
+ * Version:     0.1.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-09-20 
+ * Date:        2015-09-27 
  */
 /**
  * Create the different modules.
@@ -32,7 +32,7 @@ angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvi
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
 angular.module('pimaticApp.data', ['pimaticApp.configuration']);
-angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data']);
+angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data', 'pascalprecht.translate']);
 
 
 angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', function ($routeProvider, $logProvider, debug) {
@@ -68,14 +68,11 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
-    $rootScope.version = '0.1.0';
-    if($rootScope.version.substr(0,2) == '@@'){
-        $rootScope.version = 'dev';
-    }
+    $rootScope.version = version == '@@version' ? 'development' : version;
 
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;
@@ -1140,6 +1137,38 @@ angular.module('pimaticApp').factory('toast', ['$mdToast', function ($mdToast) {
         }
     };
 }]);
+angular.module('pimaticApp').factory('utils', ['store', function (store) {
+    return {
+        /**
+         * Get a list of ids of devices which are not in a group
+         * @return array An array containing the ids of the devices which are not in a group
+          */
+        getUngroupedDeviceIds: function () {
+            var groups = store.get('groups');
+            var devices = store.get('devices');
+
+            var ungrouped = [];
+
+            // First add all ids
+            angular.forEach(devices, function (value) {
+                ungrouped.push(value.id);
+            });
+
+            // Remove ids of devices which are in a group
+            angular.forEach(groups, function (group) {
+                angular.forEach(group.devices, function (deviceId) {
+                    var index = ungrouped.indexOf(deviceId);
+                    if (index >= 0) {
+                        ungrouped.splice(index, 1);
+                    }
+                });
+            });
+
+            // Return the result
+            return ungrouped;
+        }
+    };
+}]);
 angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "toast", function ($scope, store, toast) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
@@ -1156,8 +1185,9 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
 angular.module('pimaticApp.devices').controller('ThermostatController', [/*$scope",*/ function (/*$scope*/) {
 
 }]);
-angular.module('pimaticApp').controller('HomeController', ["$scope", function ($scope) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", "utils", function ($scope, utils) {
     $scope.selectedTab = 0;
+    $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
     /*$scope.selectPage = function(){
      console.log('selectPage', $routeParams.pageId);
@@ -1214,32 +1244,8 @@ angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav
         });
     };
 }]);
-angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", function ($scope) {
-    // Get a list of ids of devices which are not in a group
-    $scope.ungroupedDevices = function () {
-        var groups = $scope.store.get('groups');
-        var devices = $scope.store.get('devices');
-
-        var ungrouped = [];
-
-        // First add all ids
-        angular.forEach(devices, function (value) {
-            ungrouped.push(value.id);
-        });
-
-        // Remove ids of devices which are in a group
-        angular.forEach(groups, function (group) {
-            angular.forEach(group.devices, function (deviceId) {
-                var index = ungrouped.indexOf(deviceId);
-                if (index >= 0) {
-                    ungrouped.splice(index, 1);
-                }
-            });
-        });
-
-        // Return the result
-        return ungrouped;
-    };
+angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", function ($scope, utils) {
+    $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 }]);
 angular.module('pimaticApp.settings').controller('GroupsCreateController', ["$scope", "$location", "toast", function ($scope, $location, toast) {
     $scope.group = {};

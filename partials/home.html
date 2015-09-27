@@ -1,11 +1,22 @@
 <md-tabs md-dynamic-height md-center-tabs class="md-primary md-w" layout-align="center end" md-selected="selectedTab">
     <md-tab ng-repeat="page in store.get('pages')" label="{{page.name}}" md-on-select="tabSelected(page)">
-        <md-content>
-            <div layout="row" layout-wrap>
-                <div ng-repeat="device in page.devices" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
-                    <device-card device="store.get('devices', device.deviceId)"></device-card>
+        <md-content layout="column">
+            <section ng-repeat="group in store.get('groups')" ng-show="group.devices.length > 0">
+                <md-subheader class="md-primary">{{group.name}}</md-subheader>
+                <div layout="row" layout-wrap>
+                    <div ng-repeat="deviceId in group.devices" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
+                        <device-card device="store.get('devices', deviceId)"></device-card>
+                    </div>
                 </div>
-            </div>
+            </section>
+            <section ng-show="getUngroupedDeviceIds().length > 0">
+                <md-subheader class="md-primary">{{'UNGROUPED' | translate}}</md-subheader>
+                <div layout="row" layout-wrap>
+                    <div ng-repeat="deviceId in getUngroupedDeviceIds()" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
+                        <device-card device="store.get('devices', deviceId)"></device-card>
+                    </div>
+                </div>
+            </section>
         </md-content>
     </md-tab>
 </md-tabs>

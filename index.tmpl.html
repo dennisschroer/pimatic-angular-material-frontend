@@ -1,6 +1,6 @@
 <html lang="en" ng-app="pimaticApp" ng-controller="MainController" ng-cloak>
 <head>
-    <title>{{title}}</title>
+    <title>@@title</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <meta name="viewport" content="initial-scale=1"/>
     <link rel="stylesheet" href="lib/bower/angular-material/angular-material.min.css"/>
@@ -16,7 +16,7 @@
             <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()" ng-show="auth.isLoggedIn()">
                 <md-icon md-font-icon="mdi mdi-menu"></md-icon>
             </md-button>
-            <a href="#/home"><h2>{{title}}</h2></a>
+            <a href="#/home"><h2>@@title</h2></a>
             <!-- fill up the space between left and right area -->
             <span flex></span>
             <p class="md-caption">Beta</p>
@@ -62,11 +62,14 @@
     <script src="lib/bower/angular-messages/angular-messages.min.js"></script>
     <script src="lib/bower/angular-material/angular-material.min.js"></script>
     <script src="lib/bower/angular-route/angular-route.min.js"></script>
+    <script src="lib/bower/angular-translate/angular-translate.min.js"></script>
     <script src="lib/bower/socket.io-client/socket.io.js"></script>
 
     <script src="dist/pimatic-angular-material-frontend.min.js"></script>
+    <script src="i10n/en-US.js"></script>
     <script>
-        angular.module('pimaticApp.configuration').constant('debug', '{{debug}}');
+        angular.module('pimaticApp.configuration').constant('debug', '@@debug');
+        angular.module('pimaticApp.configuration').constant('version', '0.1.1');
     </script>
 </body>
 </html>

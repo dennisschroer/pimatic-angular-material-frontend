@@ -25,7 +25,7 @@ angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvi
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
 angular.module('pimaticApp.data', ['pimaticApp.configuration']);
-angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data']);
+angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data', 'pascalprecht.translate']);
 
 
 angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', function ($routeProvider, $logProvider, debug) {
@@ -61,14 +61,11 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth) {
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
-    $rootScope.version = '@@version';
-    if($rootScope.version.substr(0,2) == '@@'){
-        $rootScope.version = 'dev';
-    }
+    $rootScope.version = version == '@@version' ? 'development' : version;
 
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;

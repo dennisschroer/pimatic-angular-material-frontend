@@ -1,5 +1,6 @@
-angular.module('pimaticApp').controller('HomeController', ["$scope", function ($scope) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", "utils", function ($scope, utils) {
     $scope.selectedTab = 0;
+    $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
     /*$scope.selectPage = function(){
      console.log('selectPage', $routeParams.pageId);

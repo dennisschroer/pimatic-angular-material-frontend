@@ -11,8 +11,8 @@ module.exports = (env) ->
       fs.readFile __dirname + '/index.tmpl.html', 'utf8', (err,data) =>
         if (err)
           return env.logger.error err
-        data = data.replace(/\{\{title}}/g, @config.customTitle);
-        data = data.replace(/\{\{debug}}/g, @config.debug);
+        data = data.replace(/@@title/g, @config.customTitle);
+        data = data.replace(/@@debug/g, @config.debug);
         fs.writeFile __dirname + '/index.html', data, 'utf8', (err) ->
           if (err)
             return env.logger.error err
