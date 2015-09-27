@@ -32,8 +32,7 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
-    }).when('/landing', {
-    }).when('/about', {
+    }).when('/landing', {}).when('/about', {
         templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
@@ -70,16 +69,16 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;
 
-    $rootScope.setState = function(state){
+    $rootScope.setState = function (state) {
         $rootScope.state = state;
-        if(state == 'done' || state == 'unauthenticated'){
-            if(!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null){
+        if (state == 'done' || state == 'unauthenticated') {
+            if (!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null) {
                 $location.path($rootScope.redirectedFrom);
                 $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
                 $rootScope.redirectedFrom = null;
-            }else{
-                $log.debug('New state:', state, 'Redirecting to ', state=='unauthenticated' ? '/login' : '/home');
-                $location.path(state=='unauthenticated' ? '/login' : '/home');
+            } else {
+                $log.debug('New state:', state, 'Redirecting to ', state == 'unauthenticated' ? '/login' : '/home');
+                $location.path(state == 'unauthenticated' ? '/login' : '/home');
             }
         }
     };
@@ -93,13 +92,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
-        if($rootScope.state == 'starting'){
+        if ($rootScope.state == 'starting') {
             if (next.originalPath != "/landing") {
                 $log.debug('App', 'Application is loading, redirecting to the landing page');
                 $rootScope.redirectedFrom = next.originalPath;
                 $location.path("/landing");
             }
-        }else{
+        } else {
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
                 if (next.originalPath == "/login") {

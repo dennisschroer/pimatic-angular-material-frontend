@@ -39,8 +39,7 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
-    }).when('/landing', {
-    }).when('/about', {
+    }).when('/landing', {}).when('/about', {
         templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
@@ -77,16 +76,16 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;
 
-    $rootScope.setState = function(state){
+    $rootScope.setState = function (state) {
         $rootScope.state = state;
-        if(state == 'done' || state == 'unauthenticated'){
-            if(!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null){
+        if (state == 'done' || state == 'unauthenticated') {
+            if (!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null) {
                 $location.path($rootScope.redirectedFrom);
                 $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
                 $rootScope.redirectedFrom = null;
-            }else{
-                $log.debug('New state:', state, 'Redirecting to ', state=='unauthenticated' ? '/login' : '/home');
-                $location.path(state=='unauthenticated' ? '/login' : '/home');
+            } else {
+                $log.debug('New state:', state, 'Redirecting to ', state == 'unauthenticated' ? '/login' : '/home');
+                $location.path(state == 'unauthenticated' ? '/login' : '/home');
             }
         }
     };
@@ -100,13 +99,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
-        if($rootScope.state == 'starting'){
+        if ($rootScope.state == 'starting') {
             if (next.originalPath != "/landing") {
                 $log.debug('App', 'Application is loading, redirecting to the landing page');
                 $rootScope.redirectedFrom = next.originalPath;
                 $location.path("/landing");
             }
-        }else{
+        } else {
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
                 if (next.originalPath == "/login") {
@@ -1169,6 +1168,26 @@ angular.module('pimaticApp').factory('utils', ['store', function (store) {
         }
     };
 }]);
+angular.module('pimaticApp').filter('extract', function(){
+    /**
+     * Take an array of objects, extract the value belonging to the given key and return an array containing these values.
+     */
+    return function(arr, key){
+       return arr.map(function(value){
+           return value[key];
+       });
+    };
+});
+angular.module('pimaticApp').filter('intersect', function(){
+    /**
+     * Calculate the intersection of 2 arrays.
+     */
+    return function(arr1, arr2){
+        return arr1.filter(function(n) {
+            return arr2.indexOf(n) != -1;
+        });
+    };
+});
 angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "toast", function ($scope, store, toast) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
@@ -1185,9 +1204,24 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
 angular.module('pimaticApp.devices').controller('ThermostatController', [/*$scope",*/ function (/*$scope*/) {
 
 }]);
-angular.module('pimaticApp').controller('HomeController', ["$scope", "utils", function ($scope, utils) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", function ($scope, $filter, utils) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
+
+   /**
+    * Get the ids of the device which are on the given page and in the given group.
+    * If group is undefined, the ids of the ungrouped devices will be returned.
+    * @param page The page displayed
+    * @param group The group to display
+    * @returns array A list of device ids
+    */
+    $scope.getDeviceIds = function(page, group){
+        if(angular.isUndefined(group)){
+            return $filter('intersect')($filter('extract')(page.devices, 'deviceId'), $scope.getUngroupedDeviceIds());
+        }else{
+            return $filter('intersect')($filter('extract')(page.devices, 'deviceId'), group.devices);
+        }
+    };
 
     /*$scope.selectPage = function(){
      console.log('selectPage', $routeParams.pageId);
