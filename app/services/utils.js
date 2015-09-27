@@ -1,4 +1,4 @@
-angular.module('pimaticApp').factory('utils', ['store', function (store) {
+angular.module('pimaticApp.services').factory('utils', ['store', function (store) {
     return {
         /**
          * Get a list of ids of devices which are not in a group

@@ -12,7 +12,7 @@ angular.module('pimaticApp.configuration').constant('pimaticHost', '');
 /**
  * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
-angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvider');
+angular.module('pimaticApp.configuration').constant('apiName', 'websocketApi');
 /**
  * If debug is true, debug messages will be
  */
@@ -24,11 +24,23 @@ angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvi
 
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
-angular.module('pimaticApp.data', ['pimaticApp.configuration']);
-angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data', 'pascalprecht.translate']);
+angular.module('pimaticApp.api', ['pimaticApp.configuration']);
+angular.module('pimaticApp.services', ['pimaticApp.api', 'pimaticApp.configuration']);
+
+/** The main module */
+angular.module('pimaticApp', [
+    'ngMaterial',
+    'ngRoute',
+    'ngMessages',
+    'pimaticApp.configuration',
+    'pimaticApp.devices',
+    'pimaticApp.services',
+    'pimaticApp.settings',
+    'pascalprecht.translate'
+]);
 
 
-angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', function ($routeProvider, $logProvider, debug) {
+angular.module('pimaticApp').config(['$routeProvider', '$logProvider', '$injector', 'debug', function ($routeProvider, $logProvider, $injector, debug) {
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
@@ -58,6 +70,10 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
 
     debug = debug != 'false';
     $logProvider.debugEnabled(debug);
+}]);
+
+angular.module('pimaticApp.services').config(['storeProvider', 'apiName', function(storeProvider, apiName){
+    storeProvider.setApi(apiName);
 }]);
 
 angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {

@@ -1,4 +1,4 @@
-angular.module('pimaticApp.data').factory('fixtureProvider', ['$http', '$q', 'baseProvider', function ($http, $q, baseProvider) {
+angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', 'baseApi', function ($http, $q, baseProvider) {
 
     var data = {};
 

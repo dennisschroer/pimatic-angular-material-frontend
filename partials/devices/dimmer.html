@@ -1,0 +1,20 @@
+<md-card ng-controller="DimmerController">
+    <div layout="row" class="device-header">
+        <div class="device-icon-wrapper">
+            <span class="device-icon">
+                <i class="mdi mdi-toggle-switch"></i>
+            </span>
+        </div>
+        <div class="device-titles" layout="column" flex>
+            <h1>{{device.name}}</h1>
+
+            <h2>{{device.template}}</h2>
+        </div>
+        <div class="device-header-values" layout="row" layout-align="end center" flex>
+            <md-slider flex class="device-slider" min="0" max="100" step="5" ng-model="getAttribute('dimlevel').value"
+                       ng-mouseup="updateDimlevel(getAttribute('dimlevel'))"
+                       pimatic-touchend="updateDimlevel(getAttribute('dimlevel'))" aria-label="Slider">
+            </md-slider>
+        </div>
+    </div>
+</md-card>
