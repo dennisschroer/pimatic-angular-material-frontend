@@ -40,6 +40,25 @@ You can install the plugin either via npm or via git.
 
     		bower install -p
 
+## Changelog
+
+### 0.1.0
+Initial release
+
+## To do
+- Add all default templates [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/views/pages/index.jade)
+	- switch
+	- shutter
+	- dimmer
+	- device
+	- header
+	- buttons
+	- musicplayer
+	- thermostat
+	- timer
+	- attribute
+- Edit pages
+- More settings
 
 ## Developing
 First make sure all development dependencies are installed:
@@ -88,6 +107,7 @@ npm: [https://www.npmjs.com/](https://www.npmjs.com/)
 This project attempts to follow the AngularJS style guide, which can be found [here](https://github.com/mgechev/angularjs-style-guide).
 
 ## License
+
 	Pimatic Angular Material Frontend is published under the GNU General Public License Version 3:
 	you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
