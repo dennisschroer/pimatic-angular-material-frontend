@@ -3,7 +3,7 @@
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
  * Version:     0.1.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-09-28 
+ * Date:        2015-09-29 
  */
 /**
  * Create the different modules.
@@ -1216,6 +1216,21 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
         }
     };
 }]);
+angular.module('pimaticApp').filter('elapsed', function () {
+    return function (time) {
+        var hours = Math.floor(time / 3600);
+        var output = hours > 9 ? hours : "0" + hours;
+        time -= hours*3600;
+
+        var minutes = Math.floor(time / 60);
+        output += ":" + (minutes > 9 ? minutes : "0"+ minutes);
+        time -= minutes*60;
+
+        output += ":" + (time > 9 ? time : "0"+ time);
+
+        return output;
+    };
+});
 angular.module('pimaticApp').filter('extract', function(){
     /**
      * Take an array of objects, extract the value belonging to the given key and return an array containing these values.
@@ -1249,6 +1264,29 @@ angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "
         });
     };
 }]);
+angular.module('pimaticApp.devices').controller('ShutterController', ["$scope", "store", "events", function ($scope, store, events) {
+    $scope.moveUp = function(){
+        var attribute = $scope.getAttribute('position');
+        var action = attribute.value == 'up' ? 'stop' : 'moveUp';
+
+        store.api.deviceAction($scope.device.id, action).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+
+    $scope.moveDown = function(){
+        var attribute = $scope.getAttribute('position');
+        var action = attribute.value == 'down' ? 'stop' : 'moveDown';
+
+        store.api.deviceAction($scope.device.id, action).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+}]);
 angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
@@ -1264,6 +1302,34 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
 }]);
 angular.module('pimaticApp.devices').controller('ThermostatController', [/*$scope",*/ function (/*$scope*/) {
 
+}]);
+angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
+    $scope.start = function(){
+        var action = 'startTimer';
+        store.api.deviceAction($scope.device.id, action).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+
+    $scope.stop = function(){
+        var action = 'stopTimer';
+        store.api.deviceAction($scope.device.id, action).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+
+    $scope.reset = function(){
+        var action = 'resetTimer';
+        store.api.deviceAction($scope.device.id, action).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
 }]);
 angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", function ($scope, $filter, utils) {
     $scope.selectedTab = 0;

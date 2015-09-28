@@ -52,8 +52,24 @@
     margin-left: 16px;
 }
 
+.device-header .device-header-values .device-header-value-large {
+    font-size: 24px;
+}
+
+
+
 .device-header .device-header-values .device-switch {
     margin: 0;
+}
+
+.device-header .device-header-values .md-button {
+    /* Margin is by default 6 and 8, card gets to large then */
+    margin: 1px 4px;
+}
+
+.device-header .device-header-values md-slider {
+    /* Height is by default 48, but card gets to large then */
+    height: 40px;
 }
 
 .device-values .device-value{

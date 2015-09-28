@@ -1,0 +1,23 @@
+<md-card ng-controller="ShutterController">
+    <div layout="row" class="device-header">
+        <div class="device-icon-wrapper">
+            <span class="device-icon">
+                <i class="mdi mdi-window-closed"></i>
+            </span>
+        </div>
+        <div class="device-titles" layout="column" flex>
+            <h1>{{device.name}}</h1>
+
+            <h2>{{device.template}}</h2>
+        </div>
+        <div class="device-header-values" layout="row" layout-align="end center">
+            <md-button ng-click="moveDown()" ng-class="{'md-accent': (getAttribute('position').value == 'down')}"><md-icon md-font-icon="mdi mdi-arrow-down"></md-icon> Down</md-button>
+            <md-button ng-click="moveUp()" ng-class="{'md-accent': (getAttribute('position').value == 'up')}"><md-icon md-font-icon="mdi mdi-arrow-up"></md-icon> Up</md-button>
+        </div>
+    </div>
+    <!--div class="md-actions" layout="row" layout-align="end center">
+        <md-button ng-click="stop()" ng-class="{'md-accent': (getAttribute('position').value == 'up')}">Stop</md-button>
+        <md-button ng-click="moveDown()" ng-class="{'md-accent': (getAttribute('position').value == 'down')}">Down</md-button>
+        <md-button ng-click="moveUp()" ng-class="{'md-accent': (getAttribute('position').value == 'up')}">Up</md-button>
+    </div-->
+</md-card>
