@@ -1,9 +1,9 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
- * Description: Provides an AngularJS webinterface for pimatic with material design. 
- * Version:     0.1.0 
+ * Description: Provides an AngularJS webinterface for Pimatic with material design. 
+ * Version:     0.1.2 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-09-20 
+ * Date:        2015-10-14 
  */
 /**
  * Create the different modules.
@@ -72,7 +72,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
-    $rootScope.version = '0.1.0';
+    $rootScope.version = '0.1.2';
     if($rootScope.version.substr(0,2) == '@@'){
         $rootScope.version = 'dev';
     }
@@ -211,7 +211,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
                 self.socket.emit('call', {
                     id: 'guiSettings',
-                    action: 'getGuiSetttings',
+                    action: 'getGuiSettings',
                     params: {}
                 });
 
@@ -637,6 +637,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
         }
     });
 }]);
+
 /**
  * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
  */
