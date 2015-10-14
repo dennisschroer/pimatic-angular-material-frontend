@@ -10,17 +10,28 @@
 
             <h2>{{device.template}}</h2>
         </div>
+        <div class="device-header-values" layout="row" layout-align="end center">
+            <!-- Yes, I know, temperatue is spelled wrong. See https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/views/pages/index.jade#L75 -->
+            <md-button class="md-icon-button" ng-hide="!getConfig('guiShowTemperatueInput')" ng-click="up()">
+                <md-icon md-font-icon="mdi mdi-chevron-up"></md-icon>
+            </md-button>
+            <span class="device-header-value-large">{{getAttribute('temperatureSetpoint').value}}</span>
+            <md-button class="md-icon-button" ng-hide="!getConfig('guiShowTemperatueInput')" ng-click="down()">
+                <md-icon md-font-icon="mdi mdi-chevron-down"></md-icon>
+            </md-button>
+        </div>
     </div>
     <md-card-content>
-        <div layout="column">
-            <div layout="row" ng-repeat="attribute in device.attributes">
-                <div flex layout="row" layout-align="start center" class="md-body-1">
-                    {{attribute.label}}
-                </div>
-                <div class="md-body-2">
-                    {{attribute.value | number:1}} {{attribute.unit}}
-                </div>
-            </div>
-        </div>
     </md-card-content>
+    <div class="md-actions" layout="row" layout-align="end center">
+        <div class="button-group">
+            <md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-click="presetEco()">Eco</md-button>
+            <md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-click="presetComfy()">Comfy</md-button>
+        </div>
+        <div class="button-group">
+            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeAuto()">Auto</md-button>
+            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeManual()">Manual</md-button>
+            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeBoost()">Boost</md-button>
+        </div>
+    </div>
 </md-card>

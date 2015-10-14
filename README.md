@@ -47,16 +47,15 @@ Initial release
 
 ## To do
 - Add all default templates [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/views/pages/index.jade)
-	- switch
-	- shutter
-	- dimmer
-	- device
-	- header
-	- buttons
-	- musicplayer
-	- thermostat
-	- timer
-	- attribute
+	- ~~switch~~
+	- ~~shutter~~
+	- ~~dimmer~~
+	- ~~device~~
+	- ~~buttons~~ Test many buttons (more than fitting in one row)
+    - musicplayer
+	- thermostat (GUI settings)
+	- ~~timer~~
+- Error if device could not be found [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/pages/index-items.coffee#L58)
 - Edit pages
 - More settings
 
