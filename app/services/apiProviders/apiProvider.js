@@ -77,7 +77,7 @@ angular.module('pimaticApp.data').factory('apiProvider', ['$http', '$q', '$rootS
 
                 self.socket.emit('call', {
                     id: 'guiSettings',
-                    action: 'getGuiSetttings',
+                    action: 'getGuiSettings',
                     params: {}
                 });
 
