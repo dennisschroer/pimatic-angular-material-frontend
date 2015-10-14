@@ -1,9 +1,9 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
- * Version:     0.1.1 
+ * Version:     0.1.2 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-09-29 
+ * Date:        2015-10-14 
  */
 /**
  * Create the different modules.
@@ -386,7 +386,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
 
                 self.socket.emit('call', {
                     id: 'guiSettings',
-                    action: 'getGuiSetttings',
+                    action: 'getGuiSettings',
                     params: {}
                 });
 
@@ -818,6 +818,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
         }
     });
 }]);
+
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
  * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
