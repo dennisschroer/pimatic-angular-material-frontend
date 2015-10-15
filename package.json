@@ -11,7 +11,7 @@
     "index.tmpl.html",
     "angular-material-frontend.coffee",
     "angular-material-frontend-config-schema.coffee",
-    "lib/color.js",
+    "lib/color.min.js",
     "bower.json",
     ".bowerrc",
     "README.md",

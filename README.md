@@ -45,16 +45,21 @@ You can install the plugin either via npm or via git.
 ## Changelog
 
 ### 0.2.0
-All basic devices (except musicplayer) added.
+All basic devices (except music player) added.
 
 ### 0.1.2
 A little bugfix.
+
 ### 0.1.1
+- Description updated
+- Documentation updated
 
 ### 0.1.0
-Initial release
+Initial release.
 
 ## To do
+(not in order of priority)
+
 - Add all default templates [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/views/pages/index.jade)
 	- ~~switch~~
 	- ~~shutter~~
@@ -65,7 +70,10 @@ Initial release
 	- ~~thermostat (GUI settings)~~
 	- ~~timer~~
 - Error if device could not be found [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/pages/index-items.coffee#L58)
+- Default (device)template if given template does not exist
+- Graphs :)
 - Edit pages
+- Themes
 - More settings
 
 ## Developing

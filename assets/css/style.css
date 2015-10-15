@@ -100,7 +100,7 @@ md-icon.mdi.mdi-large {
 
 /** Fix for vertical allign */
 a.md-fab md-icon {
-    line-height: inherit;
+    /*line-height: inherit;*/
 }
 
 /*
