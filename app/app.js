@@ -36,7 +36,8 @@ angular.module('pimaticApp', [
     'pimaticApp.devices',
     'pimaticApp.services',
     'pimaticApp.settings',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'mdThemeColors'
 ]);
 
 

@@ -13,14 +13,7 @@
     </div>
     <md-card-content>
         <div layout="column">
-            <div layout="row" ng-repeat="attribute in device.attributes">
-                <div flex layout="row" layout-align="start center" class="md-body-1">
-                    {{attribute.name}}
-                </div>
-                <div class="md-body-2">
-                    {{attribute.value | number:1}} {{attribute.unit}}
-                </div>
-            </div>
+            <div attribute-value attribute="attribute" use-name="1" ng-repeat="attribute in device.attributes"></div>
         </div>
     </md-card-content>
 </md-card>

@@ -43,7 +43,8 @@ angular.module('pimaticApp', [
     'pimaticApp.devices',
     'pimaticApp.services',
     'pimaticApp.settings',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
+    'mdThemeColors'
 ]);
 
 
@@ -1311,8 +1312,61 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
         });
     };
 }]);
-angular.module('pimaticApp.devices').controller('ThermostatController', [/*$scope",*/ function (/*$scope*/) {
+angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", "store", "events", "mdThemeColors", function ($scope, store, events, mdThemeColors) {
+    $scope.themeColors = mdThemeColors;
 
+    /**
+     * Increase the set point of the thermostat.
+     */
+    $scope.up = function(){
+        $scope.setTemperatureSetpoint($scope.getAttribute('temperatureSetpoint').value + 0.5);
+    };
+
+    /**
+     * Decrease the set point of the thermostat.
+     */
+    $scope.down = function(){
+        $scope.setTemperatureSetpoint($scope.getAttribute('temperatureSetpoint').value - 0.5);
+    };
+
+    /**
+     * Set the temperature to a specific set point
+     * @param setPoint The temperature to set the set point of the thermostat to.
+     */
+    $scope.setTemperatureSetpoint = function(setPoint){
+        var action = 'changeTemperatureTo';
+
+        // Execute the action
+        store.api.deviceAction($scope.device.id, action, {'temperatureSetpoint': setPoint}).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+
+    /**
+     * Set the mode of the thermostat to the given mode.
+     * @param mode The mode to set the thermostat to.
+     */
+    $scope.setMode = function(mode) {
+        var action = 'changeModeTo';
+        // Todo indicate that mode is selected but not confirmed by backend ?
+
+        store.api.deviceAction($scope.device.id, action, {'mode': mode}).then(function () {
+            events.onDeviceActionDone($scope.device, action);
+        }, function () {
+            events.onDeviceActionFail($scope.device, action);
+        });
+    };
+
+    /**
+     * Set the temperature set point to a certain preset value.
+     * @param preset The name of the preset to set the set point to.
+     */
+    $scope.preset = function(preset) {
+        var setPoint = $scope.getConfig(preset, false);
+        $scope.setTemperatureSetpoint(setPoint);
+    };
 }]);
 angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.start = function(){
@@ -1480,6 +1534,32 @@ angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", 
         $location.path('settings/groups/' + id);
     };
 }]);
+/**
+ * Simple directive for showing an attribute in a horizontal display.
+ */
+angular.module('pimaticApp').directive('attributeValue', function () {
+    return {
+        scope: {
+            /**
+             * A reference to the attribute object
+             */
+            attribute: '=',
+            /**
+             * If true, use attribute.name for the label instead of attribute.label.
+             */
+            useName: '='
+        },
+        template:
+            '<div layout="row">' +
+                '<div flex layout="row" layout-align="start center" class="md-body-1">' +
+                    '{{useName ? attribute.name : attribute.label}}' +
+                '</div>' +
+                '<div><span>' +
+                    '{{attribute.value}} {{attribute.unit}}' +
+                '</span></div>' +
+            '</div>'
+    };
+});
 angular.module('pimaticApp').directive('deviceCard', function () {
     return {
         scope: {

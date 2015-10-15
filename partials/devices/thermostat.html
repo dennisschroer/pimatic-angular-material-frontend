@@ -1,4 +1,4 @@
-<md-card>
+<md-card ng-controller="ThermostatController">
     <div layout="row" class="device-header">
         <div class="device-icon-wrapper">
             <span class="device-icon">
@@ -21,17 +21,61 @@
             </md-button>
         </div>
     </div>
-    <md-card-content>
+    <md-card-content ng-show="true || getAttribute('valve').value != null || getAttribute('battery').value == 'low' || getAttribute('synced').value == false">
+        <div layout="column">
+            <div ng-show="getAttribute('valve').value != null" attribute-value attribute="getAttribute('valve')"></div>
+            <span ng-show="getAttribute('battery').value == 'low'" ng-style="{color: themeColors.warn['default']}"><md-icon md-font-icon="mdi mdi-battery-10"></md-icon> {{'LOW_BATTERY' | translate}}</span>
+            <span ng-show="getAttribute('synced').value == false" ng-style="{color: themeColors.warn['default']}"><md-icon md-font-icon="mdi mdi-sync"></md-icon> {{'NOT_SYNCED' | translate}}</span>
+
+            <div layout="row">
+                <div flex layout="row" layout-align="start center" class="md-body-1">
+                    {{'PRESET' | translate}}
+                </div>
+                <div>
+                    <div class="button-group md-raised">
+                        <md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('ecoTemp'))}" ng-click="preset('ecoTemp')">Eco</md-button><!--
+                        --><md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('comfyTemp'))}"  ng-click="preset('comfyTemp')">Comfy</md-button>
+                    </div>
+                </div>
+            </div>
+
+            <div layout="row">
+                <div flex layout="row" layout-align="start center" class="md-body-1">
+                    {{'MODE' | translate}}
+                </div>
+                <div>
+                    <div class="button-group md-raised">
+                        <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'auto')}" ng-click="setMode('auto')">Auto</md-button><!--
+                        --><md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'manu')}" ng-click="setMode('manu')">Manual</md-button><!--
+                        --><md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'boost')}" ng-click="setMode('boost')">Boost</md-button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </md-card-content>
-    <div class="md-actions" layout="row" layout-align="end center">
-        <div class="button-group">
-            <md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-click="presetEco()">Eco</md-button>
-            <md-button class="md-raised" ng-hide="!getConfig('guiShowPresetControl')" ng-click="presetComfy()">Comfy</md-button>
+    <!--div class="md-actions" layout="row">
+        <div flex>
+            <md-button ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('ecoTemp'))}" ng-click="preset('ecoTemp')">Eco</md-button>
+            <md-button ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('comfyTemp'))}"  ng-click="preset('comfyTemp')">Comfy</md-button>
         </div>
-        <div class="button-group">
-            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeAuto()">Auto</md-button>
-            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeManual()">Manual</md-button>
-            <md-button class="md-raised" ng-hide="!getConfig('guiShowModeControl')" ng-click="modeBoost()">Boost</md-button>
+        <div>
+            <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'auto')}" ng-click="setMode('auto')">Auto</md-button>
+            <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'manu')}" ng-click="setMode('manu')">Manual</md-button>
+            <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'boost')}" ng-click="setMode('boost')">Boost</md-button>
+
         </div>
+
     </div>
+    <div ng-hide="!getConfig('guiShowPresetControl')" class="md-actions" layout="row" layout-align="end center">
+        <span>Preset</span>
+        <md-button ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('ecoTemp'))}" ng-click="preset('ecoTemp')">Eco</md-button>
+        <md-button ng-hide="!getConfig('guiShowPresetControl')" ng-class="{'md-accent': (getAttribute('temperatureSetpoint').value == getConfig('comfyTemp'))}"  ng-click="preset('comfyTemp')">Comfy</md-button>
+    </div>
+    <div ng-hide="!getConfig('guiShowModeControl')" class="md-actions" layout="row" layout-align="end center">
+        <span>Mode</span>
+        <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'auto')}" ng-click="setMode('auto')">Auto</md-button>
+        <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'manu')}" ng-click="setMode('manu')">Manual</md-button>
+        <md-button ng-hide="!getConfig('guiShowModeControl')" ng-class="{'md-accent': (getAttribute('mode').value == 'boost')}" ng-click="setMode('boost')">Boost</md-button>
+    </div-->
 </md-card>

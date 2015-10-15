@@ -130,8 +130,15 @@ http://www.google.com/design/spec/components/buttons-floating-action-button.html
 }
 
 /* Button group */
+.button-group{
+    margin: 6px 8px;
+}
+
+.button-group > .md-button{
+    margin: 0;
+}
+
 .button-group > .md-button:not(:first-child){
-    margin-left: 0;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     -moz-border-radius-topleft: 0px;
@@ -140,11 +147,18 @@ http://www.google.com/design/spec/components/buttons-floating-action-button.html
     -webkit-border-bottom-left-radius: 0px;
 }
 .button-group > .md-button:not(:last-child){
-    margin-right: 0;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
     -moz-border-radius-topright: 0px;
     -moz-border-radius-bottomright: 0px;
     -webkit-border-top-right-radius: 0px;
     -webkit-border-bottom-right-radius: 0px;
+}
+
+.button-group.md-raised{
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.button-group.md-raised > .md-button{
+    box-shadow: none;
 }
