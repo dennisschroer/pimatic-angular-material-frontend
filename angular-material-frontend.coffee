@@ -2,6 +2,7 @@ module.exports = (env) ->
 
   express = env.require "express"
   fs = require "fs"
+  #bower = require "bower"
 
   # ##The MobileFrontend
   class MobileMaterialFrontend extends env.plugins.Plugin
@@ -18,7 +19,14 @@ module.exports = (env) ->
             return env.logger.error err
           env.logger.info "Generated index.html"
 
-      # * Static assets
+      # Update dependencies
+      # Does not work: you can not call bower update with a reference to the bower.json file
+      #env.logger.info "Updating dependencies. This can take some time (runs next to startup)..."
+      #bower.commands.update([__dirname], {production: true}, {}).on('log', (log) =>
+      #  env.logger.info log
+      #)
+
+      # Static assets
       @app.use @config.mountPath, express.static(__dirname)
       env.logger.info "Mounted material frontend on '" + @config.mountPath + "'"
 
