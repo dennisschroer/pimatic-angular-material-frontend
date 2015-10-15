@@ -8,6 +8,7 @@
     "assets",
     "dist",
     "partials",
+    "i10n",
     "index.tmpl.html",
     "angular-material-frontend.coffee",
     "angular-material-frontend-config-schema.coffee",
@@ -17,7 +18,7 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "http://github.com/denniss17/pimatic-angular-material-frontend",
   "repository": {
     "type": "git",
@@ -50,6 +51,6 @@
     "phantomjs": "^1.9.18"
   },
   "scripts": {
-    "postinstall": "bower install -p"
+    "postinstall": "bower install -p --allow-root"
   }
 }

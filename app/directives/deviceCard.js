@@ -19,7 +19,7 @@ angular.module('pimaticApp').directive('deviceCard', function () {
             $scope.getConfig = function(name, defaultValue) {
                 // Get the value from the config, or from the defaults, or return defaultValue
                 if(name in $scope.device.config){
-                    return $scope.device.config;
+                    return $scope.device.config[name];
                 }else if(name in $scope.device.configDefaults){
                     return $scope.device.configDefaults[name];
                 }else{
