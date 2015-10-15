@@ -50,6 +50,6 @@
     "phantomjs": "^1.9.18"
   },
   "scripts": {
-    "postinstall": "bower install -p"
+    "postinstall": "bower install -p --allow-root"
   }
 }
