@@ -15,8 +15,8 @@
         </div>
     </div>
     <di class="md-actions" layout="row" layout-align="end center">
-        <md-button ng-click="start()" ng-show="!getAttribute('running').value">Start</md-button>
-        <md-button ng-click="stop()" ng-show="getAttribute('running').value">Stop</md-button>
-        <md-button ng-click="reset()">Reset</md-button>
+        <md-button ng-click="start()" ng-show="!getAttribute('running').value">{{'START' | translate}}</md-button>
+        <md-button ng-click="stop()" ng-show="getAttribute('running').value">{{'STOP' | translate}}</md-button>
+        <md-button ng-click="reset()">{{'RESET' | translate}}</md-button>
     </di>
 </md-card>

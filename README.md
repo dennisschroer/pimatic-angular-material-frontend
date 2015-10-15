@@ -45,7 +45,8 @@ You can install the plugin either via npm or via git.
 ## Changelog
 
 ### 0.2.0
-All basic devices (except music player) added.
+- All basic devices (except music player) added
+- Better localisation
 
 ### 0.1.2
 A little bugfix.
