@@ -13,9 +13,9 @@
         </md-list>
     </section>
     <section>
-        <md-subheader class="md-primary">Ungrouped</md-subheader>
+        <md-subheader class="md-primary">{{'UNGROUPED' | translate}}</md-subheader>
         <md-list>
-            <md-list-item class="md-2-line" ng-repeat="deviceId in ungroupedDevices()">
+            <md-list-item class="md-2-line" ng-repeat="deviceId in getUngroupedDeviceIds()">
                 <div class="md-list-item-text">
                     <h3>{{store.get('devices', deviceId).name}}</h3>
 

@@ -17,6 +17,8 @@ By default, the webinterface wil be available via `http://<hostname>/material`. 
 
 If the `debug` setting is set to true, the web app will print additional debug information to the console of the browser.
 
+A screen width of at least 400 pixels is advised, otherwise some buttons will overlap with text.
+
 ## Installation
 You can install the plugin either via npm or via git.
 
@@ -36,10 +38,44 @@ You can install the plugin either via npm or via git.
 
 			npm install git://github.com/denniss17/pimatic-angular-material-frontend
 
-		This should also automatically download all dependencies of bower. If not, run the following command in the root of the plugin:
+		This should also automatically download all dependencies via bower. If not, run the following command in the root of the plugin:
 
     		bower install -p
 
+## Changelog
+
+### 0.2.0
+- All basic devices (except music player) added
+- Better localisation
+
+### 0.1.2
+A little bugfix.
+
+### 0.1.1
+- Description updated
+- Documentation updated
+
+### 0.1.0
+Initial release.
+
+## To do
+(not in order of priority)
+
+- Add all default templates [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/views/pages/index.jade)
+	- ~~switch~~
+	- ~~shutter~~
+	- ~~dimmer~~
+	- ~~device~~
+	- ~~buttons~~ Test many buttons (more than fitting in one row)
+    - musicplayer
+	- ~~thermostat (GUI settings)~~
+	- ~~timer~~
+- Error if device could not be found [link](https://github.com/pimatic/pimatic-mobile-frontend/blob/master/app/pages/index-items.coffee#L58)
+- Default (device)template if given template does not exist
+- Graphs :)
+- Edit pages
+- Themes
+- More settings
 
 ## Developing
 First make sure all development dependencies are installed:
@@ -88,6 +124,7 @@ npm: [https://www.npmjs.com/](https://www.npmjs.com/)
 This project attempts to follow the AngularJS style guide, which can be found [here](https://github.com/mgechev/angularjs-style-guide).
 
 ## License
+
 	Pimatic Angular Material Frontend is published under the GNU General Public License Version 3:
 	you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

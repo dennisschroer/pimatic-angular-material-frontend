@@ -1,3 +1,8 @@
+/*
+Please not that if you change some size value, it should be a multiple of 8 (or maybe 4)
+See https://www.google.com/design/spec/layout/metrics-keylines.html#metrics-keylines-baseline-grids
+*/
+
 #toolbar-top {
     position: fixed;
 }
@@ -52,8 +57,29 @@
     margin-left: 16px;
 }
 
+.device-header .device-header-values .device-header-value-large {
+    font-size: 24px;
+}
+
+
+
 .device-header .device-header-values .device-switch {
     margin: 0;
+}
+
+.device-header .device-header-values .md-button {
+    /* Margin is by default 6 and 8, card gets to large then */
+    margin: 1px 0px;
+}
+
+md-card .md-actions .md-button{
+    /* Default min-width is 88 px. It is decreased to make more buttons in a card availaible. */
+    min-width: 72px;
+}
+
+.device-header .device-header-values md-slider {
+    /* Height is by default 48, but card gets to large then */
+    height: 40px;
 }
 
 .device-values .device-value{
@@ -74,7 +100,7 @@ md-icon.mdi.mdi-large {
 
 /** Fix for vertical allign */
 a.md-fab md-icon {
-    line-height: inherit;
+    /*line-height: inherit;*/
 }
 
 /*
@@ -101,4 +127,38 @@ http://www.google.com/design/spec/components/buttons-floating-action-button.html
 
 .login-card md-input-container{
     text-align: left;
+}
+
+/* Button group */
+.button-group{
+    margin: 6px 8px;
+}
+
+.button-group > .md-button{
+    margin: 0;
+}
+
+.button-group > .md-button:not(:first-child){
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+}
+.button-group > .md-button:not(:last-child){
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+}
+
+.button-group.md-raised{
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.button-group.md-raised > .md-button{
+    box-shadow: none;
 }

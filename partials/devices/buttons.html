@@ -1,8 +1,8 @@
-<md-card>
+<md-card ng-controller="ButtonsController">
     <div layout="row" class="device-header">
         <div class="device-icon-wrapper">
             <span class="device-icon">
-                <i class="mdi mdi-tag-text-outline"></i>
+                <i class="mdi mdi-cursor-pointer"></i>
             </span>
         </div>
         <div class="device-titles" layout="column" flex>
@@ -11,9 +11,7 @@
             <h2>{{device.template}}</h2>
         </div>
     </div>
-    <md-card-content>
-        <div layout="column">
-            <div style="margin-bottom: 8px;" attribute-value attribute="attribute" use-name="1" ng-repeat="attribute in device.attributes"></div>
-        </div>
-    </md-card-content>
+    <di class="md-actions" layout="row" layout-align="end center">
+        <md-button ng-repeat="button in device.config.buttons" ng-click="buttonPressed(button)">{{button.text}}</md-button>
+    </di>
 </md-card>

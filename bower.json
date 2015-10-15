@@ -1,6 +1,6 @@
 {
   "name": "Pimatic AngularJS frontend",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "authors": [
     "Dennis Schroer <dennisschroer@hotmail.com>"
   ],
@@ -9,8 +9,9 @@
   "dependencies": {
     "angular": "~1",
     "angular-material": "~0.11",
-    "angular-route": "~1",
     "angular-messages": "~1",
+    "angular-route": "~1",
+    "angular-translate": "~2.8.0",
     "mdi": "~1",
     "socket.io-client": "~1"
   },

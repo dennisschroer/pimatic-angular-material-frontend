@@ -1,21 +1,36 @@
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
- * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
- * If the models are not in the store, the models are requested via the specified ApiProvider
+ * Api. Users can request models from the store. If the models are in the store, the models are directly returned.
+ * If the models are not in the store, the models are requested via the specified Api
  */
 
-angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', 'apiProviderName', function ($q, $injector, $log, apiProviderName) {
-    var store = {
-        // Retrieve the provider instance from the injector
-        provider: $injector.get(apiProviderName),
+angular.module('pimaticApp.services').provider('store', function () {
+    var self = this;
+
+    this.apiName = "fixtureApi";
+
+    this.$get = ['$q', '$log', '$injector', function ($q, $log, $injector) {
+        self.store.$q = $q;
+        self.store.$log = $log;
+        self.store.api = $injector.get(self.apiName);
+        return self.store;
+    }];
+
+    this.setApi = function (apiName) {
+        this.apiName = apiName;
+    };
+
+    this.store = {
+        // Retrieve the api instance from the injector
+        api: null,
 
         store: {},
 
         /**
          * Reset the store and retreive all objects from the API provider again
          */
-        reset: function(){
-            $log.debug('=== STORE RESET ===');
+        reset: function () {
+            this.$log.debug('=== STORE RESET ===');
 
             this.store = {
                 user: {timestamp: 0, loading: false, data: null},
@@ -26,23 +41,23 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
                 variables: {timestamp: 0, loading: false, data: []}
             };
 
-            this.provider.setStore(this);
+            this.api.setStore(this);
         },
 
-        reload: function(){
+        reload: function () {
             this.reset();
-            this.provider.start();
+            this.api.start();
         },
 
-        isLoading: function(type){
+        isLoading: function (type) {
             return this.store[type].loading;
         },
 
-        getUser: function(){
+        getUser: function () {
             return this.store.user.data;
         },
 
-        setUser: function(user){
+        setUser: function (user) {
             this.store.user.data = user;
         },
 
@@ -64,19 +79,19 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
 
                     // Fetch data via the API
                     if (!skipApi) {
-                        self.provider.load(type).then(function (data) {
-                        // Merge the objects
-                        self.store[type].data = data;
+                        self.api.load(type).then(function (data) {
+                            // Merge the objects
+                            self.store[type].data = data;
 
-                        var date = new Date();
-                        self.store[type].timestamp = date.getTime();
+                            var date = new Date();
+                            self.store[type].timestamp = date.getTime();
 
-                        self.store[type].loading = false;
-                    }, function () {
-                        // Set to false, so it can be retried
-                        self.store[type].loading = false;
-                    });
-                }
+                            self.store[type].loading = false;
+                        }, function () {
+                            // Set to false, so it can be retried
+                            self.store[type].loading = false;
+                        });
+                    }
                 }
 
                 if (angular.isUndefined(id)) {
@@ -92,9 +107,9 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
                     });
 
                     //if (item == null) {
-                        //item = self.createDummy(type, id);
-                        //self.store[type].data.push(item);
-                        //console.log("Dummy created", type, id);
+                    //item = self.createDummy(type, id);
+                    //self.store[type].data.push(item);
+                    //console.log("Dummy created", type, id);
                     //}
                     return item;
                 }
@@ -112,39 +127,39 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
          * the addition is originated from the server. Defaults to false
          */
         add: function (type, object, skipApi) {
-            var provider = this.provider;
+            var api = this.api;
             var self = this;
 
-            $log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
+            this.$log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
-            var add = function(){
+            var add = function () {
                 var current = self.get(type, object.id, skipApi);
-                if(current === null){
+                if (current === null) {
                     // Really new
-                    return $q(function(resolve){
+                    return self.$q(function (resolve) {
                         self.get(type, undefined, skipApi).push(object);
                         resolve(object);
                     });
-                }else{
+                } else {
                     // Not new, update instead
                     return self.update(type, object, skipApi);
                 }
             };
 
-            return $q(function (resolve, reject) {
-                if(skipApi){
+            return self.$q(function (resolve, reject) {
+                if (skipApi) {
                     // Add directly
-                    add(object).then(function(result){
+                    add(object).then(function (result) {
                         resolve(result);
                     });
-                }else{
+                } else {
                     // Call the API provider
-                    provider.add(type, object).then(function (resultingObject) {
+                    api.add(type, object).then(function (resultingObject) {
                         // Succesfully added -> add to store
-                        add(resultingObject).then(function(result){
+                        add(resultingObject).then(function (result) {
                             resolve(result);
                         });
                     }, function (message) {
@@ -164,26 +179,26 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
          * the addition is originated from the server. Defaults to false
          */
         update: function (type, object, skipApi) {
-            var provider = this.provider;
+            var api = this.api;
             var self = this;
 
-            $log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
+            this.$log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
 
-            return $q(function (resolve, reject) {
+            return self.$q(function (resolve, reject) {
                 var current = self.get(type, object.id);
-                if(current === null){
+                if (current === null) {
                     reject("Fatal: update called, but object does not exist");
                     return;
                 }
 
-                if(skipApi){
+                if (skipApi) {
                     // Update directly
                     angular.merge(current, object);
                     resolve(current);
-                }else {
+                } else {
                     // Call the API provider
-                    provider.update(type, object).then(function (resultingObject) {
+                    api.update(type, object).then(function (resultingObject) {
                         // Succesfully updated -> update in store
                         angular.merge(current, resultingObject);
                         resolve(current);
@@ -205,36 +220,36 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
         remove: function (type, object, skipApi) {
             var self = this;
 
-            $log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
+            this.$log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
-            if(!(type in self.store)){
-                return $q(function(resolve, reject){
+            if (!(type in self.store)) {
+                return self.$q(function (resolve, reject) {
                     reject('Type is not valid');
                 });
             }
 
             // Help function
-            var remove = function(){
+            var remove = function () {
                 // Find index
                 var index = -1;
-                angular.forEach(self.store[type].data, function(value, i){
+                angular.forEach(self.store[type].data, function (value, i) {
                     index = value.id == object.id ? i : index;
                 });
 
                 // Remove object
-                if(index>=0){
+                if (index >= 0) {
                     self.store[type].data.splice(index, 1);
                 }
             };
 
-            return $q(function (resolve, reject) {
-                if(skipApi){
+            return self.$q(function (resolve, reject) {
+                if (skipApi) {
                     // Update directly
                     remove(object);
                     resolve(object);
-                }else {
+                } else {
                     // Call the API provider
-                    self.provider.remove(type, object).then(function (resultingObject) {
+                    self.api.remove(type, object).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
                         resolve(resultingObject);
@@ -244,8 +259,6 @@ angular.module('pimaticApp.data').factory('store', ['$q', '$injector', '$log', '
                     });
                 }
             });
-        },
+        }
     };
-
-    return store;
-}]);
+});

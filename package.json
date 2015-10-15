@@ -11,12 +11,13 @@
     "index.tmpl.html",
     "angular-material-frontend.coffee",
     "angular-material-frontend-config-schema.coffee",
+    "lib/color.min.js",
     "bower.json",
     ".bowerrc",
     "README.md",
     "LICENSE.txt"
   ],
-  "version": "0.1.2",
+  "version": "0.2.0",
   "homepage": "http://github.com/denniss17/pimatic-angular-material-frontend",
   "repository": {
     "type": "git",

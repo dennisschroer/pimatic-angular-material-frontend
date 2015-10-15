@@ -4,7 +4,7 @@
  * If the models are not in the store, the models are requested via the specified ApiProvider
  */
 
-angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location', '$q', function (store, $injector, $location, $q) {
+angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$location', '$q', function (store, $injector, $location, $q) {
     var auth = {
         store: store,
 
@@ -50,7 +50,7 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
         login: function(username, password, rememberMe){
             var self = this;
             return $q(function(resolve, reject){
-                self.store.provider.login(username, password, rememberMe).then(function(user){
+                self.store.api.login(username, password, rememberMe).then(function(user){
                     store.reload();
                     store.setUser(user);
                     //store.add('user',user);
@@ -63,7 +63,7 @@ angular.module('pimaticApp').factory('auth', ['store', '$injector', '$location',
         logout: function(){
             var self = this;
             return $q(function(resolve, reject) {
-                self.store.provider.logout().then(function(){
+                self.store.api.logout().then(function(){
                     // Remove user
                     store.setUser(null);
                     // Reset store

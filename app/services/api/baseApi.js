@@ -1,9 +1,19 @@
 /**
  * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
  */
-angular.module('pimaticApp.data').factory('baseProvider', ['$q', function ($q) {
+angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
     return {
         store: null,
+
+        toQueryString: function(data, prefix){
+            var self = this;
+            var strings = [];
+            angular.forEach(data, function(value, key){
+                var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + "[" + encodeURIComponent(key) + "]";
+                strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + "=" + encodeURIComponent(value));
+            });
+            return strings.join("&");
+        },
 
         setStore: function (store) {
             this.store = store;

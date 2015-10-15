@@ -1,1 +1,1 @@
-[{"id":"main","name":"Main","devices":["cv","syscpu","sysram","sysdisk","systemp","thermostat","cvcontrol","temperature-humidity","www"],"rules":[],"variables":[]}]
+[{"id":"test","name":"Test","devices":[],"rules":[],"variables":[]}]

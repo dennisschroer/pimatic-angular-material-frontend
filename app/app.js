@@ -12,7 +12,7 @@ angular.module('pimaticApp.configuration').constant('pimaticHost', '');
 /**
  * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
-angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvider');
+angular.module('pimaticApp.configuration').constant('apiName', 'websocketApi');
 /**
  * If debug is true, debug messages will be
  */
@@ -24,16 +24,28 @@ angular.module('pimaticApp.configuration').constant('apiProviderName', 'apiProvi
 
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
-angular.module('pimaticApp.data', ['pimaticApp.configuration']);
-angular.module('pimaticApp', ['ngMaterial', 'ngRoute', 'ngMessages', 'pimaticApp.configuration', 'pimaticApp.devices', 'pimaticApp.settings', 'pimaticApp.data']);
+angular.module('pimaticApp.api', ['pimaticApp.configuration']);
+angular.module('pimaticApp.services', ['pimaticApp.api', 'pimaticApp.configuration']);
+
+/** The main module */
+angular.module('pimaticApp', [
+    'ngMaterial',
+    'ngRoute',
+    'ngMessages',
+    'pimaticApp.configuration',
+    'pimaticApp.devices',
+    'pimaticApp.services',
+    'pimaticApp.settings',
+    'pascalprecht.translate',
+    'mdThemeColors'
+]);
 
 
-angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', function ($routeProvider, $logProvider, debug) {
+angular.module('pimaticApp').config(['$routeProvider', '$logProvider', '$injector', 'debug', function ($routeProvider, $logProvider, $injector, debug) {
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
-    }).when('/landing', {
-    }).when('/about', {
+    }).when('/landing', {}).when('/about', {
         templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
@@ -61,28 +73,29 @@ angular.module('pimaticApp').config(['$routeProvider', '$logProvider', 'debug', 
     $logProvider.debugEnabled(debug);
 }]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", function ($rootScope, $location, $injector, $log, store, auth) {
+angular.module('pimaticApp.services').config(['storeProvider', 'apiName', function(storeProvider, apiName){
+    storeProvider.setApi(apiName);
+}]);
+
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
     $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
-    $rootScope.version = '@@version';
-    if($rootScope.version.substr(0,2) == '@@'){
-        $rootScope.version = 'dev';
-    }
+    $rootScope.version = version == '@@version' ? 'development' : version;
 
     $rootScope.state = 'starting';
     $rootScope.redirectedFrom = null;
 
-    $rootScope.setState = function(state){
+    $rootScope.setState = function (state) {
         $rootScope.state = state;
-        if(state == 'done' || state == 'unauthenticated'){
-            if(!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null){
+        if (state == 'done' || state == 'unauthenticated') {
+            if (!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null) {
                 $location.path($rootScope.redirectedFrom);
                 $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
                 $rootScope.redirectedFrom = null;
-            }else{
-                $log.debug('New state:', state, 'Redirecting to ', state=='unauthenticated' ? '/login' : '/home');
-                $location.path(state=='unauthenticated' ? '/login' : '/home');
+            } else {
+                $log.debug('New state:', state, 'Redirecting to ', state == 'unauthenticated' ? '/login' : '/home');
+                $location.path(state == 'unauthenticated' ? '/login' : '/home');
             }
         }
     };
@@ -96,13 +109,13 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
-        if($rootScope.state == 'starting'){
+        if ($rootScope.state == 'starting') {
             if (next.originalPath != "/landing") {
                 $log.debug('App', 'Application is loading, redirecting to the landing page');
                 $rootScope.redirectedFrom = next.originalPath;
                 $location.path("/landing");
             }
-        }else{
+        } else {
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
                 if (next.originalPath == "/login") {

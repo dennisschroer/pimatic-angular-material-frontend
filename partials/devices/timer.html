@@ -1,0 +1,22 @@
+<md-card ng-controller="TimerController">
+    <div layout="row" class="device-header">
+        <div class="device-icon-wrapper">
+            <span class="device-icon">
+                <i class="mdi mdi-timer"></i>
+            </span>
+        </div>
+        <div class="device-titles" layout="column" flex>
+            <h1>{{device.name}}</h1>
+
+            <h2>{{device.template}}</h2>
+        </div>
+        <div class="device-header-values" layout="row" layout-align="end center" flex>
+            <span class="device-header-value-large">{{getAttribute('time').value | elapsed}}</span>
+        </div>
+    </div>
+    <di class="md-actions" layout="row" layout-align="end center">
+        <md-button ng-click="start()" ng-show="!getAttribute('running').value">{{'START' | translate}}</md-button>
+        <md-button ng-click="stop()" ng-show="getAttribute('running').value">{{'STOP' | translate}}</md-button>
+        <md-button ng-click="reset()">{{'RESET' | translate}}</md-button>
+    </di>
+</md-card>
