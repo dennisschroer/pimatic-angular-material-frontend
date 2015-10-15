@@ -1,7 +1,7 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
- * Version:     0.2.0 
+ * Version:     0.2.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
  * Date:        2015-10-16 
  */
@@ -1365,7 +1365,9 @@ angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope
      */
     $scope.preset = function(preset) {
         var setPoint = $scope.getConfig(preset, false);
-        $scope.setTemperatureSetpoint(setPoint);
+        if(angular.isNumber(setPoint)){
+            $scope.setTemperatureSetpoint(setPoint);
+        }
     };
 }]);
 angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
@@ -1581,7 +1583,7 @@ angular.module('pimaticApp').directive('deviceCard', function () {
             $scope.getConfig = function(name, defaultValue) {
                 // Get the value from the config, or from the defaults, or return defaultValue
                 if(name in $scope.device.config){
-                    return $scope.device.config;
+                    return $scope.device.config[name];
                 }else if(name in $scope.device.configDefaults){
                     return $scope.device.configDefaults[name];
                 }else{
