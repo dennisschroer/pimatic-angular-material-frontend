@@ -51,6 +51,8 @@ angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope
      */
     $scope.preset = function(preset) {
         var setPoint = $scope.getConfig(preset, false);
-        $scope.setTemperatureSetpoint(setPoint);
+        if(angular.isNumber(setPoint)){
+            $scope.setTemperatureSetpoint(setPoint);
+        }
     };
 }]);

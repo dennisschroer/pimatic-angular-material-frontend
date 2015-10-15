@@ -8,6 +8,7 @@
     "assets",
     "dist",
     "partials",
+    "i10n",
     "index.tmpl.html",
     "angular-material-frontend.coffee",
     "angular-material-frontend-config-schema.coffee",
