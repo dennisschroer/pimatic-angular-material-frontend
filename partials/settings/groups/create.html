@@ -1,31 +1,29 @@
 <div class="md-padding">
-    <h1 class="md-headline">Create group</h1>
-
     <form name="form" ng-submit="save()">
         <md-input-container>
-            <label>Id</label>
+            <label>{{'LABEL.ID' | translate}}</label>
             <input name="id" ng-model="group.id" required pattern="[a-z0-9_\-]*" type="text">
 
             <div ng-messages="form.id.$error" ng-show="form.id.$dirty">
-                <div ng-message="pattern">Only lowercase alphanumeric characters, '-' and '_'</div>
-                <div ng-message="required">Required</div>
+                <div ng-message="pattern">{{'MESSAGE.ID_PATTERN' | translate}}</div>
+                <div ng-message="required">{{'MESSAGE.REQUIRED' | translate}}</div>
             </div>
         </md-input-container>
 
         <md-input-container>
-            <label>Name</label>
+            <label>{{'LABEL.NAME' | translate}}</label>
             <input name="name" ng-model="group.name" required type="text">
 
             <div ng-messages="form.name.$error" ng-show="form.name.$dirty">
-                <div ng-message="required">Required</div>
+                <div ng-message="required">{{'MESSAGE.REQUIRED' | translate}}</div>
             </div>
         </md-input-container>
 
         <md-button class="md-raised md-primary">
-            Save
+            {{ 'ACTION.SAVE' | translate }}
         </md-button>
         <md-button class="md-raised" ng-click="cancel($event)">
-            Cancel
+            {{ 'ACTION.CANCEL' | translate }}
         </md-button>
     </form>
 </div>

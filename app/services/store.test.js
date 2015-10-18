@@ -1,4 +1,5 @@
 describe('store', function(){
+    beforeEach(module('ngMaterial'));
     beforeEach(module('pimaticApp.services', function (storeProvider){
         storeProvider.setApi("fixtureApi");
     }));

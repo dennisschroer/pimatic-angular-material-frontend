@@ -12,7 +12,11 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
     var cache = {};
 
     var singulars = {
-        'groups': 'group'
+        'groups': 'group',
+        'pages': 'page',
+        'devices': 'device',
+        'rules': 'rule',
+        'variables': 'variable'
     };
 
     return angular.extend({}, baseProvider, {

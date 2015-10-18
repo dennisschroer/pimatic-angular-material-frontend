@@ -9,10 +9,11 @@ angular.module('pimaticApp.services').provider('store', function () {
 
     this.apiName = "fixtureApi";
 
-    this.$get = ['$q', '$log', '$injector', function ($q, $log, $injector) {
+    this.$get = ['$q', '$log', '$injector', 'events', function ($q, $log, $injector, events) {
         self.store.$q = $q;
         self.store.$log = $log;
         self.store.api = $injector.get(self.apiName);
+        self.store.events = events;
         return self.store;
     }];
 
@@ -23,6 +24,8 @@ angular.module('pimaticApp.services').provider('store', function () {
     this.store = {
         // Retrieve the api instance from the injector
         api: null,
+        // Event handler
+        events: null,
 
         store: {},
 
@@ -153,17 +156,26 @@ angular.module('pimaticApp.services').provider('store', function () {
                 if (skipApi) {
                     // Add directly
                     add(object).then(function (result) {
+                        self.events.onStoreAdditionSuccess(type, object);
                         resolve(result);
+                    }, function(message){
+                        self.events.onStoreAdditionFailure(type, object, message);
+                        reject(message);
                     });
                 } else {
                     // Call the API provider
                     api.add(type, object).then(function (resultingObject) {
                         // Succesfully added -> add to store
                         add(resultingObject).then(function (result) {
+                            self.events.onStoreAdditionSuccess(type, object);
                             resolve(result);
+                        }, function(message){
+                            self.events.onStoreAdditionFailure(type, object, message);
+                            reject(message);
                         });
                     }, function (message) {
                         // Not added
+                        self.events.onStoreAdditionFailure(type, object, message);
                         reject(message);
                     });
                 }
@@ -246,15 +258,18 @@ angular.module('pimaticApp.services').provider('store', function () {
                 if (skipApi) {
                     // Update directly
                     remove(object);
+                    self.events.onStoreRemovalSuccess(type, object);
                     resolve(object);
                 } else {
                     // Call the API provider
                     self.api.remove(type, object).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
+                        self.events.onStoreRemovalSuccess(type, object);
                         resolve(resultingObject);
                     }, function (message) {
                         // Not removed
+                        self.events.onStoreRemovalFailure(type, object, message);
                         reject(message);
                     });
                 }
