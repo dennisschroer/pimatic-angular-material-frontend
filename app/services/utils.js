@@ -3,7 +3,7 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
         /**
          * Get a list of ids of devices which are not in a group
          * @return array An array containing the ids of the devices which are not in a group
-          */
+         */
         getUngroupedDeviceIds: function () {
             var groups = store.get('groups');
             var devices = store.get('devices');

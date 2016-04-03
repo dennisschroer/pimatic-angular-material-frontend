@@ -13,7 +13,7 @@ angular.module('pimaticApp.configuration').provider('config', function () {
         debug: false
     };
 
-    this.$get = function(){
+    this.$get = function () {
         return this.development;
     }
 });

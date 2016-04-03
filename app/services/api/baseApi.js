@@ -5,10 +5,10 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
     return {
         store: null,
 
-        toQueryString: function(data, prefix){
+        toQueryString: function (data, prefix) {
             var self = this;
             var strings = [];
-            angular.forEach(data, function(value, key){
+            angular.forEach(data, function (value, key) {
                 var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + "[" + encodeURIComponent(key) + "]";
                 strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + "=" + encodeURIComponent(value));
             });

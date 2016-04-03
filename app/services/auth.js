@@ -13,32 +13,32 @@ angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$l
         },
 
         /*setupWatchers: function(){
-            $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
-                if(newUser === oldUser) return;
+         $rootScope.$watch(function(){return store.getUser()}, function(newUser, oldUser){
+         if(newUser === oldUser) return;
 
-                // New user or logout, reset the store
-                if(oldUser !== null){
-                    store.reload();
-                }
-            }, true)
-        },*/
+         // New user or logout, reset the store
+         if(oldUser !== null){
+         store.reload();
+         }
+         }, true)
+         },*/
 
         /*setUser: function (user, reset) {
-            console.log('auth', 'New user: ', user);
+         console.log('auth', 'New user: ', user);
 
-            // Set the user
-            this.user = user;
+         // Set the user
+         this.user = user;
 
-            // Reset the store, so it can re-request all objects
-            if(reset){
-                store.reset();
-            }
+         // Reset the store, so it can re-request all objects
+         if(reset){
+         store.reset();
+         }
 
-            // Redirect the user
-            if (user !== null) {
-                this.redirect();
-            }
-        },*/
+         // Redirect the user
+         if (user !== null) {
+         this.redirect();
+         }
+         },*/
 
         /**
          * Attempt to login with the given credentials
@@ -47,10 +47,10 @@ angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$l
          * @param rememberMe bool Whether the user should be remembered. Defaults to false.
          * @returns promise A promise which will be resolved with the user object, or rejected with a message
          */
-        login: function(username, password, rememberMe){
+        login: function (username, password, rememberMe) {
             var self = this;
-            return $q(function(resolve, reject){
-                self.store.api.login(username, password, rememberMe).then(function(user){
+            return $q(function (resolve, reject) {
+                self.store.api.login(username, password, rememberMe).then(function (user) {
                     store.reload();
                     store.setUser(user);
                     //store.add('user',user);
@@ -60,10 +60,10 @@ angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$l
             });
         },
 
-        logout: function(){
+        logout: function () {
             var self = this;
-            return $q(function(resolve, reject) {
-                self.store.api.logout().then(function(){
+            return $q(function (resolve, reject) {
+                self.store.api.logout().then(function () {
                     // Remove user
                     store.setUser(null);
                     // Reset store

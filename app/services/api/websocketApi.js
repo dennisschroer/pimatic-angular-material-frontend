@@ -38,9 +38,9 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
             // It seems that sometimes after executing a device action (for example by calling GET api/device/dummy/turnOn),
             // the response of this call comes at the same time (or in the same cycle) as the received updated via the
             // socket, resulting in errors if you call $apply there. I'm not sure if it also happens in other cases.
-            if($rootScope.$$phase){
+            if ($rootScope.$$phase) {
                 fn();
-            }else{
+            } else {
                 $rootScope.$apply(fn);
             }
         },
@@ -356,8 +356,8 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                             reject(data.message);
                         }
                     }).error(function (data) {
-                        reject(data.message);
-                    });
+                    reject(data.message);
+                });
             });
         },
 
@@ -371,9 +371,9 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                     .success(function () {
                         resolve();
                     }).error(function () {
-                        // Succesfull logout gives a 401
-                        resolve();
-                    });
+                    // Succesfull logout gives a 401
+                    resolve();
+                });
             });
         },
 
@@ -397,7 +397,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
             var self = this;
             return $q(function (resolve, reject) {
                 var url = pimaticHost + '/api/device/' + deviceId + '/' + actionName;
-                if(!angular.isUndefined(params) && angular.isObject(params)){
+                if (!angular.isUndefined(params) && angular.isObject(params)) {
                     url += '?' + self.toQueryString(params);
                 }
 
@@ -409,8 +409,8 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                             reject();
                         }
                     }).error(function () {
-                        reject();
-                    });
+                    reject();
+                });
             });
         },
 

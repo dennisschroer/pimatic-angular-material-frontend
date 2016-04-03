@@ -13,14 +13,13 @@ angular.module('pimaticApp').directive('attributeValue', function () {
              */
             useName: '='
         },
-        template:
-            '<div layout="row">' +
-                '<div flex layout="row" layout-align="start center" class="md-body-1">' +
-                    '{{useName ? attribute.name : attribute.label}}' +
-                '</div>' +
-                '<div><span>' +
-                    '{{attribute.value}} {{attribute.unit}}' +
-                '</span></div>' +
-            '</div>'
+        template: '<div layout="row">' +
+        '<div flex layout="row" layout-align="start center" class="md-body-1">' +
+        '{{useName ? attribute.name : attribute.label}}' +
+        '</div>' +
+        '<div><span>' +
+        '{{attribute.value}} {{attribute.unit}}' +
+        '</span></div>' +
+        '</div>'
     };
 });

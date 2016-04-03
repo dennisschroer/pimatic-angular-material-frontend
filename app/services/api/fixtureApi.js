@@ -8,7 +8,7 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
          */
         start: function () {
             data = {};
-            
+
             this.store.setUser(
                 {
                     "username": "admin",
