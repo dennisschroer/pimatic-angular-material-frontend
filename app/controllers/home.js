@@ -1,4 +1,4 @@
-angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", function ($scope, $filter, utils) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", "store", function ($scope, $filter, utils, store) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
@@ -15,6 +15,18 @@ angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", 
         } else {
             return $filter('intersect')($filter('extract')(page.devices, 'deviceId'), group.devices);
         }
+    };
+
+    $scope.getPages = function () {
+        return store.get('pages');
+    };
+
+    $scope.getGroups = function () {
+        return store.get('grpups');
+    };
+
+    $scope.getDevice = function (deviceId) {
+        return store.get('devices', deviceId)
     };
 
     /*$scope.selectPage = function(){

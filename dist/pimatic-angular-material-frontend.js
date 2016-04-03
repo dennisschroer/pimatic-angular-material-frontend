@@ -3,7 +3,7 @@
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
  * Version:     0.2.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2016-04-03 
+ * Date:        2016-04-04 
  */
 /**
  * Create the different modules.
@@ -13,8 +13,8 @@
 angular.module('pimaticApp.configuration', []);
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
-angular.module('pimaticApp.api', ['pimaticApp.configuration']);
-angular.module('pimaticApp.services', ['pimaticApp.api', 'pimaticApp.configuration']);
+angular.module('pimaticApp.adapters', ['pimaticApp.configuration']);
+angular.module('pimaticApp.services', ['pimaticApp.adapters', 'pimaticApp.configuration']);
 
 /** The main module */
 angular.module('pimaticApp', [
@@ -29,73 +29,20 @@ angular.module('pimaticApp', [
     'mdThemeColors'
 ]);
 
-angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
-    $rootScope.store = store;
-    $rootScope.auth = auth;
-    // Version
-    $rootScope.version = version == '@@version' ? 'development' : version;
-
-    $rootScope.state = 'starting';
-    $rootScope.redirectedFrom = null;
-
-    $rootScope.setState = function (state) {
-        $rootScope.state = state;
-        if (state == 'done' || state == 'unauthenticated') {
-            if (!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null) {
-                $location.path($rootScope.redirectedFrom);
-                $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
-                $rootScope.redirectedFrom = null;
-            } else {
-                $log.debug('New state:', state, 'Redirecting to ', state == 'unauthenticated' ? '/login' : '/home');
-                $location.path(state == 'unauthenticated' ? '/login' : '/home');
-            }
-        }
-    };
-
-    // Initialize the apiProvider, so that it can make callbacks
-    //var apiProvider = $injector.get(apiProviderName);
-    //apiProvider.init(store, auth);
-
-    // Start the store
-    store.reload();
-
-    // register listener to watch route changes
-    $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
-        if ($rootScope.state == 'starting') {
-            if (next.originalPath != "/landing") {
-                $log.debug('App', 'Application is loading, redirecting to the landing page');
-                $rootScope.redirectedFrom = next.originalPath;
-                $location.path("/landing");
-            }
-        } else {
-            if (!auth.isLoggedIn()) {
-                // no logged user, we should be going to #login
-                if (next.originalPath !== "/login") {
-                    // not going to #login, we should redirect now
-                    $log.debug('pimaticApp', 'Redirecting to login...');
-                    $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("/login");
-                }
-            }
-        }
-
-    });
-}]);
-
 angular.module('pimaticApp.configuration').provider('config', function () {
     this.environment = 'development';
 
     this.production = {
         title: '',
         pimaticHost: '',
-        apiName: 'websocketApi',
+        adapterName: 'websocketAdapter',
         debug: false
     };
 
     this.development = {
         title: 'Pimatic frontend - DEV',
         pimaticHost: '',
-        apiName: 'fixtureApi',
+        adapterName: 'fixtureAdapter',
         debug: true
     };
 
@@ -153,9 +100,9 @@ angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingP
 }]);
 
 /**
- * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
+ * Base API adapter, specifies dummy methods each adapter could override.
  */
-angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
+angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q) {
     return {
         store: null,
 
@@ -268,12 +215,12 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
     };
 }]);
 
-angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
+angular.module('pimaticApp.adapters').factory('fixtureAdapter', ['$http', '$q', '$rootScope', 'baseAdapter', function ($http, $q, $rootScope, baseAdapter) {
 
     var data = {};
     var deferedPromises = {};
 
-    return angular.extend({}, baseProvider, {
+    return angular.extend({}, baseAdapter, {
         /**
          * Start the provider and reset all caches
          */
@@ -357,7 +304,7 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
     });
 }]);
 
-angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootScope', '$log', 'baseApi', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseProvider, pimaticHost, toast) {
+angular.module('pimaticApp.adapters').factory('websocketAdapter', ['$http', '$q', '$rootScope', '$log', 'baseAdapter', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseAdapter, pimaticHost, toast) {
 
     /*
      * Data via this provider comes asynchronously via a websocket, while the data is requested by the application
@@ -374,7 +321,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
         'groups': 'group'
     };
 
-    return angular.extend({}, baseProvider, {
+    return angular.extend({}, baseAdapter, {
         socket: null,
 
         /**
@@ -977,14 +924,12 @@ angular.module('pimaticApp.services').provider('store', function () {
     this.$get = ['$q', '$log', '$injector', 'config', function ($q, $log, $injector, config) {
         self.store.$q = $q;
         self.store.$log = $log;
-        self.store.api = $injector.get(config.apiName);
+        self.store.adapter = $injector.get(config.adapterName);
         return self.store;
     }];
 
     this.store = {
-        // Retrieve the api instance from the injector
-        api: null,
-
+        adapter: null,
         store: {},
 
         /**
@@ -1002,12 +947,12 @@ angular.module('pimaticApp.services').provider('store', function () {
                 variables: {timestamp: 0, loading: false, data: []}
             };
 
-            this.api.setStore(this);
+            this.adapter.setStore(this);
         },
 
         reload: function () {
             this.reset();
-            this.api.start();
+            this.adapter.start();
         },
 
         isLoading: function (type) {
@@ -1024,7 +969,7 @@ angular.module('pimaticApp.services').provider('store', function () {
 
         /**
          * Retrieve a list of models or a single model. If the requested models are not yet loaded, either
-         * an empty list or an empty object is returned which is filled when the models are provided by the apiProvider.
+         * an empty list or an empty object is returned which is filled when the models are provided by the adapterProvider.
          * @param type The type of the model to load.
          * @param id Optional the id of the model to load. If undefined, all instances will be returned.
          * @param skipApi Optional indicates if the call to the API should be skipped. Defaults to false;
@@ -1042,7 +987,7 @@ angular.module('pimaticApp.services').provider('store', function () {
 
                     // Fetch data via the API
                     if (!skipApi) {
-                        self.api.load(type).then(function (data) {
+                        self.adapter.load(type).then(function (data) {
                             // Merge the objects
                             self.store[type].data = data;
 
@@ -1090,7 +1035,7 @@ angular.module('pimaticApp.services').provider('store', function () {
          * the addition is originated from the server. Defaults to false
          */
         add: function (type, object, skipApi) {
-            var api = this.api;
+            var adapter = this.adapter;
             var self = this;
             var add;
 
@@ -1121,7 +1066,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     });
                 } else {
                     // Call the API provider
-                    api.add(type, object).then(function (resultingObject) {
+                    adapter.add(type, object).then(function (resultingObject) {
                         // Succesfully added -> add to store
                         add(resultingObject).then(function (result) {
                             resolve(result);
@@ -1143,7 +1088,7 @@ angular.module('pimaticApp.services').provider('store', function () {
          * the addition is originated from the server. Defaults to false
          */
         update: function (type, object, skipApi) {
-            var api = this.api;
+            var adapter = this.adapter;
             var self = this;
 
             this.$log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
@@ -1162,7 +1107,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     resolve(current);
                 } else {
                     // Call the API provider
-                    api.update(type, object).then(function (resultingObject) {
+                    adapter.update(type, object).then(function (resultingObject) {
                         // Succesfully updated -> update in store
                         angular.merge(current, resultingObject);
                         resolve(current);
@@ -1214,7 +1159,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     resolve(object);
                 } else {
                     // Call the API provider
-                    self.api.remove(type, object).then(function (resultingObject) {
+                    self.adapter.remove(type, object).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
                         resolve(resultingObject);
@@ -1463,7 +1408,7 @@ angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "s
     };
 }]);
 
-angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", function ($scope, $filter, utils) {
+angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", "store", function ($scope, $filter, utils, store) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
@@ -1480,6 +1425,18 @@ angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", 
         } else {
             return $filter('intersect')($filter('extract')(page.devices, 'deviceId'), group.devices);
         }
+    };
+
+    $scope.getPages = function () {
+        return store.get('pages');
+    };
+
+    $scope.getGroups = function () {
+        return store.get('grpups');
+    };
+
+    $scope.getDevice = function (deviceId) {
+        return store.get('devices', deviceId)
     };
 
     /*$scope.selectPage = function(){
@@ -1540,73 +1497,99 @@ angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav
     };
 }]);
 
-angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", function ($scope, utils) {
+angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", "store", function ($scope, utils, store) {
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
-}]);
 
-angular.module('pimaticApp.settings').controller('GroupsCreateController', ["$scope", "$location", "toast", function ($scope, $location, toast) {
-    $scope.group = {};
-
-    $scope.cancel = function ($event) {
-        $event.preventDefault();
-        $location.path('settings/groups');
+    $scope.getGroups = function () {
+        return store.get('grpups');
     };
 
-    $scope.save = function () {
-        $scope.store.add('groups', $scope.group).then(function () {
+    $scope.getDevice = function (deviceId) {
+        return store.get('devices', deviceId)
+    };
+}]);
+
+angular.module('pimaticApp.settings').controller('GroupsCreateController', [
+    "$scope",
+    "$location",
+    "toast",
+    "store",
+    function ($scope, $location, toast, store) {
+        $scope.group = {};
+
+        $scope.cancel = function ($event) {
+            $event.preventDefault();
             $location.path('settings/groups');
-        }, function (message) {
-            toast.error('Saving group failed: ' + message);
-        });
-    };
-}]);
+        };
 
-angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scope", "$location", "$routeParams", "$mdDialog", "toast", function ($scope, $location, $routeParams, $mdDialog, toast) {
-    $scope.group = angular.copy($scope.store.get('groups', $routeParams.id));
-
-    if ($scope.group === null) {
-        $location.path('settings/groups');
-    }
-
-    $scope.cancel = function ($event) {
-        $event.preventDefault();
-        $location.path('settings/groups');
-    };
-
-    $scope.delete = function ($event) {
-        var confirm;
-
-        $event.preventDefault();
-        // Appending dialog to document.body to cover sidenav in docs app
-        confirm = $mdDialog.confirm()
-            .title('Are you sure you want to delete this group?')
-            .content($scope.group.id)
-            .ariaLabel('Delete group')
-            .ok('Yes')
-            .cancel('No')
-            .targetEvent($event);
-        $mdDialog.show(confirm).then(function () {
-            // Delete group
-            $scope.store.remove('groups', $scope.group).then(function () {
+        $scope.save = function () {
+            store.add('groups', $scope.group).then(function () {
                 $location.path('settings/groups');
             }, function (message) {
-                toast.error('Deleting group failed: ' + message);
+                toast.error('Saving group failed: ' + message);
             });
-        });
-    };
+        };
+    }
+]);
 
-    $scope.save = function () {
-        $scope.store.update('groups', $scope.group).then(function () {
+angular.module('pimaticApp.settings').controller('GroupsEditController', [
+    "$scope",
+    "$location",
+    "$routeParams",
+    "$mdDialog",
+    "toast",
+    "store",
+    function ($scope, $location, $routeParams, $mdDialog, toast, store) {
+        $scope.group = angular.copy(store.get('groups', $routeParams.id));
+
+        if ($scope.group === null) {
             $location.path('settings/groups');
-        }, function (message) {
-            toast.error('Saving group failed: ' + message);
-        });
-    };
-}]);
+        }
 
-angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", "$location", function ($scope, $location) {
+        $scope.cancel = function ($event) {
+            $event.preventDefault();
+            $location.path('settings/groups');
+        };
+
+        $scope.delete = function ($event) {
+            var confirm;
+
+            $event.preventDefault();
+            // Appending dialog to document.body to cover sidenav in docs app
+            confirm = $mdDialog.confirm()
+                .title('Are you sure you want to delete this group?')
+                .content($scope.group.id)
+                .ariaLabel('Delete group')
+                .ok('Yes')
+                .cancel('No')
+                .targetEvent($event);
+            $mdDialog.show(confirm).then(function () {
+                // Delete group
+                store.remove('groups', $scope.group).then(function () {
+                    $location.path('settings/groups');
+                }, function (message) {
+                    toast.error('Deleting group failed: ' + message);
+                });
+            });
+        };
+
+        $scope.save = function () {
+            store.update('groups', $scope.group).then(function () {
+                $location.path('settings/groups');
+            }, function (message) {
+                toast.error('Saving group failed: ' + message);
+            });
+        };
+    }
+]);
+
+angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", "$location", "store", function ($scope, $location, store) {
     $scope.edit = function (id) {
         $location.path('settings/groups/' + id);
+    };
+
+    $scope.getGroups = function () {
+        return store.get('groups');
     };
 }]);
 
@@ -1680,3 +1663,55 @@ angular.module('pimaticApp').directive('pimaticTouchend', function () {
         });
     };
 });
+
+angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
+    $rootScope.auth = auth;
+    // Version
+    $rootScope.version = version == '@@version' ? 'development' : version;
+
+    $rootScope.state = 'starting';
+    $rootScope.redirectedFrom = null;
+
+    $rootScope.setState = function (state) {
+        $rootScope.state = state;
+        if (state == 'done' || state == 'unauthenticated') {
+            if (!angular.isUndefined($rootScope.redirectedFrom) && $rootScope.redirectedFrom !== null) {
+                $location.path($rootScope.redirectedFrom);
+                $log.debug('New state:', state, 'Redirecting to ', $rootScope.redirectedFrom);
+                $rootScope.redirectedFrom = null;
+            } else {
+                $log.debug('New state:', state, 'Redirecting to ', state == 'unauthenticated' ? '/login' : '/home');
+                $location.path(state == 'unauthenticated' ? '/login' : '/home');
+            }
+        }
+    };
+
+    // Initialize the apiProvider, so that it can make callbacks
+    //var apiProvider = $injector.get(apiProviderName);
+    //apiProvider.init(store, auth);
+
+    // Start the store
+    store.reload();
+
+    // register listener to watch route changes
+    $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
+        if ($rootScope.state == 'starting') {
+            if (next.originalPath != "/landing") {
+                $log.debug('App', 'Application is loading, redirecting to the landing page');
+                $rootScope.redirectedFrom = next.originalPath;
+                $location.path("/landing");
+            }
+        } else {
+            if (!auth.isLoggedIn()) {
+                // no logged user, we should be going to #login
+                if (next.originalPath !== "/login") {
+                    // not going to #login, we should redirect now
+                    $log.debug('pimaticApp', 'Redirecting to login...');
+                    $rootScope.redirectedFrom = next.originalPath;
+                    $location.path("/login");
+                }
+            }
+        }
+
+    });
+}]);

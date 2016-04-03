@@ -1,5 +1,4 @@
 angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
-    $rootScope.store = store;
     $rootScope.auth = auth;
     // Version
     $rootScope.version = version == '@@version' ? 'development' : version;
