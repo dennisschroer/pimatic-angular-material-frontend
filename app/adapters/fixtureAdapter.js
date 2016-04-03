@@ -1,9 +1,9 @@
-angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
+angular.module('pimaticApp.api').factory('fixtureAdapter', ['$http', '$q', '$rootScope', 'baseAdapter', function ($http, $q, $rootScope, baseAdapter) {
 
     var data = {};
     var deferedPromises = {};
 
-    return angular.extend({}, baseProvider, {
+    return angular.extend({}, baseAdapter, {
         /**
          * Start the provider and reset all caches
          */

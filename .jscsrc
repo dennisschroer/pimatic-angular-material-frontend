@@ -5,7 +5,7 @@
     "allExcept": [
       "_store_",
       "_$rootScope_",
-      "_baseApi_"
+      "_baseAdapter_"
     ]
   }
 }

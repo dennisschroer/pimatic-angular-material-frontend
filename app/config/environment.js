@@ -4,14 +4,14 @@ angular.module('pimaticApp.configuration').provider('config', function () {
     this.production = {
         title: '',
         pimaticHost: '',
-        apiName: 'websocketApi',
+        adapterName: 'websocketAdapter',
         debug: false
     };
 
     this.development = {
         title: 'Pimatic frontend - DEV',
         pimaticHost: '',
-        apiName: 'fixtureApi',
+        adapterName: 'fixtureAdapter',
         debug: true
     };
 

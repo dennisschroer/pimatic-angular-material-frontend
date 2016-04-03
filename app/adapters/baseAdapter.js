@@ -1,7 +1,7 @@
 /**
- * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
+ * Base API adapter, specifies dummy methods each adapter could override.
  */
-angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
+angular.module('pimaticApp.api').factory('baseAdapter', ['$q', function ($q) {
     return {
         store: null,
 
