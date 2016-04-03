@@ -1,4 +1,10 @@
 # Pimatic Angular Material Frontend
+
+Master:
+[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=master)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
+Development:
+[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=develop)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
+
 A web frontend build for the pimatic framework using angular and material design (angular material).
 
 ![](screenshot.png)
