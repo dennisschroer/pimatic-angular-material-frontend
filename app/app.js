@@ -12,7 +12,7 @@ angular.module('pimaticApp.configuration').constant('pimaticHost', '');
 /**
  * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
  */
-angular.module('pimaticApp.configuration').constant('apiName', 'websocketApi');
+angular.module('pimaticApp.configuration').constant('apiName', 'fixtureApi');
 /**
  * If debug is true, debug messages will be
  */
