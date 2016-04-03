@@ -1,4 +1,4 @@
-lib/bower
+bower_components
 node_modules
 .idea
 .js
