@@ -2,6 +2,9 @@
 
 Master:
 [![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=master)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
+[![Code Climate](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/badges/gpa.svg)](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend)
+[![Test Coverage](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/badges/coverage.svg)](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/coverage)
+
 Development:
 [![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=develop)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
 
