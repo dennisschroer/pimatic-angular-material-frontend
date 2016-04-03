@@ -1483,6 +1483,8 @@ angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", fu
 }]);
 
 angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav", "$mdMedia", "auth", function ($scope, $mdSidenav, $mdMedia, auth) {
+    $scope.auth = auth;
+
     $scope.$mdMedia = $mdMedia;
 
     $scope.toggleMenu = function () {
@@ -1665,7 +1667,6 @@ angular.module('pimaticApp').directive('pimaticTouchend', function () {
 });
 
 angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
-    $rootScope.auth = auth;
     // Version
     $rootScope.version = version == '@@version' ? 'development' : version;
 
@@ -1685,13 +1686,6 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
             }
         }
     };
-
-    // Initialize the apiProvider, so that it can make callbacks
-    //var apiProvider = $injector.get(apiProviderName);
-    //apiProvider.init(store, auth);
-
-    // Start the store
-    store.reload();
 
     // register listener to watch route changes
     $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
@@ -1714,4 +1708,9 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
         }
 
     });
+}]);
+
+angular.module('pimaticApp').run(["store", function (store) {
+    // Start the store
+    store.reload();
 }]);
