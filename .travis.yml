@@ -8,5 +8,11 @@ cache:
     - bower_components
 
 before_script:
+  - npm config set spin false
   - npm install -g grunt-cli
   - npm install -g bower
+  - npm install phantomjs-prebuilt
+
+install:
+  - npm install
+  - bower install
