@@ -253,7 +253,7 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
         },
     };
 }]);
-angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', 'baseApi', function ($http, $q, baseProvider) {
+angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
 
     var data = {};
 
@@ -261,8 +261,30 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', 'baseApi'
         /**
          * Start the provider and reset all caches
          */
-        start: function(){
+        start: function () {
             data = {};
+            
+            this.store.setUser(
+                {
+                    "username": "admin",
+                    "role": "admin",
+                    "permissions": {
+                        "pages": "write",
+                        "rules": "write",
+                        "variables": "write",
+                        "messages": "write",
+                        "events": "write",
+                        "devices": "write",
+                        "groups": "write",
+                        "plugins": "write",
+                        "updates": "write",
+                        "controlDevices": true,
+                        "restart": true
+                    }
+                }
+            );
+            // This triggers a redirect
+            $rootScope.setState('done');
 
             // Simulate by loading fixtures
             $http.get('assets/fixtures/devices.json').then(function (response) {
