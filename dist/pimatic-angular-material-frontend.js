@@ -83,12 +83,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 }]);
 
 angular.module('pimaticApp.configuration').provider('config', function () {
-    this.development = {
-        title: 'Pimatic frontend - DEV',
-        pimaticHost: '',
-        apiName: 'fixtureApi',
-        debug: true
-    };
+    this.environment = 'development';
 
     this.production = {
         title: '',
@@ -97,8 +92,24 @@ angular.module('pimaticApp.configuration').provider('config', function () {
         debug: false
     };
 
+    this.development = {
+        title: 'Pimatic frontend - DEV',
+        pimaticHost: '',
+        apiName: 'fixtureApi',
+        debug: true
+    };
+
+    this.testing = this.development;
+
     this.$get = function () {
-        return this.development;
+        switch (this.environment){
+            case 'testing':
+                return this.testing;
+            case 'development':
+                return this.development;
+            case 'production':
+                return this.production;
+        }
     }
 });
 
@@ -294,7 +305,6 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
             // Simulate by loading fixtures
             $http.get('assets/fixtures/devices.json').then(function (response) {
                 self.addData('devices', response.data);
-                this.checkPromises();
             }, function () {
                 self.addData('devices', []);
             });
@@ -320,8 +330,8 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
             });
         },
 
-        addData: function (name, data) {
-            data[name] = data;
+        addData: function (name, objects) {
+            data[name] = objects;
             this.checkPromises(name);
         },
 
@@ -334,7 +344,6 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
         },
 
         load: function (name) {
-            var defered;
             if (name in data) {
                 return $q(function (resolve) {
                     resolve(data[name]);
