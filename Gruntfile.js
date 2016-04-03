@@ -37,6 +37,7 @@ module.exports = function (grunt) {
                     'app/filters/**/*.js',
                     'app/controllers/**/*.js',
                     'app/directives/**/*.js',
+                    'app/initializers/**/*.js',
                     '!app/**/*.test.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js'
