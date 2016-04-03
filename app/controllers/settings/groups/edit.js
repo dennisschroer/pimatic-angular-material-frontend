@@ -11,9 +11,11 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scop
     };
 
     $scope.delete = function ($event) {
+        var confirm;
+
         $event.preventDefault();
         // Appending dialog to document.body to cover sidenav in docs app
-        var confirm = $mdDialog.confirm()
+        confirm = $mdDialog.confirm()
             .title('Are you sure you want to delete this group?')
             .content($scope.group.id)
             .ariaLabel('Delete group')

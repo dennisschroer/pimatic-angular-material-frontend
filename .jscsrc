@@ -1,3 +1,11 @@
 {
-	"preset": "crockford"
+  "preset": "crockford",
+  "requireMultipleVarDecl": false,
+  "disallowDanglingUnderscores": {
+    "allExcept": [
+      "_store_",
+      "_$rootScope_",
+      "_baseApi_"
+    ]
+  }
 }

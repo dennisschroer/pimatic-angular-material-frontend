@@ -1,10 +1,11 @@
 describe('store', function () {
+    var store;
+    var $rootScope;
+
     beforeEach(module('pimaticApp.services', function (storeProvider) {
         storeProvider.setApi("fixtureApi");
     }));
 
-    var store;
-    var $rootScope;
 
     beforeEach(inject(function (_store_, _$rootScope_) {
         store = _store_;

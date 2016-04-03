@@ -65,6 +65,8 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         get: function (type, id, skipApi) {
             var self = this;
+            var item;
+            var date;
 
             if (type in self.store) {
                 // Check if data is already fetched
@@ -77,7 +79,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                             // Merge the objects
                             self.store[type].data = data;
 
-                            var date = new Date();
+                            date = new Date();
                             self.store[type].timestamp = date.getTime();
 
                             self.store[type].loading = false;
@@ -93,7 +95,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     return self.store[type].data;
                 } else {
                     // Return single item, or null
-                    var item = null;
+                    item = null;
                     angular.forEach(self.store[type].data, function (value) {
                         if (value.id == id) {
                             item = value;
@@ -123,13 +125,14 @@ angular.module('pimaticApp.services').provider('store', function () {
         add: function (type, object, skipApi) {
             var api = this.api;
             var self = this;
+            var add;
 
             this.$log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
-            var add = function () {
+            add = function () {
                 var current = self.get(type, object.id, skipApi);
                 if (current === null) {
                     // Really new
@@ -213,6 +216,7 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         remove: function (type, object, skipApi) {
             var self = this;
+            var remove;
 
             this.$log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
@@ -223,7 +227,7 @@ angular.module('pimaticApp.services').provider('store', function () {
             }
 
             // Help function
-            var remove = function () {
+            remove = function () {
                 // Find index
                 var index = -1;
                 angular.forEach(self.store[type].data, function (value, i) {

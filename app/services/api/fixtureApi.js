@@ -1,13 +1,14 @@
 angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
 
     var data = {};
+    var deferedPromises = {};
 
     return angular.extend({}, baseProvider, {
         /**
          * Start the provider and reset all caches
          */
         start: function () {
-            data = {};
+            var self = this;
 
             this.store.setUser(
                 {
@@ -33,38 +34,57 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
 
             // Simulate by loading fixtures
             $http.get('assets/fixtures/devices.json').then(function (response) {
-                data.devices = response.data;
+                self.addData('devices', response.data);
+                this.checkPromises();
             }, function () {
-                data.devices = [];
+                self.addData('devices', []);
             });
             $http.get('assets/fixtures/groups.json').then(function (response) {
-                data.groups = response.data;
+                self.addData('groups', response.data);
             }, function () {
-                data.groups = [];
+                self.addData('groups', []);
             });
             $http.get('assets/fixtures/pages.json').then(function (response) {
-                data.pages = response.data;
+                self.addData('pages', response.data);
             }, function () {
-                data.pages = [];
+                self.addData('pages', []);
             });
             $http.get('assets/fixtures/rules.json').then(function (response) {
-                data.rules = response.data;
+                self.addData('rules', response.data);
             }, function () {
-                data.rules = [];
+                self.addData('rules', []);
             });
             $http.get('assets/fixtures/variables.json').then(function (response) {
-                data.variables = response.data;
+                self.addData('variables', response.data);
             }, function () {
-                data.variables = [];
+                self.addData('variables', []);
             });
         },
 
+        addData: function (name, data) {
+            data[name] = data;
+            this.checkPromises(name);
+        },
+
+        // Todo use cache from websocketApi
+        checkPromises: function (name) {
+            if (name in deferedPromises) {
+                deferedPromises[name].resolve(data[name]);
+                delete deferedPromises[name];
+            }
+        },
+
         load: function (name) {
-            return $q(function (resolve) {
-                while (!(name in data)) {
-                }
-                resolve(data[name]);
-            });
+            var defered;
+            if (name in data) {
+                return $q(function (resolve) {
+                    resolve(data[name]);
+                });
+            } else {
+                deferedPromises[name] = $q.defer();
+                return deferedPromises[name].promise
+            }
+
         }
     });
 }]);

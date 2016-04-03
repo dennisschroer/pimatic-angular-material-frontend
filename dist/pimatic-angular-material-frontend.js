@@ -70,9 +70,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
         } else {
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
-                if (next.originalPath == "/login") {
-                    // already going to #login, no redirect needed
-                } else {
+                if (next.originalPath !== "/login") {
                     // not going to #login, we should redirect now
                     $log.debug('pimaticApp', 'Redirecting to login...');
                     $rootScope.redirectedFrom = next.originalPath;
@@ -262,13 +260,14 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
 angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
 
     var data = {};
+    var deferedPromises = {};
 
     return angular.extend({}, baseProvider, {
         /**
          * Start the provider and reset all caches
          */
         start: function () {
-            data = {};
+            var self = this;
 
             this.store.setUser(
                 {
@@ -294,38 +293,57 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
 
             // Simulate by loading fixtures
             $http.get('assets/fixtures/devices.json').then(function (response) {
-                data.devices = response.data;
+                self.addData('devices', response.data);
+                this.checkPromises();
             }, function () {
-                data.devices = [];
+                self.addData('devices', []);
             });
             $http.get('assets/fixtures/groups.json').then(function (response) {
-                data.groups = response.data;
+                self.addData('groups', response.data);
             }, function () {
-                data.groups = [];
+                self.addData('groups', []);
             });
             $http.get('assets/fixtures/pages.json').then(function (response) {
-                data.pages = response.data;
+                self.addData('pages', response.data);
             }, function () {
-                data.pages = [];
+                self.addData('pages', []);
             });
             $http.get('assets/fixtures/rules.json').then(function (response) {
-                data.rules = response.data;
+                self.addData('rules', response.data);
             }, function () {
-                data.rules = [];
+                self.addData('rules', []);
             });
             $http.get('assets/fixtures/variables.json').then(function (response) {
-                data.variables = response.data;
+                self.addData('variables', response.data);
             }, function () {
-                data.variables = [];
+                self.addData('variables', []);
             });
         },
 
+        addData: function (name, data) {
+            data[name] = data;
+            this.checkPromises(name);
+        },
+
+        // Todo use cache from websocketApi
+        checkPromises: function (name) {
+            if (name in deferedPromises) {
+                deferedPromises[name].resolve(data[name]);
+                delete deferedPromises[name];
+            }
+        },
+
         load: function (name) {
-            return $q(function (resolve) {
-                while (!(name in data)) {
-                }
-                resolve(data[name]);
-            });
+            var defered;
+            if (name in data) {
+                return $q(function (resolve) {
+                    resolve(data[name]);
+                });
+            } else {
+                deferedPromises[name] = $q.defer();
+                return deferedPromises[name].promise
+            }
+
         }
     });
 }]);
@@ -653,9 +671,9 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                     // Show toast
                     toast.show(entry.msg);
                 }
-                if (entry.level == 'error') {
+                /*if (entry.level == 'error') {
 
-                }
+                }*/
             });
         },
 
@@ -808,9 +826,12 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
          * @return promise promise A promise which is resolved when the data is loaded.
          */
         load: function (type) {
+            var promise;
+            var defered;
+
             // Check if the data is cached
             if (type in cache && 'data' in cache[type]) {
-                var promise = $q(function (resolve) {
+                promise = $q(function (resolve) {
                     // Resolve immediately
                     resolve(cache[type].data);
                 });
@@ -824,7 +845,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                 // Data is not cached. We will create a promise and store this promise
 
                 // Create a promise
-                var deffered = $q.defer();
+                defered = $q.defer();
 
                 // Add the promise
                 if (angular.isUndefined(cache[type])) {
@@ -833,10 +854,10 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                 if (angular.isUndefined(cache[type].promises)) {
                     cache[type].promises = [];
                 }
-                cache[type].promises.push(deffered);
+                cache[type].promises.push(defered);
 
                 // Return the promise
-                return deffered.promise;
+                return defered.promise;
             }
         }
     });
@@ -1002,6 +1023,8 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         get: function (type, id, skipApi) {
             var self = this;
+            var item;
+            var date;
 
             if (type in self.store) {
                 // Check if data is already fetched
@@ -1014,7 +1037,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                             // Merge the objects
                             self.store[type].data = data;
 
-                            var date = new Date();
+                            date = new Date();
                             self.store[type].timestamp = date.getTime();
 
                             self.store[type].loading = false;
@@ -1030,7 +1053,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     return self.store[type].data;
                 } else {
                     // Return single item, or null
-                    var item = null;
+                    item = null;
                     angular.forEach(self.store[type].data, function (value) {
                         if (value.id == id) {
                             item = value;
@@ -1060,13 +1083,14 @@ angular.module('pimaticApp.services').provider('store', function () {
         add: function (type, object, skipApi) {
             var api = this.api;
             var self = this;
+            var add;
 
             this.$log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
-            var add = function () {
+            add = function () {
                 var current = self.get(type, object.id, skipApi);
                 if (current === null) {
                     // Really new
@@ -1150,6 +1174,7 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         remove: function (type, object, skipApi) {
             var self = this;
+            var remove;
 
             this.$log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
@@ -1160,7 +1185,7 @@ angular.module('pimaticApp.services').provider('store', function () {
             }
 
             // Help function
-            var remove = function () {
+            remove = function () {
                 // Find index
                 var index = -1;
                 angular.forEach(self.store[type].data, function (value, i) {
@@ -1240,11 +1265,13 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
 
 angular.module('pimaticApp').filter('elapsed', function () {
     return function (time) {
-        var hours = Math.floor(time / 3600);
-        var output = hours > 9 ? hours : "0" + hours;
+        var hours, output, minutes;
+
+        hours = Math.floor(time / 3600);
+        output = hours > 9 ? hours : "0" + hours;
         time -= hours * 3600;
 
-        var minutes = Math.floor(time / 60);
+        minutes = Math.floor(time / 60);
         output += ":" + (minutes > 9 ? minutes : "0" + minutes);
         time -= minutes * 60;
 
@@ -1538,9 +1565,11 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scop
     };
 
     $scope.delete = function ($event) {
+        var confirm;
+
         $event.preventDefault();
         // Appending dialog to document.body to cover sidenav in docs app
-        var confirm = $mdDialog.confirm()
+        confirm = $mdDialog.confirm()
             .title('Are you sure you want to delete this group?')
             .content($scope.group.id)
             .ariaLabel('Delete group')

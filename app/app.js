@@ -63,9 +63,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
         } else {
             if (!auth.isLoggedIn()) {
                 // no logged user, we should be going to #login
-                if (next.originalPath == "/login") {
-                    // already going to #login, no redirect needed
-                } else {
+                if (next.originalPath !== "/login") {
                     // not going to #login, we should redirect now
                     $log.debug('pimaticApp', 'Redirecting to login...');
                     $rootScope.redirectedFrom = next.originalPath;

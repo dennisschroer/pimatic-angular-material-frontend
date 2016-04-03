@@ -321,9 +321,9 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                     // Show toast
                     toast.show(entry.msg);
                 }
-                if (entry.level == 'error') {
+                /*if (entry.level == 'error') {
 
-                }
+                }*/
             });
         },
 
@@ -476,9 +476,12 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
          * @return promise promise A promise which is resolved when the data is loaded.
          */
         load: function (type) {
+            var promise;
+            var defered;
+
             // Check if the data is cached
             if (type in cache && 'data' in cache[type]) {
-                var promise = $q(function (resolve) {
+                promise = $q(function (resolve) {
                     // Resolve immediately
                     resolve(cache[type].data);
                 });
@@ -492,7 +495,7 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                 // Data is not cached. We will create a promise and store this promise
 
                 // Create a promise
-                var deffered = $q.defer();
+                defered = $q.defer();
 
                 // Add the promise
                 if (angular.isUndefined(cache[type])) {
@@ -501,10 +504,10 @@ angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootS
                 if (angular.isUndefined(cache[type].promises)) {
                     cache[type].promises = [];
                 }
-                cache[type].promises.push(deffered);
+                cache[type].promises.push(defered);
 
                 // Return the promise
-                return deffered.promise;
+                return defered.promise;
             }
         }
     });
