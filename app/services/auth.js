@@ -73,7 +73,7 @@ angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$l
                 }, reject);
 
             });
-        },
+        }
     };
 
     return auth;

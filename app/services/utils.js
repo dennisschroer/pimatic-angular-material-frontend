@@ -7,7 +7,6 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
         getUngroupedDeviceIds: function () {
             var groups = store.get('groups');
             var devices = store.get('devices');
-
             var ungrouped = [];
 
             // First add all ids

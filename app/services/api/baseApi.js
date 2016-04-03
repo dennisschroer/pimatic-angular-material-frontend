@@ -110,6 +110,6 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
-        },
+        }
     };
 }]);

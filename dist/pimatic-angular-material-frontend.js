@@ -83,6 +83,7 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 
     });
 }]);
+
 angular.module('pimaticApp.configuration').provider('config', function () {
     this.development = {
         title: 'Pimatic frontend - DEV',
@@ -102,9 +103,11 @@ angular.module('pimaticApp.configuration').provider('config', function () {
         return this.development;
     }
 });
+
 angular.module('pimaticApp').config(['$logProvider', function ($logProvider) {
     $logProvider.debugEnabled(true);
 }]);
+
 angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
@@ -133,11 +136,13 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
         redirectTo: '/landing'
     });
 }]);
+
 angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
         .accentPalette('orange');
 }]);
+
 /**
  * Base for an ApiProvider, specifies dummy methods the ApiProvider could override.
  */
@@ -250,9 +255,10 @@ angular.module('pimaticApp.api').factory('baseApi', ['$q', function ($q) {
             return $q(function (resolve, reject) {
                 reject("Not implemented");
             });
-        },
+        }
     };
 }]);
+
 angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootScope', 'baseApi', function ($http, $q, $rootScope, baseProvider) {
 
     var data = {};
@@ -323,6 +329,7 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
         }
     });
 }]);
+
 angular.module('pimaticApp.api').factory('websocketApi', ['$http', '$q', '$rootScope', '$log', 'baseApi', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseProvider, pimaticHost, toast) {
 
     /*
@@ -910,11 +917,12 @@ angular.module('pimaticApp.services').factory('auth', ['store', '$injector', '$l
                 }, reject);
 
             });
-        },
+        }
     };
 
     return auth;
 }]);
+
 angular.module('pimaticApp.services').factory('events', ['toast', function (toast) {
     return {
         onDeviceActionDone: function (device, action/*, params*/) {
@@ -926,6 +934,7 @@ angular.module('pimaticApp.services').factory('events', ['toast', function (toas
         }
     };
 }]);
+
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
  * Api. Users can request models from the store. If the models are in the store, the models are directly returned.
@@ -1184,6 +1193,7 @@ angular.module('pimaticApp.services').provider('store', function () {
         }
     };
 });
+
 angular.module('pimaticApp.services').factory('toast', ['$mdToast', function ($mdToast) {
     return {
         show: function (message) {
@@ -1195,6 +1205,7 @@ angular.module('pimaticApp.services').factory('toast', ['$mdToast', function ($m
         }
     };
 }]);
+
 angular.module('pimaticApp.services').factory('utils', ['store', function (store) {
     return {
         /**
@@ -1204,7 +1215,6 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
         getUngroupedDeviceIds: function () {
             var groups = store.get('groups');
             var devices = store.get('devices');
-
             var ungrouped = [];
 
             // First add all ids
@@ -1227,6 +1237,7 @@ angular.module('pimaticApp.services').factory('utils', ['store', function (store
         }
     };
 }]);
+
 angular.module('pimaticApp').filter('elapsed', function () {
     return function (time) {
         var hours = Math.floor(time / 3600);
@@ -1242,6 +1253,7 @@ angular.module('pimaticApp').filter('elapsed', function () {
         return output;
     };
 });
+
 angular.module('pimaticApp').filter('extract', function () {
     /**
      * Take an array of objects, extract the value belonging to the given key and return an array containing these values.
@@ -1252,6 +1264,7 @@ angular.module('pimaticApp').filter('extract', function () {
         });
     };
 });
+
 angular.module('pimaticApp').filter('intersect', function () {
     /**
      * Calculate the intersection of 2 arrays.
@@ -1262,6 +1275,7 @@ angular.module('pimaticApp').filter('intersect', function () {
         });
     };
 });
+
 angular.module('pimaticApp.devices').controller('ButtonsController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.buttonPressed = function (button) {
         var action = 'buttonPressed';
@@ -1272,6 +1286,7 @@ angular.module('pimaticApp.devices').controller('ButtonsController', ["$scope", 
         });
     };
 }]);
+
 angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.updateDimlevel = function (attribute) {
         var action = 'changeDimlevelTo';
@@ -1285,6 +1300,7 @@ angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "
         });
     };
 }]);
+
 angular.module('pimaticApp.devices').controller('ShutterController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.moveUp = function () {
         var attribute = $scope.getAttribute('position');
@@ -1308,6 +1324,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', ["$scope", 
         });
     };
 }]);
+
 angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
@@ -1321,6 +1338,7 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
         });
     };
 }]);
+
 angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", "store", "events", "mdThemeColors", function ($scope, store, events, mdThemeColors) {
     $scope.themeColors = mdThemeColors;
 
@@ -1379,6 +1397,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope
         }
     };
 }]);
+
 angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
     $scope.start = function () {
         var action = 'startTimer';
@@ -1407,6 +1426,7 @@ angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "s
         });
     };
 }]);
+
 angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", function ($scope, $filter, utils) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
@@ -1446,6 +1466,7 @@ angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", 
      $scope.selectPage();
      }, true);*/
 }]);
+
 angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", function ($scope, auth) {
     if (auth.user !== null) {
         // This triggers a redirect
@@ -1467,6 +1488,7 @@ angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", fu
         });
     };
 }]);
+
 angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav", "$mdMedia", "auth", function ($scope, $mdSidenav, $mdMedia, auth) {
     $scope.$mdMedia = $mdMedia;
 
@@ -1481,9 +1503,11 @@ angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav
         });
     };
 }]);
+
 angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", function ($scope, utils) {
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 }]);
+
 angular.module('pimaticApp.settings').controller('GroupsCreateController', ["$scope", "$location", "toast", function ($scope, $location, toast) {
     $scope.group = {};
 
@@ -1500,6 +1524,7 @@ angular.module('pimaticApp.settings').controller('GroupsCreateController', ["$sc
         });
     };
 }]);
+
 angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scope", "$location", "$routeParams", "$mdDialog", "toast", function ($scope, $location, $routeParams, $mdDialog, toast) {
     $scope.group = angular.copy($scope.store.get('groups', $routeParams.id));
 
@@ -1540,11 +1565,13 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', ["$scop
         });
     };
 }]);
+
 angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", "$location", function ($scope, $location) {
     $scope.edit = function (id) {
         $location.path('settings/groups/' + id);
     };
 }]);
+
 /**
  * Simple directive for showing an attribute in a horizontal display.
  */
@@ -1570,6 +1597,7 @@ angular.module('pimaticApp').directive('attributeValue', function () {
         '</div>'
     };
 });
+
 angular.module('pimaticApp').directive('deviceCard', function () {
     return {
         scope: {
@@ -1601,6 +1629,7 @@ angular.module('pimaticApp').directive('deviceCard', function () {
         }]
     };
 });
+
 /**
  * Directive like md-mouseup which will execute a function when the user stopped touching (touchend event)
  */
