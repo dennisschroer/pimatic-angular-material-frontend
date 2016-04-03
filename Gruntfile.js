@@ -43,23 +43,7 @@ module.exports = function (grunt) {
         },
         karma: {
             unit: {
-                options: {
-                    frameworks: ['jasmine'],
-                    singleRun: true,
-                    browsers: ['PhantomJS'],
-                    files: [
-                        'lib/bower/angular/angular.js',
-                        'lib/bower/angular/angular.min.js',
-                        'lib/bower/angular-animate/angular-animate.min.js',
-                        'lib/bower/angular-aria/angular-aria.min.js',
-                        'lib/bower/angular-messages/angular-messages.min.js',
-                        'lib/bower/angular-material/angular-material.min.js',
-                        'lib/bower/angular-route/angular-route.min.js',
-                        'lib/bower/socket.io-client/socket.io.js',
-                        'lib/bower/angular-mocks/angular-mocks.js',
-                        'app/**/*.js'
-                    ]
-                }
+                configFile: 'karma.conf.js'
             }
         },
         jscs: {
