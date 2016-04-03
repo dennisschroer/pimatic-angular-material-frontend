@@ -31,6 +31,7 @@ module.exports = function (grunt) {
             build: {
                 src: [
                     'app/app.js',
+                    'app/config/**/*.js',
                     'app/services/**/*.js',
                     'app/filters/**/*.js',
                     'app/controllers/**/*.js',

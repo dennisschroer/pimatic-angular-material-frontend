@@ -7,18 +7,12 @@
 angular.module('pimaticApp.services').provider('store', function () {
     var self = this;
 
-    this.apiName = "fixtureApi";
-
-    this.$get = ['$q', '$log', '$injector', function ($q, $log, $injector) {
+    this.$get = ['$q', '$log', '$injector', 'config', function ($q, $log, $injector, config) {
         self.store.$q = $q;
         self.store.$log = $log;
-        self.store.api = $injector.get(self.apiName);
+        self.store.api = $injector.get(config.apiName);
         return self.store;
     }];
-
-    this.setApi = function (apiName) {
-        this.apiName = apiName;
-    };
 
     this.store = {
         // Retrieve the api instance from the injector

@@ -3,7 +3,7 @@
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
  * Version:     0.2.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2015-10-16 
+ * Date:        2016-04-03 
  */
 /**
  * Create the different modules.
@@ -11,24 +11,6 @@
  * The pimaticApp.devices module contains device specific controllers or directives.
  */
 angular.module('pimaticApp.configuration', []);
-
-/**
- * The hostname of the device running the pimatic API. Leave empty if the pimatic API is running on the same machine.
- */
-angular.module('pimaticApp.configuration').constant('pimaticHost', '');
-/**
- * The name of the service to use as API Provider. This makes it possible to change the API used, or use fixtures instead.
- */
-angular.module('pimaticApp.configuration').constant('apiName', 'websocketApi');
-/**
- * If debug is true, debug messages will be
- */
-//angular.module('pimaticApp.configuration').constant('debug', true);
-/**
- * The title of the application.
- */
-//angular.module('pimaticApp.configuration').constant('title', 'Pimatic Material');
-
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
 angular.module('pimaticApp.api', ['pimaticApp.configuration']);
@@ -46,43 +28,6 @@ angular.module('pimaticApp', [
     'pascalprecht.translate',
     'mdThemeColors'
 ]);
-
-
-angular.module('pimaticApp').config(['$routeProvider', '$logProvider', '$injector', 'debug', function ($routeProvider, $logProvider, $injector, debug) {
-    $routeProvider.when('/home', {
-        templateUrl: 'partials/home.html',
-        controller: 'HomeController'
-    }).when('/landing', {}).when('/about', {
-        templateUrl: 'partials/about.html'
-    }).when('/login', {
-        templateUrl: 'partials/login.html',
-        controller: 'LoginController'
-    }).when('/home/:pageId', {
-        templateUrl: 'partials/home.html',
-        controller: 'HomeController'
-    }).when('/settings/groups', {
-        templateUrl: 'partials/settings/groups/index.html',
-        controller: 'GroupsController'
-    }).when('/settings/groups/create', {
-        templateUrl: 'partials/settings/groups/create.html',
-        controller: 'GroupsCreateController'
-    }).when('/settings/groups/:id', {
-        templateUrl: 'partials/settings/groups/edit.html',
-        controller: 'GroupsEditController'
-    }).when('/settings/devices', {
-        templateUrl: 'partials/settings/devices/index.html',
-        controller: 'DevicesController'
-    }).otherwise({
-        redirectTo: '/landing'
-    });
-
-    debug = debug != 'false';
-    $logProvider.debugEnabled(debug);
-}]);
-
-angular.module('pimaticApp.services').config(['storeProvider', 'apiName', function(storeProvider, apiName){
-    storeProvider.setApi(apiName);
-}]);
 
 angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log", "store", "auth", "version", function ($rootScope, $location, $injector, $log, store, auth, version) {
     $rootScope.store = store;
@@ -138,8 +83,56 @@ angular.module('pimaticApp').run(["$rootScope", "$location", "$injector", "$log"
 
     });
 }]);
+angular.module('pimaticApp.configuration').provider('config', function () {
+    this.development = {
+        title: 'Pimatic frontend - DEV',
+        pimaticHost: '',
+        apiName: 'fixtureApi',
+        debug: true
+    };
 
+    this.production = {
+        title: '',
+        pimaticHost: '',
+        apiName: 'websocketApi',
+        debug: false
+    };
 
+    this.$get = function(){
+        return this.development;
+    }
+});
+angular.module('pimaticApp').config(['$logProvider', function ($logProvider) {
+    $logProvider.debugEnabled(true);
+}]);
+angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/home', {
+        templateUrl: 'partials/home.html',
+        controller: 'HomeController'
+    }).when('/landing', {}).when('/about', {
+        templateUrl: 'partials/about.html'
+    }).when('/login', {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginController'
+    }).when('/home/:pageId', {
+        templateUrl: 'partials/home.html',
+        controller: 'HomeController'
+    }).when('/settings/groups', {
+        templateUrl: 'partials/settings/groups/index.html',
+        controller: 'GroupsController'
+    }).when('/settings/groups/create', {
+        templateUrl: 'partials/settings/groups/create.html',
+        controller: 'GroupsCreateController'
+    }).when('/settings/groups/:id', {
+        templateUrl: 'partials/settings/groups/edit.html',
+        controller: 'GroupsEditController'
+    }).when('/settings/devices', {
+        templateUrl: 'partials/settings/devices/index.html',
+        controller: 'DevicesController'
+    }).otherwise({
+        redirectTo: '/landing'
+    });
+}]);
 angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
@@ -920,18 +913,12 @@ angular.module('pimaticApp.services').factory('events', ['toast', function (toas
 angular.module('pimaticApp.services').provider('store', function () {
     var self = this;
 
-    this.apiName = "fixtureApi";
-
-    this.$get = ['$q', '$log', '$injector', function ($q, $log, $injector) {
+    this.$get = ['$q', '$log', '$injector', 'config', function ($q, $log, $injector, config) {
         self.store.$q = $q;
         self.store.$log = $log;
-        self.store.api = $injector.get(self.apiName);
+        self.store.api = $injector.get(config.apiName);
         return self.store;
     }];
-
-    this.setApi = function (apiName) {
-        this.apiName = apiName;
-    };
 
     this.store = {
         // Retrieve the api instance from the injector
