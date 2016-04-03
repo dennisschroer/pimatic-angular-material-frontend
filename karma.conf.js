@@ -23,6 +23,7 @@ module.exports = function (config) {
             'bower_components/angular-route/angular-route.min.js',
             'bower_components/socket.io-client/socket.io.js',
             'bower_components/angular-mocks/angular-mocks.js',
+            'app/app.js',
             'app/**/*.js'
         ],
 
