@@ -62,24 +62,13 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jshint: {
+        jscs: {
             all: [
                 'app/**/*.js',
                 'Gruntfile.js'
             ],
             options: {
-                curly: true,
-                latedef: true,
-                //undef: true,
-                unused: true,
-                globals: {
-                    angular: true,
-                    console: true,
-                    module: true,
-                    describe: true,
-                    it: true,
-                    beforeEach: true,
-                }
+                config: ".jscsrc",
             }
         },
         replace: {
@@ -116,14 +105,14 @@ module.exports = function (grunt) {
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks("grunt-jscs");
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-replace');
 
     // Default task(s).
     grunt.registerTask('default', ['build']);
     grunt.registerTask('dev', ['concat']);
-    grunt.registerTask('test', ['jshint', 'karma']);
+    grunt.registerTask('test', ['jscs', 'karma']);
     grunt.registerTask('build', ['test', 'concat', 'replace', 'uglify']);
 };
