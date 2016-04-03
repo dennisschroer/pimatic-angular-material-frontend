@@ -57,7 +57,7 @@ module.exports = function (grunt) {
                         'lib/bower/angular-route/angular-route.min.js',
                         'lib/bower/socket.io-client/socket.io.js',
                         'lib/bower/angular-mocks/angular-mocks.js',
-                        'app/**/*.js',
+                        'app/**/*.js'
                     ]
                 }
             }
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                 'Gruntfile.js'
             ],
             options: {
-                config: ".jscsrc",
+                config: ".jscsrc"
             }
         },
         replace: {
@@ -98,8 +98,8 @@ module.exports = function (grunt) {
                 options: {
                     livereload: true
                 }
-            },
-        },
+            }
+        }
     });
 
     // Load the plugin that provides the "uglify" task.
