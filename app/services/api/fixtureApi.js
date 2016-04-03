@@ -35,7 +35,6 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
             // Simulate by loading fixtures
             $http.get('assets/fixtures/devices.json').then(function (response) {
                 self.addData('devices', response.data);
-                this.checkPromises();
             }, function () {
                 self.addData('devices', []);
             });
@@ -61,8 +60,8 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
             });
         },
 
-        addData: function (name, data) {
-            data[name] = data;
+        addData: function (name, objects) {
+            data[name] = objects;
             this.checkPromises(name);
         },
 
@@ -75,7 +74,6 @@ angular.module('pimaticApp.api').factory('fixtureApi', ['$http', '$q', '$rootSco
         },
 
         load: function (name) {
-            var defered;
             if (name in data) {
                 return $q(function (resolve) {
                     resolve(data[name]);
