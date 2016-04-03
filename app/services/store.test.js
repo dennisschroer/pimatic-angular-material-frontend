@@ -2,8 +2,8 @@ describe('store', function () {
     var store;
     var $rootScope;
 
-    beforeEach(module('pimaticApp.services', function (storeProvider) {
-        storeProvider.setApi("fixtureApi");
+    beforeEach(module('pimaticApp.services', function (configProvider) {
+        configProvider.environment = 'testing';
     }));
 
 
