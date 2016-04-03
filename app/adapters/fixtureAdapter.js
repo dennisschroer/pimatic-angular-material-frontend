@@ -1,4 +1,4 @@
-angular.module('pimaticApp.api').factory('fixtureAdapter', ['$http', '$q', '$rootScope', 'baseAdapter', function ($http, $q, $rootScope, baseAdapter) {
+angular.module('pimaticApp.adapters').factory('fixtureAdapter', ['$http', '$q', '$rootScope', 'baseAdapter', function ($http, $q, $rootScope, baseAdapter) {
 
     var data = {};
     var deferedPromises = {};

@@ -6,8 +6,8 @@
 angular.module('pimaticApp.configuration', []);
 angular.module('pimaticApp.devices', []);
 angular.module('pimaticApp.settings', []);
-angular.module('pimaticApp.api', ['pimaticApp.configuration']);
-angular.module('pimaticApp.services', ['pimaticApp.api', 'pimaticApp.configuration']);
+angular.module('pimaticApp.adapters', ['pimaticApp.configuration']);
+angular.module('pimaticApp.services', ['pimaticApp.adapters', 'pimaticApp.configuration']);
 
 /** The main module */
 angular.module('pimaticApp', [

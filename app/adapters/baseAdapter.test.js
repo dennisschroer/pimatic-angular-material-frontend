@@ -1,7 +1,7 @@
 describe('utils', function () {
     var baseAdapter;
 
-    beforeEach(module('pimaticApp.api'));
+    beforeEach(module('pimaticApp.adapters'));
 
     beforeEach(inject(function (_baseAdapter_) {
         baseAdapter = _baseAdapter_;

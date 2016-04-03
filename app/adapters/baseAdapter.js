@@ -1,7 +1,7 @@
 /**
  * Base API adapter, specifies dummy methods each adapter could override.
  */
-angular.module('pimaticApp.api').factory('baseAdapter', ['$q', function ($q) {
+angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q) {
     return {
         store: null,
 

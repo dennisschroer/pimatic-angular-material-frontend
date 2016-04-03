@@ -1,4 +1,4 @@
-angular.module('pimaticApp.api').factory('websocketAdapter', ['$http', '$q', '$rootScope', '$log', 'baseAdapter', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseAdapter, pimaticHost, toast) {
+angular.module('pimaticApp.adapters').factory('websocketAdapter', ['$http', '$q', '$rootScope', '$log', 'baseAdapter', 'pimaticHost', 'toast', function ($http, $q, $rootScope, $log, baseAdapter, pimaticHost, toast) {
 
     /*
      * Data via this provider comes asynchronously via a websocket, while the data is requested by the application
