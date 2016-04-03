@@ -16,7 +16,6 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             'bower_components/angular/angular.js',
-            'bower_components/angular/angular.min.js',
             'bower_components/angular-animate/angular-animate.min.js',
             'bower_components/angular-aria/angular-aria.min.js',
             'bower_components/angular-messages/angular-messages.min.js',
