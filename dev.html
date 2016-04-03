@@ -3,10 +3,11 @@
 <head>
     <title>@@title</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <meta name="viewport" content="initial-scale=1"/>
-    <link rel="stylesheet" href="lib/bower/angular-material/angular-material.min.css"/>
+    <meta name="viewport" content="initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
-    <link rel="stylesheet" href="lib/bower/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
+    <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
     <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
 </head>
 
@@ -57,18 +58,19 @@
         </div>
     </md-sidenav>
 
-    <script src="lib/bower/angular/angular.js"></script>
-    <script src="lib/bower/angular-animate/angular-animate.min.js"></script>
-    <script src="lib/bower/angular-aria/angular-aria.min.js"></script>
-    <script src="lib/bower/angular-messages/angular-messages.min.js"></script>
-    <script src="lib/bower/angular-material/angular-material.min.js"></script>
-    <script src="lib/bower/angular-route/angular-route.min.js"></script>
-    <script src="lib/bower/angular-translate/angular-translate.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+    <script src="bower_components/angular-material/angular-material.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
     <script src="lib/color.js"></script>
-    <script src="lib/bower/socket.io-client/socket.io.js"></script>
+    <script src="bower_components/socket.io-client/socket.io.js"></script>
 
     <script src="dist/pimatic-angular-material-frontend.js"></script>
     <script src="i10n/en-US.js"></script>
+    <script src="http://localhost:35729/livereload.js"></script>
     <script>
         angular.module('pimaticApp.configuration').constant('debug', '@@debug');
         angular.module('pimaticApp.configuration').constant('version', '@@version');
