@@ -82,20 +82,6 @@ module.exports = function (grunt) {
             }
         },
         replace: {
-            // Replace the version tag
-            /*buildJS: {
-                options: {
-                    patterns: [
-                        {
-                            match: 'version',
-                            replacement: '<%= pkg.version %>'
-                        }
-                    ]
-                },
-                files: [
-                    {expand: true, flatten: true, src: 'dist/<%= pkg.name %>.js', dest: 'dist'},
-                ]
-            },*/
             // Build index.html which uses the minified versions of the scripts
             buildHTML: {
                 options: {
@@ -114,19 +100,29 @@ module.exports = function (grunt) {
                     {flatten: true, src: 'dev.html', dest: 'index.tmpl.html'}
                 ]
             }
-        }
+        },
+        watch: {
+            scripts: {
+                files: ['app/**/*.js'],
+                tasks: ['dev'],
+                options: {
+                    livereload: true
+                }
+            },
+        },
     });
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-replace');
 
     // Default task(s).
-    grunt.registerTask('default', ['dev']);
-    grunt.registerTask('dev', ['concat', 'replace']);
-    grunt.registerTask('test', ['karma']);
-    grunt.registerTask('build', ['jshint', 'karma', 'concat', 'replace', 'uglify']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('dev', ['concat']);
+    grunt.registerTask('test', ['jshint', 'karma']);
+    grunt.registerTask('build', ['test', 'concat', 'replace', 'uglify']);
 };

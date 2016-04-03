@@ -1,9 +1,11 @@
 {
   "name": "pimatic-angular-material-frontend",
   "description": "Provides an AngularJS webinterface for Pimatic with material design.",
-  "author": "Dennis Schroer <mail@dennisschroer.nl> (http://dennisschroer.nl)",
+  "author": "Dennis Schroer <dev@dennisschroer.nl> (http://dennisschroer.nl)",
   "main": "angular-material-frontend.coffee",
-  "keywords": ["pimatic"],
+  "keywords": [
+    "pimatic"
+  ],
   "files": [
     "assets",
     "dist",
@@ -41,6 +43,7 @@
     "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-karma": "^0.12.0",
     "grunt-replace": "^0.11.0",
     "jasmine-core": "^2.3.4",
@@ -51,6 +54,7 @@
     "phantomjs": "^1.9.18"
   },
   "scripts": {
-    "postinstall": "bower install -p --allow-root"
+    "postinstall": "bower install -p --allow-root",
+    "test": "grunt test"
   }
 }
