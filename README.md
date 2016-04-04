@@ -6,7 +6,7 @@ Master:
 [![Test Coverage](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/badges/coverage.svg)](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/coverage)
 
 Development:
-[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=develop)](https://github.com/denniss17/pimatic-angular-material-frontend/tree/develop)
+[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=develop)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
 
 A web frontend build for the pimatic framework using angular and material design (angular material).
 
