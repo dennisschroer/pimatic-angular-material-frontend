@@ -3,6 +3,7 @@ angular.module('pimaticApp.configuration').provider('config', function () {
 
     this.production = {
         title: '',
+        version: 'production',
         pimaticHost: '',
         adapterName: 'websocketAdapter',
         debug: false
@@ -10,6 +11,7 @@ angular.module('pimaticApp.configuration').provider('config', function () {
 
     this.development = {
         title: 'Pimatic frontend - DEV',
+        version: 'develop',
         pimaticHost: '',
         adapterName: 'fixtureAdapter',
         debug: true
