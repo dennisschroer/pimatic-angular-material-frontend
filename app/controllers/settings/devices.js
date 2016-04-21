@@ -1,4 +1,4 @@
-angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", "store", function ($scope, utils, store) {
+angular.module('pimaticApp.settings').controller('DevicesController', ['$scope', 'utils', 'store', function ($scope, utils, store) {
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
     $scope.getGroups = function () {

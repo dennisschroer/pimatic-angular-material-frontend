@@ -9,10 +9,10 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
             var self = this;
             var strings = [];
             angular.forEach(data, function (value, key) {
-                var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + "[" + encodeURIComponent(key) + "]";
-                strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + "=" + encodeURIComponent(value));
+                var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + '[' + encodeURIComponent(key) + ']';
+                strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + '=' + encodeURIComponent(value));
             });
-            return strings.join("&");
+            return strings.join('&');
         },
 
         setStore: function (store) {
@@ -41,7 +41,7 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         login: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
@@ -51,7 +51,7 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         logout: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
@@ -69,46 +69,46 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         load: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Add a new object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to add.
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         add: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Update an existing object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to update.
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         update: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Remove an existing object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to remove.
          * @return promise A promise. When resolved, the removed should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         remove: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         }
     };

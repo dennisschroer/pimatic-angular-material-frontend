@@ -91,7 +91,7 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
     });
 }]);
 
-angular.module('pimaticApp').config(["$mdThemingProvider", function ($mdThemingProvider) {
+angular.module('pimaticApp').config(['$mdThemingProvider', function ($mdThemingProvider) {
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
         .accentPalette('orange');
@@ -108,10 +108,10 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
             var self = this;
             var strings = [];
             angular.forEach(data, function (value, key) {
-                var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + "[" + encodeURIComponent(key) + "]";
-                strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + "=" + encodeURIComponent(value));
+                var name = angular.isUndefined(prefix) ? encodeURIComponent(key) : prefix + '[' + encodeURIComponent(key) + ']';
+                strings.push(angular.isObject(value) ? self.toQueryString(value, name) : (name) + '=' + encodeURIComponent(value));
             });
-            return strings.join("&");
+            return strings.join('&');
         },
 
         setStore: function (store) {
@@ -140,7 +140,7 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         login: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
@@ -150,7 +150,7 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         logout: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
@@ -168,46 +168,46 @@ angular.module('pimaticApp.adapters').factory('baseAdapter', ['$q', function ($q
          */
         load: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Add a new object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to add.
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         add: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Update an existing object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to update.
          * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         update: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         },
 
         /**
          * Remove an existing object.
-         * @param type The type of the object (e.g. "groups").
+         * @param type The type of the object (e.g. 'groups').
          * @param object The object to remove.
          * @return promise A promise. When resolved, the removed should be passed as parameter. When rejected, an
          * error message should be passed as parameter.
          */
         remove: function () {
             return $q(function (resolve, reject) {
-                reject("Not implemented");
+                reject('Not implemented');
             });
         }
     };
@@ -227,20 +227,20 @@ angular.module('pimaticApp.adapters').factory('fixtureAdapter', ['$http', '$q', 
 
             this.store.setUser(
                 {
-                    "username": "admin",
-                    "role": "admin",
-                    "permissions": {
-                        "pages": "write",
-                        "rules": "write",
-                        "variables": "write",
-                        "messages": "write",
-                        "events": "write",
-                        "devices": "write",
-                        "groups": "write",
-                        "plugins": "write",
-                        "updates": "write",
-                        "controlDevices": true,
-                        "restart": true
+                    'username': 'admin',
+                    'role': 'admin',
+                    'permissions': {
+                        'pages': 'write',
+                        'rules': 'write',
+                        'variables': 'write',
+                        'messages': 'write',
+                        'events': 'write',
+                        'devices': 'write',
+                        'groups': 'write',
+                        'plugins': 'write',
+                        'updates': 'write',
+                        'controlDevices': true,
+                        'restart': true
                     }
                 }
             );
@@ -493,8 +493,8 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                         }
                     });
                 });
-                this.socket.on("variableValueChanged", function (varValEvent) {
-                    $log.debug('websocketApi', "variableValueChanged", varValEvent);
+                this.socket.on('variableValueChanged', function (varValEvent) {
+                    $log.debug('websocketApi', 'variableValueChanged', varValEvent);
                     self.apply(function () {
                         var v = store.get('variables', varValEvent.variableName);
                         if (v !== null) {
@@ -504,131 +504,131 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                 });
 
                 // Devices
-                this.socket.on("deviceChanged", function (device) {
-                    $log.debug('websocketApi', "deviceChanged", device);
+                this.socket.on('deviceChanged', function (device) {
+                    $log.debug('websocketApi', 'deviceChanged', device);
                     self.apply(function () {
                         store.update('devices', device, true);
                     });
                 });
-                this.socket.on("deviceRemoved", function (device) {
-                    $log.debug('websocketApi', "deviceRemoved", device);
+                this.socket.on('deviceRemoved', function (device) {
+                    $log.debug('websocketApi', 'deviceRemoved', device);
                     self.apply(function () {
                         store.remove('devices', device, true);
                     });
                 });
-                this.socket.on("deviceAdded", function (device) {
-                    $log.debug('websocketApi', "deviceAdded", device);
+                this.socket.on('deviceAdded', function (device) {
+                    $log.debug('websocketApi', 'deviceAdded', device);
                     self.apply(function () {
                         store.add('devices', device, true);
                     });
                 });
-                this.socket.on("deviceOrderChanged", function (order) {
-                    $log.debug('websocketApi', "deviceOrderChanged", order);
+                this.socket.on('deviceOrderChanged', function (order) {
+                    $log.debug('websocketApi', 'deviceOrderChanged', order);
                 });
 
                 // Pages
-                this.socket.on("pageChanged", function (page) {
-                    $log.debug('websocketApi', "pageChanged", page);
+                this.socket.on('pageChanged', function (page) {
+                    $log.debug('websocketApi', 'pageChanged', page);
                     self.apply(function () {
                         store.update('pages', page, true);
                     });
                 });
-                this.socket.on("pageRemoved", function (page) {
-                    $log.debug('websocketApi', "pageRemoved", page);
+                this.socket.on('pageRemoved', function (page) {
+                    $log.debug('websocketApi', 'pageRemoved', page);
                     self.apply(function () {
                         store.remove('pages', page, true);
                     });
                 });
-                this.socket.on("pageAdded", function (page) {
-                    $log.debug('websocketApi', "pageAdded", page);
+                this.socket.on('pageAdded', function (page) {
+                    $log.debug('websocketApi', 'pageAdded', page);
                     self.apply(function () {
                         store.add('pages', page, true);
                     });
                 });
-                this.socket.on("pageOrderChanged", function (order) {
-                    $log.debug('websocketApi', "pageOrderChanged", order);
+                this.socket.on('pageOrderChanged', function (order) {
+                    $log.debug('websocketApi', 'pageOrderChanged', order);
                 });
 
 
                 // Groups
-                this.socket.on("groupChanged", function (group) {
-                    $log.debug('websocketApi', "groupChanged", group);
+                this.socket.on('groupChanged', function (group) {
+                    $log.debug('websocketApi', 'groupChanged', group);
                     self.apply(function () {
                         store.update('groups', group, true);
                     });
                 });
-                this.socket.on("groupRemoved", function (group) {
-                    $log.debug('websocketApi', "groupRemoved", group);
+                this.socket.on('groupRemoved', function (group) {
+                    $log.debug('websocketApi', 'groupRemoved', group);
                     self.apply(function () {
                         store.remove('groups', group, true);
                     });
                 });
-                this.socket.on("groupAdded", function (group) {
-                    $log.debug('websocketApi', "groupAdded", group);
+                this.socket.on('groupAdded', function (group) {
+                    $log.debug('websocketApi', 'groupAdded', group);
                     self.apply(function () {
                         store.add('groups', group, true);
                     });
                 });
-                this.socket.on("groupOrderChanged", function (order) {
-                    $log.debug('websocketApi', "groupOrderChanged", order);
+                this.socket.on('groupOrderChanged', function (order) {
+                    $log.debug('websocketApi', 'groupOrderChanged', order);
                 });
 
 
                 // Rules
-                this.socket.on("ruleChanged", function (rule) {
-                    $log.debug('websocketApi', "ruleChanged", rule);
+                this.socket.on('ruleChanged', function (rule) {
+                    $log.debug('websocketApi', 'ruleChanged', rule);
                     self.apply(function () {
                         store.update('rules', rule, true);
                     });
                 });
-                this.socket.on("ruleAdded", function (rule) {
-                    $log.debug('websocketApi', "ruleAdded", rule);
+                this.socket.on('ruleAdded', function (rule) {
+                    $log.debug('websocketApi', 'ruleAdded', rule);
                     self.apply(function () {
                         store.add('rules', rule, true);
                     });
                 });
-                this.socket.on("ruleRemoved", function (rule) {
-                    $log.debug('websocketApi', "ruleRemoved", rule);
+                this.socket.on('ruleRemoved', function (rule) {
+                    $log.debug('websocketApi', 'ruleRemoved', rule);
                     self.apply(function () {
                         store.remove('rules', rule, true);
                     });
                 });
-                this.socket.on("ruleOrderChanged", function (order) {
-                    $log.debug('websocketApi', "ruleOrderChanged", order);
+                this.socket.on('ruleOrderChanged', function (order) {
+                    $log.debug('websocketApi', 'ruleOrderChanged', order);
                 });
 
                 // Variables
-                this.socket.on("variableChanged", function (variable) {
-                    $log.debug('websocketApi', "variableChanged", variable);
+                this.socket.on('variableChanged', function (variable) {
+                    $log.debug('websocketApi', 'variableChanged', variable);
                     self.apply(function () {
                         store.update('variables', variable, true);
                     });
                 });
-                this.socket.on("variableAdded", function (variable) {
-                    $log.debug('websocketApi', "variableAdded", variable);
+                this.socket.on('variableAdded', function (variable) {
+                    $log.debug('websocketApi', 'variableAdded', variable);
                     self.apply(function () {
                         store.add('variables', variable, true);
                     });
                 });
-                this.socket.on("variableRemoved", function (variable) {
-                    $log.debug('websocketApi', "variableRemoved", variable);
+                this.socket.on('variableRemoved', function (variable) {
+                    $log.debug('websocketApi', 'variableRemoved', variable);
                     self.apply(function () {
                         store.remove('variables', variable, true);
                     });
                 });
-                this.socket.on("variableOrderChanged", function (order) {
-                    $log.debug('websocketApi', "variableOrderChanged", order);
+                this.socket.on('variableOrderChanged', function (order) {
+                    $log.debug('websocketApi', 'variableOrderChanged', order);
                 });
 
-                this.socket.on("updateProcessStatus", function (statusEvent) {
-                    $log.debug('websocketApi', "updateProcessStatus", statusEvent);
+                this.socket.on('updateProcessStatus', function (statusEvent) {
+                    $log.debug('websocketApi', 'updateProcessStatus', statusEvent);
                 });
-                this.socket.on("updateProcessMessage", function (msgEvent) {
-                    $log.debug('websocketApi', "updateProcessMessage", msgEvent);
+                this.socket.on('updateProcessMessage', function (msgEvent) {
+                    $log.debug('websocketApi', 'updateProcessMessage', msgEvent);
                 });
 
                 this.socket.on('messageLogged', function (entry) {
-                    $log.debug('websocketApi', "messageLogged", entry);
+                    $log.debug('websocketApi', 'messageLogged', entry);
                     if (entry.level != 'debug') {
                         // Show toast
                         toast.show(entry.msg);
@@ -728,7 +728,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
 
             /**
              * Add a new object.
-             * @param type The type of the object (e.g. "groups").
+             * @param type The type of the object (e.g. 'groups').
              * @param object The object to add.
              * @return promise A promise which is resolved when the object is added.
              */
@@ -747,7 +747,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
 
             /**
              * Update an existing object.
-             * @param type The type of the object (e.g. "groups").
+             * @param type The type of the object (e.g. 'groups').
              * @param object The object to update.
              * @return promise A promise. When resolved, the final object should be passed as parameter. When rejected, an
              * error message should be passed as parameter.
@@ -767,7 +767,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
 
             /**
              * Remove an existing object.
-             * @param type The type of the object (e.g. "groups").
+             * @param type The type of the object (e.g. 'groups').
              * @param object The object to remove.
              * @return promise A promise. When resolved, the removed should be passed as parameter. When rejected, an
              * error message should be passed as parameter.
@@ -1024,7 +1024,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     //if (item == null) {
                     //item = self.createDummy(type, id);
                     //self.store[type].data.push(item);
-                    //console.log("Dummy created", type, id);
+                    //console.log('Dummy created', type, id);
                     //}
                     return item;
                 }
@@ -1104,7 +1104,7 @@ angular.module('pimaticApp.services').provider('store', function () {
             return self.$q(function (resolve, reject) {
                 var current = self.get(type, object.id);
                 if (current === null) {
-                    reject("Fatal: update called, but object does not exist");
+                    reject('Fatal: update called, but object does not exist');
                     return;
                 }
 
@@ -1229,14 +1229,14 @@ angular.module('pimaticApp').filter('elapsed', function () {
         var hours, output, minutes;
 
         hours = Math.floor(time / 3600);
-        output = hours > 9 ? hours : "0" + hours;
+        output = hours > 9 ? hours : '0' + hours;
         time -= hours * 3600;
 
         minutes = Math.floor(time / 60);
-        output += ":" + (minutes > 9 ? minutes : "0" + minutes);
+        output += ':' + (minutes > 9 ? minutes : '0' + minutes);
         time -= minutes * 60;
 
-        output += ":" + (time > 9 ? time : "0" + time);
+        output += ':' + (time > 9 ? time : '0' + time);
 
         return output;
     };
@@ -1265,11 +1265,11 @@ angular.module('pimaticApp').filter('intersect', function () {
 });
 
 angular.module('pimaticApp').controller('ApplicationController', [
-    "$scope",
-    "$mdSidenav",
-    "$mdMedia",
-    "auth",
-    "config",
+    '$scope',
+    '$mdSidenav',
+    '$mdMedia',
+    'auth',
+    'config',
     function ($scope, $mdSidenav, $mdMedia, auth, config) {
     $scope.auth = auth;
     $scope.config = config;
@@ -1288,7 +1288,7 @@ angular.module('pimaticApp').controller('ApplicationController', [
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('ButtonsController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('ButtonsController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.buttonPressed = function (button) {
         var action = 'buttonPressed';
         store.api.deviceAction($scope.device.id, action, {'buttonId': button.id}).then(function () {
@@ -1299,7 +1299,7 @@ angular.module('pimaticApp.devices').controller('ButtonsController', ["$scope", 
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('DimmerController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.updateDimlevel = function (attribute) {
         var action = 'changeDimlevelTo';
 
@@ -1313,7 +1313,7 @@ angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('ShutterController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('ShutterController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.moveUp = function () {
         var attribute = $scope.getAttribute('position');
         var action = attribute.value == 'up' ? 'stop' : 'moveUp';
@@ -1337,7 +1337,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', ["$scope", 
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('SwitchController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
 
@@ -1351,7 +1351,7 @@ angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", "store", "events", "mdThemeColors", function ($scope, store, events, mdThemeColors) {
+angular.module('pimaticApp.devices').controller('ThermostatController', ['$scope', 'store', 'events', 'mdThemeColors', function ($scope, store, events, mdThemeColors) {
     $scope.themeColors = mdThemeColors;
 
     /**
@@ -1410,7 +1410,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope
     };
 }]);
 
-angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('TimerController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.start = function () {
         var action = 'startTimer';
         store.api.deviceAction($scope.device.id, action).then(function () {
@@ -1439,7 +1439,7 @@ angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "s
     };
 }]);
 
-angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", "store", function ($scope, $filter, utils, store) {
+angular.module('pimaticApp').controller('HomeController', ['$scope', '$filter', 'utils', 'store', function ($scope, $filter, utils, store) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
@@ -1471,7 +1471,7 @@ angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", 
     };
 }]);
 
-angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", function ($scope, auth) {
+angular.module('pimaticApp').controller('LoginController', ['$scope', 'auth', function ($scope, auth) {
     if (auth.user !== null) {
         // This triggers a redirect
         $scope.setState('done');
@@ -1493,7 +1493,7 @@ angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", fu
     };
 }]);
 
-angular.module('pimaticApp.settings').controller('DevicesController', ["$scope", "utils", "store", function ($scope, utils, store) {
+angular.module('pimaticApp.settings').controller('DevicesController', ['$scope', 'utils', 'store', function ($scope, utils, store) {
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
     $scope.getGroups = function () {
@@ -1506,10 +1506,10 @@ angular.module('pimaticApp.settings').controller('DevicesController', ["$scope",
 }]);
 
 angular.module('pimaticApp.settings').controller('GroupsCreateController', [
-    "$scope",
-    "$location",
-    "toast",
-    "store",
+    '$scope',
+    '$location',
+    'toast',
+    'store',
     function ($scope, $location, toast, store) {
         $scope.group = {};
 
@@ -1529,12 +1529,12 @@ angular.module('pimaticApp.settings').controller('GroupsCreateController', [
 ]);
 
 angular.module('pimaticApp.settings').controller('GroupsEditController', [
-    "$scope",
-    "$location",
-    "$routeParams",
-    "$mdDialog",
-    "toast",
-    "store",
+    '$scope',
+    '$location',
+    '$routeParams',
+    '$mdDialog',
+    'toast',
+    'store',
     function ($scope, $location, $routeParams, $mdDialog, toast, store) {
         $scope.group = angular.copy(store.get('groups', $routeParams.id));
 
@@ -1579,7 +1579,7 @@ angular.module('pimaticApp.settings').controller('GroupsEditController', [
     }
 ]);
 
-angular.module('pimaticApp.settings').controller('GroupsController', ["$scope", "$location", "store", function ($scope, $location, store) {
+angular.module('pimaticApp.settings').controller('GroupsController', ['$scope', '$location', 'store', function ($scope, $location, store) {
     $scope.edit = function (id) {
         $location.path('settings/groups/' + id);
     };
@@ -1661,12 +1661,12 @@ angular.module('pimaticApp').directive('pimaticTouchend', function () {
 });
 
 angular.module('pimaticApp').run([
-    "$rootScope",
-    "$location",
-    "$injector",
-    "$log",
-    "store",
-    "auth",
+    '$rootScope',
+    '$location',
+    '$injector',
+    '$log',
+    'store',
+    'auth',
     function ($rootScope, $location, $injector, $log, store, auth) {
         $rootScope.state = 'starting';
         $rootScope.redirectedFrom = null;
@@ -1686,21 +1686,21 @@ angular.module('pimaticApp').run([
         };
 
         // register listener to watch route changes
-        $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
+        $rootScope.$on('$routeChangeStart', function (event, next/*, current*/) {
             if ($rootScope.state == 'starting') {
-                if (next.originalPath != "/landing") {
+                if (next.originalPath != '/landing') {
                     $log.debug('App', 'Application is loading, redirecting to the landing page');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("/landing");
+                    $location.path('/landing');
                 }
             } else {
                 if (!auth.isLoggedIn()) {
                     // no logged user, we should be going to #login
-                    if (next.originalPath !== "/login") {
+                    if (next.originalPath !== '/login') {
                         // not going to #login, we should redirect now
                         $log.debug('pimaticApp', 'Redirecting to login...');
                         $rootScope.redirectedFrom = next.originalPath;
-                        $location.path("/login");
+                        $location.path('/login');
                     }
                 }
             }
@@ -1709,6 +1709,6 @@ angular.module('pimaticApp').run([
     }
 ]);
 
-angular.module('pimaticApp').run(["store", function (store) {
+angular.module('pimaticApp').run(['store', function (store) {
     store.reload();
 }]);

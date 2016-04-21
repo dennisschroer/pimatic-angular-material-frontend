@@ -1,4 +1,4 @@
-angular.module('pimaticApp.devices').controller('ThermostatController', ["$scope", "store", "events", "mdThemeColors", function ($scope, store, events, mdThemeColors) {
+angular.module('pimaticApp.devices').controller('ThermostatController', ['$scope', 'store', 'events', 'mdThemeColors', function ($scope, store, events, mdThemeColors) {
     $scope.themeColors = mdThemeColors;
 
     /**

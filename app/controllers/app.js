@@ -1,9 +1,9 @@
 angular.module('pimaticApp').controller('ApplicationController', [
-    "$scope",
-    "$mdSidenav",
-    "$mdMedia",
-    "auth",
-    "config",
+    '$scope',
+    '$mdSidenav',
+    '$mdMedia',
+    'auth',
+    'config',
     function ($scope, $mdSidenav, $mdMedia, auth, config) {
     $scope.auth = auth;
     $scope.config = config;

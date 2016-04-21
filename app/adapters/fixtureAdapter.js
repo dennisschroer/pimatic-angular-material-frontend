@@ -12,20 +12,20 @@ angular.module('pimaticApp.adapters').factory('fixtureAdapter', ['$http', '$q', 
 
             this.store.setUser(
                 {
-                    "username": "admin",
-                    "role": "admin",
-                    "permissions": {
-                        "pages": "write",
-                        "rules": "write",
-                        "variables": "write",
-                        "messages": "write",
-                        "events": "write",
-                        "devices": "write",
-                        "groups": "write",
-                        "plugins": "write",
-                        "updates": "write",
-                        "controlDevices": true,
-                        "restart": true
+                    'username': 'admin',
+                    'role': 'admin',
+                    'permissions': {
+                        'pages': 'write',
+                        'rules': 'write',
+                        'variables': 'write',
+                        'messages': 'write',
+                        'events': 'write',
+                        'devices': 'write',
+                        'groups': 'write',
+                        'plugins': 'write',
+                        'updates': 'write',
+                        'controlDevices': true,
+                        'restart': true
                     }
                 }
             );

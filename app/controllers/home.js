@@ -1,4 +1,4 @@
-angular.module('pimaticApp').controller('HomeController', ["$scope", "$filter", "utils", "store", function ($scope, $filter, utils, store) {
+angular.module('pimaticApp').controller('HomeController', ['$scope', '$filter', 'utils', 'store', function ($scope, $filter, utils, store) {
     $scope.selectedTab = 0;
     $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 

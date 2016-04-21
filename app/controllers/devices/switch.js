@@ -1,4 +1,4 @@
-angular.module('pimaticApp.devices').controller('SwitchController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('SwitchController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.updateValue = function (attribute) {
         var action = attribute.value ? 'turnOn' : 'turnOff';
 

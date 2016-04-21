@@ -1,4 +1,4 @@
-angular.module('pimaticApp.devices').controller('TimerController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('TimerController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.start = function () {
         var action = 'startTimer';
         store.api.deviceAction($scope.device.id, action).then(function () {

@@ -1,3 +1,3 @@
-angular.module('pimaticApp').run(["store", function (store) {
+angular.module('pimaticApp').run(['store', function (store) {
     store.reload();
 }]);

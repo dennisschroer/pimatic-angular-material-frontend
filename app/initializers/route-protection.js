@@ -1,10 +1,10 @@
 angular.module('pimaticApp').run([
-    "$rootScope",
-    "$location",
-    "$injector",
-    "$log",
-    "store",
-    "auth",
+    '$rootScope',
+    '$location',
+    '$injector',
+    '$log',
+    'store',
+    'auth',
     function ($rootScope, $location, $injector, $log, store, auth) {
         $rootScope.state = 'starting';
         $rootScope.redirectedFrom = null;
@@ -24,21 +24,21 @@ angular.module('pimaticApp').run([
         };
 
         // register listener to watch route changes
-        $rootScope.$on("$routeChangeStart", function (event, next/*, current*/) {
+        $rootScope.$on('$routeChangeStart', function (event, next/*, current*/) {
             if ($rootScope.state == 'starting') {
-                if (next.originalPath != "/landing") {
+                if (next.originalPath != '/landing') {
                     $log.debug('App', 'Application is loading, redirecting to the landing page');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path("/landing");
+                    $location.path('/landing');
                 }
             } else {
                 if (!auth.isLoggedIn()) {
                     // no logged user, we should be going to #login
-                    if (next.originalPath !== "/login") {
+                    if (next.originalPath !== '/login') {
                         // not going to #login, we should redirect now
                         $log.debug('pimaticApp', 'Redirecting to login...');
                         $rootScope.redirectedFrom = next.originalPath;
-                        $location.path("/login");
+                        $location.path('/login');
                     }
                 }
             }

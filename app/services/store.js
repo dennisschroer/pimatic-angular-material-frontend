@@ -103,7 +103,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     //if (item == null) {
                     //item = self.createDummy(type, id);
                     //self.store[type].data.push(item);
-                    //console.log("Dummy created", type, id);
+                    //console.log('Dummy created', type, id);
                     //}
                     return item;
                 }
@@ -183,7 +183,7 @@ angular.module('pimaticApp.services').provider('store', function () {
             return self.$q(function (resolve, reject) {
                 var current = self.get(type, object.id);
                 if (current === null) {
-                    reject("Fatal: update called, but object does not exist");
+                    reject('Fatal: update called, but object does not exist');
                     return;
                 }
 

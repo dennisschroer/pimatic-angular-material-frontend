@@ -1,4 +1,4 @@
-angular.module('pimaticApp.devices').controller('DimmerController', ["$scope", "store", "events", function ($scope, store, events) {
+angular.module('pimaticApp.devices').controller('DimmerController', ['$scope', 'store', 'events', function ($scope, store, events) {
     $scope.updateDimlevel = function (attribute) {
         var action = 'changeDimlevelTo';
 

@@ -1,10 +1,10 @@
 angular.module('pimaticApp.settings').controller('GroupsEditController', [
-    "$scope",
-    "$location",
-    "$routeParams",
-    "$mdDialog",
-    "toast",
-    "store",
+    '$scope',
+    '$location',
+    '$routeParams',
+    '$mdDialog',
+    'toast',
+    'store',
     function ($scope, $location, $routeParams, $mdDialog, toast, store) {
         $scope.group = angular.copy(store.get('groups', $routeParams.id));
 

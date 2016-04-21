@@ -1,8 +1,8 @@
 angular.module('pimaticApp.settings').controller('GroupsCreateController', [
-    "$scope",
-    "$location",
-    "toast",
-    "store",
+    '$scope',
+    '$location',
+    'toast',
+    'store',
     function ($scope, $location, toast, store) {
         $scope.group = {};
 

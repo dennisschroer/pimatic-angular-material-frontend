@@ -1,4 +1,4 @@
-angular.module('pimaticApp').controller('LoginController', ["$scope", "auth", function ($scope, auth) {
+angular.module('pimaticApp').controller('LoginController', ['$scope', 'auth', function ($scope, auth) {
     if (auth.user !== null) {
         // This triggers a redirect
         $scope.setState('done');
