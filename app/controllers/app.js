@@ -1,5 +1,12 @@
-angular.module('pimaticApp').controller('MainController', ["$scope", "$mdSidenav", "$mdMedia", "auth", function ($scope, $mdSidenav, $mdMedia, auth) {
+angular.module('pimaticApp').controller('ApplicationController', [
+    "$scope",
+    "$mdSidenav",
+    "$mdMedia",
+    "auth",
+    "config",
+    function ($scope, $mdSidenav, $mdMedia, auth, config) {
     $scope.auth = auth;
+    $scope.config = config;
 
     $scope.$mdMedia = $mdMedia;
 
