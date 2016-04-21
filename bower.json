@@ -8,11 +8,11 @@
   "private": true,
   "dependencies": {
     "angular": "^1.5.5",
-    "angular-material": "~0.11",
+    "angular-material": "^0.11.4",
     "angular-messages": "^1.5.5",
     "angular-route": "^1.5.5",
-    "angular-translate": "~2.8.0",
-    "mdi": "~1",
+    "angular-translate": "~2.11.0",
+    "mdi": "^1.5.54",
     "socket.io-client": "~1"
   },
   "devDependencies": {
