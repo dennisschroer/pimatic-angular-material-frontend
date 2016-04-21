@@ -999,7 +999,6 @@ angular.module('pimaticApp.services').provider('store', function () {
                             item = value;
                         }
                     });
-                    
                     return item;
                 }
             } else {
@@ -1073,7 +1072,6 @@ angular.module('pimaticApp.services').provider('store', function () {
             var self = this;
 
             this.$log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
-
 
             return self.$q(function (resolve, reject) {
                 var current = self.get(type, object.id);

@@ -54,7 +54,7 @@ module.exports = function (grunt) {
                 'Gruntfile.js'
             ],
             options: {
-                config: ".jscsrc"
+                config: '.jscsrc'
             }
         },
         replace: {
@@ -88,11 +88,11 @@ module.exports = function (grunt) {
         }
     });
 
-    // Load the plugin that provides the "uglify" task.
+    // Load the plugin that provides the 'uglify' task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks("grunt-jscs");
+    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-replace');
 
