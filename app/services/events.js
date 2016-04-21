@@ -3,11 +3,11 @@ angular.module('pimaticApp.services').factory('events', [
     function (toast) {
         return {
             onDeviceActionDone: function (device, action/*, params*/) {
-                toast.show('Done: ' + action + ' ' + device.id);
+                toast.show('Succesfully performed "' + action + '" on ' + device.id);
             },
 
             onDeviceActionFail: function (device, action/*, params*/) {
-                toast.error('Fail: ' + action + ' ' + device.id);
+                toast.error('Failed to perform "' + action + '" on ' + device.id);
             }
         };
     }
