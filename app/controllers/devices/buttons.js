@@ -5,7 +5,7 @@ angular.module('pimaticApp.devices').controller('ButtonsController', [
     function ($scope, store, events) {
         $scope.buttonPressed = function (button) {
             var action = 'buttonPressed';
-            store.api.deviceAction($scope.device.id, action, {'buttonId': button.id}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'buttonId': button.id}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);

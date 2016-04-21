@@ -70,7 +70,7 @@ angular.module('pimaticApp.adapters').factory('fixtureAdapter', [
                 this.checkPromises(name);
             },
 
-            // Todo use cache from websocketApi
+            // Todo use cache from websocketAdapter
             checkPromises: function (name) {
                 if (name in deferedPromises) {
                     deferedPromises[name].resolve(data[name]);

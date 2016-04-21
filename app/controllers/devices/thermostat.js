@@ -28,7 +28,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', [
             var action = 'changeTemperatureTo';
 
             // Execute the action
-            store.api.deviceAction($scope.device.id, action, {'temperatureSetpoint': setPoint}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'temperatureSetpoint': setPoint}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -43,7 +43,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', [
             var action = 'changeModeTo';
             // Todo indicate that mode is selected but not confirmed by backend ?
 
-            store.api.deviceAction($scope.device.id, action, {'mode': mode}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'mode': mode}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);

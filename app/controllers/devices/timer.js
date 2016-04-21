@@ -5,7 +5,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
     function ($scope, store, events) {
         $scope.start = function () {
             var action = 'startTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -14,7 +14,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
 
         $scope.stop = function () {
             var action = 'stopTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -23,7 +23,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
 
         $scope.reset = function () {
             var action = 'resetTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);

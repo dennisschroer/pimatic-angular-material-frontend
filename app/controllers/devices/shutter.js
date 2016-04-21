@@ -7,7 +7,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', [
             var attribute = $scope.getAttribute('position');
             var action = attribute.value == 'up' ? 'stop' : 'moveUp';
 
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -18,7 +18,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', [
             var attribute = $scope.getAttribute('position');
             var action = attribute.value == 'down' ? 'stop' : 'moveDown';
 
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);

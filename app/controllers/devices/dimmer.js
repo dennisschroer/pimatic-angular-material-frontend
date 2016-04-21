@@ -6,7 +6,7 @@ angular.module('pimaticApp.devices').controller('DimmerController', [
         $scope.updateDimlevel = function (attribute) {
             var action = 'changeDimlevelTo';
 
-            store.api.deviceAction($scope.device.id, action, {'dimlevel': attribute.value}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'dimlevel': attribute.value}).then(function () {
                 events.onDeviceActionDone($scope.device, action, {'dimlevel': attribute.value});
             }, function () {
                 // Reset value

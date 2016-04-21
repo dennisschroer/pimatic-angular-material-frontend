@@ -1,7 +1,7 @@
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
- * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
- * If the models are not in the store, the models are requested via the specified ApiProvider
+ * adapter. Users can request models from the store. If the models are in the store, the models are directly returned.
+ * If the models are not in the store, the models are requested via the specified adapter
  */
 
 angular.module('pimaticApp.services').factory('auth', [
@@ -27,7 +27,7 @@ angular.module('pimaticApp.services').factory('auth', [
             login: function (username, password, rememberMe) {
                 var self = this;
                 return $q(function (resolve, reject) {
-                    self.store.api.login(username, password, rememberMe).then(function (user) {
+                    self.store.adapter.login(username, password, rememberMe).then(function (user) {
                         store.reload();
                         store.setUser(user);
                         //store.add('user',user);
@@ -40,7 +40,7 @@ angular.module('pimaticApp.services').factory('auth', [
             logout: function () {
                 var self = this;
                 return $q(function (resolve, reject) {
-                    self.store.api.logout().then(function () {
+                    self.store.adapter.logout().then(function () {
                         // Remove user
                         store.setUser(null);
                         // Reset store

@@ -288,7 +288,7 @@ angular.module('pimaticApp.adapters').factory('fixtureAdapter', [
                 this.checkPromises(name);
             },
 
-            // Todo use cache from websocketApi
+            // Todo use cache from websocketAdapter
             checkPromises: function (name) {
                 if (name in deferedPromises) {
                     deferedPromises[name].resolve(data[name]);
@@ -820,8 +820,8 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
 
 /**
  * The store is responsible for keeping the references to the different models or requesting them via the specified
- * ApiProvider. Users can request models from the store. If the models are in the store, the models are directly returned.
- * If the models are not in the store, the models are requested via the specified ApiProvider
+ * adapter. Users can request models from the store. If the models are in the store, the models are directly returned.
+ * If the models are not in the store, the models are requested via the specified adapter
  */
 
 angular.module('pimaticApp.services').factory('auth', [
@@ -847,7 +847,7 @@ angular.module('pimaticApp.services').factory('auth', [
             login: function (username, password, rememberMe) {
                 var self = this;
                 return $q(function (resolve, reject) {
-                    self.store.api.login(username, password, rememberMe).then(function (user) {
+                    self.store.adapter.login(username, password, rememberMe).then(function (user) {
                         store.reload();
                         store.setUser(user);
                         //store.add('user',user);
@@ -860,7 +860,7 @@ angular.module('pimaticApp.services').factory('auth', [
             logout: function () {
                 var self = this;
                 return $q(function (resolve, reject) {
-                    self.store.api.logout().then(function () {
+                    self.store.adapter.logout().then(function () {
                         // Remove user
                         store.setUser(null);
                         // Reset store
@@ -1273,7 +1273,7 @@ angular.module('pimaticApp.devices').controller('ButtonsController', [
     function ($scope, store, events) {
         $scope.buttonPressed = function (button) {
             var action = 'buttonPressed';
-            store.api.deviceAction($scope.device.id, action, {'buttonId': button.id}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'buttonId': button.id}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1290,7 +1290,7 @@ angular.module('pimaticApp.devices').controller('DimmerController', [
         $scope.updateDimlevel = function (attribute) {
             var action = 'changeDimlevelTo';
 
-            store.api.deviceAction($scope.device.id, action, {'dimlevel': attribute.value}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'dimlevel': attribute.value}).then(function () {
                 events.onDeviceActionDone($scope.device, action, {'dimlevel': attribute.value});
             }, function () {
                 // Reset value
@@ -1310,7 +1310,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', [
             var attribute = $scope.getAttribute('position');
             var action = attribute.value == 'up' ? 'stop' : 'moveUp';
 
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1321,7 +1321,7 @@ angular.module('pimaticApp.devices').controller('ShutterController', [
             var attribute = $scope.getAttribute('position');
             var action = attribute.value == 'down' ? 'stop' : 'moveDown';
 
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1338,7 +1338,7 @@ angular.module('pimaticApp.devices').controller('SwitchController', [
         $scope.updateValue = function (attribute) {
             var action = attribute.value ? 'turnOn' : 'turnOff';
 
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 // Reset value
@@ -1379,7 +1379,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', [
             var action = 'changeTemperatureTo';
 
             // Execute the action
-            store.api.deviceAction($scope.device.id, action, {'temperatureSetpoint': setPoint}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'temperatureSetpoint': setPoint}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1394,7 +1394,7 @@ angular.module('pimaticApp.devices').controller('ThermostatController', [
             var action = 'changeModeTo';
             // Todo indicate that mode is selected but not confirmed by backend ?
 
-            store.api.deviceAction($scope.device.id, action, {'mode': mode}).then(function () {
+            store.adapter.deviceAction($scope.device.id, action, {'mode': mode}).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1421,7 +1421,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
     function ($scope, store, events) {
         $scope.start = function () {
             var action = 'startTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1430,7 +1430,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
 
         $scope.stop = function () {
             var action = 'stopTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
@@ -1439,7 +1439,7 @@ angular.module('pimaticApp.devices').controller('TimerController', [
 
         $scope.reset = function () {
             var action = 'resetTimer';
-            store.api.deviceAction($scope.device.id, action).then(function () {
+            store.adapter.deviceAction($scope.device.id, action).then(function () {
                 events.onDeviceActionDone($scope.device, action);
             }, function () {
                 events.onDeviceActionFail($scope.device, action);
