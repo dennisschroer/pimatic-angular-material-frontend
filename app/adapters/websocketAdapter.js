@@ -99,7 +99,6 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                 this.socket.on('error', function (error) {
                     $log.debug('websocketApi', 'error', error);
                     self.apply(function () {
-                        //self.store.setUser(msg);
                         // This triggers a redirect
                         $rootScope.setState('unauthenticated');
                     });
@@ -125,22 +124,10 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
 
                     switch (msg.id) {
                         case 'errorMessageCount':
-                            //if(msg.success)
-                            //pimatic.errorCount(msg.result.count);
                             break;
                         case 'guiSettings':
-                            /*if(msg.success)
-                             guiSettings = msg.result.guiSettings
-                             angular.forEach(guiSettings.defaults, function(value, key){
-                             unless guiSettings.config[k]?
-                             guiSettings.config[k] = v
-                             }
-                             pimatic.guiSettings(guiSettings.config)*/
                             break;
                         case 'updateProcessStatus':
-                            /*info = msg.result.info
-                             pimatic.updateProcessStatus(info.status)
-                             pimatic.updateProcessMessages(info.messages)*/
                             break;
                     }
                 });
@@ -326,12 +313,8 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                 this.socket.on('messageLogged', function (entry) {
                     $log.debug('websocketApi', 'messageLogged', entry);
                     if (entry.level != 'debug') {
-                        // Show toast
                         toast.show(entry.msg);
                     }
-                    /*if (entry.level == 'error') {
-
-                     }*/
                 });
             },
 

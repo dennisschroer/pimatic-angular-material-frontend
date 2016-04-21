@@ -7,19 +7,25 @@
 angular.module('pimaticApp.services').provider('store', function () {
     var self = this;
 
-    this.$get = ['$q', '$log', '$injector', 'config', function ($q, $log, $injector, config) {
-        self.store.$q = $q;
-        self.store.$log = $log;
-        self.store.adapter = $injector.get(config.adapterName);
-        return self.store;
-    }];
+    this.$get = [
+        '$q',
+        '$log',
+        '$injector',
+        'config',
+        function ($q, $log, $injector, config) {
+            self.store.$q = $q;
+            self.store.$log = $log;
+            self.store.adapter = $injector.get(config.adapterName);
+            return self.store;
+        }
+    ];
 
     this.store = {
         adapter: null,
         store: {},
 
         /**
-         * Reset the store and retreive all objects from the API provider again
+         * Reset the store and retrieve all objects from the API provider again
          */
         reset: function () {
             this.$log.debug('=== STORE RESET ===');
@@ -99,12 +105,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                             item = value;
                         }
                     });
-
-                    //if (item == null) {
-                    //item = self.createDummy(type, id);
-                    //self.store[type].data.push(item);
-                    //console.log('Dummy created', type, id);
-                    //}
+                    
                     return item;
                 }
             } else {
