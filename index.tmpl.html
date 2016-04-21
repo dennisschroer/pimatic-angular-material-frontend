@@ -70,8 +70,11 @@
     <script src="dist/pimatic-angular-material-frontend.min.js"></script>
     <script src="i10n/en-US.js"></script>
     <script>
-        angular.module('pimaticApp.configuration').constant('debug', '@@debug');
-        angular.module('pimaticApp.configuration').constant('version', '0.2.1');
+        angular.module('pimaticApp.configuration').run(function(configProvider) {
+            configProvider.production.version = '0.2.1';
+            configProvider.production.debug = '@@debug';
+            configProvider.production.title = '@@title';
+        });
     </script>
 </body>
 </html>
