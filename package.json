@@ -2,6 +2,7 @@
   "name": "pimatic-angular-material-frontend",
   "description": "Provides an AngularJS webinterface for Pimatic with material design.",
   "author": "Dennis Schroer <dev@dennisschroer.nl> (http://dennisschroer.nl)",
+  "license": "GPL-3.0",
   "main": "angular-material-frontend.coffee",
   "keywords": [
     "pimatic"
@@ -26,23 +27,29 @@
     "type": "git",
     "url": "git://github.com/denniss17/pimatic-angular-material-frontend.git"
   },
+  "bugs": {
+     "url": "git://github.com/denniss17/pimatic-angular-material-frontend/issues"
+  },
   "configSchema": "angular-material-frontend-config-schema.coffee",
   "bundledDependencies": [],
   "dependencies": {
     "bower": "^1.5.1"
+  },
+  "peerDependencies": {
+    "pimatic": ">=0.8.31"
   },
   "engines": {
     "node": ">0.8.x",
     "npm": ">1.1.x"
   },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^1.0.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-jscs": "^2.8.0",
     "grunt-karma": "^0.12.0",
-    "grunt-replace": "^0.11.0",
+    "grunt-replace": "^1.0.1",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.22",
     "karma-firefox-launcher": "^0.1.7",
