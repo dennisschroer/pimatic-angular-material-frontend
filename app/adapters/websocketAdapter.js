@@ -335,7 +335,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                         data.rememberMe = true;
                     }
 
-                    $http.post(pimaticHost + '/login', data)
+                    $http.post(config.pimaticHost + '/login', data)
                         .success(function (data) {
                             if (data.success) {
                                 resolve({
@@ -358,7 +358,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
              */
             logout: function () {
                 return $q(function (resolve) {
-                    $http.get(pimaticHost + '/logout')
+                    $http.get(config.pimaticHost + '/logout')
                         .success(function () {
                             resolve();
                         }).error(function () {
@@ -387,7 +387,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
             deviceAction: function (deviceId, actionName, params) {
                 var self = this;
                 return $q(function (resolve, reject) {
-                    var url = pimaticHost + '/api/device/' + deviceId + '/' + actionName;
+                    var url = config.pimaticHost + '/api/device/' + deviceId + '/' + actionName;
                     if (!angular.isUndefined(params) && angular.isObject(params)) {
                         url += '?' + self.toQueryString(params);
                     }
@@ -416,7 +416,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                     var singular = singulars[type];
                     var data = {};
                     data[singular] = object;
-                    $http.post(pimaticHost + '/api/' + type + '/' + object.id, data).then(function (response) {
+                    $http.post(config.pimaticHost + '/api/' + type + '/' + object.id, data).then(function (response) {
                         resolve(response[singular]);
                     }, function (response) {
                         reject(response.message);
@@ -436,7 +436,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
                     var singular = singulars[type];
                     var data = {};
                     data[singular] = object;
-                    $http.patch(pimaticHost + '/api/' + type + '/' + object.id, data).then(function (response) {
+                    $http.patch(config.pimaticHost + '/api/' + type + '/' + object.id, data).then(function (response) {
                         resolve(response[singular]);
                     }, function (response) {
                         reject(response.message);
@@ -453,7 +453,7 @@ angular.module('pimaticApp.adapters').factory('websocketAdapter', [
              */
             remove: function (type, object) {
                 return $q(function (resolve, reject) {
-                    $http.delete(pimaticHost + '/api/' + type + '/' + object.id).then(function (response) {
+                    $http.delete(config.pimaticHost + '/api/' + type + '/' + object.id).then(function (response) {
                         resolve(response.removed);
                     }, function (response) {
                         reject(response.message);
