@@ -51,14 +51,20 @@ angular.module('pimaticApp.configuration').provider('config', function () {
     this.testing = this.development;
 
     this.$get = function () {
-        switch (this.environment){
+        var config = this.production;
+
+        switch (this.environment) {
             case 'testing':
-                return this.testing;
+                config = this.testing;
             case 'development':
-                return this.development;
-            case 'production':
-                return this.production;
+                config = this.development;
         }
+
+        if (config.title == '@@title') {
+            config.title = 'Pimatic';
+        }
+
+        return config;
     }
 });
 
