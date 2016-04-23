@@ -57,26 +57,6 @@ module.exports = function (grunt) {
                 config: '.jscsrc'
             }
         },
-        replace: {
-            // Build index.html which uses the minified versions of the scripts
-            buildHTML: {
-                options: {
-                    patterns: [
-                        {
-                            match: 'version',
-                            replacement: '<%= pkg.version %>'
-                        },
-                        {
-                            match: /(?!\.min)([\w]{4})(\.js)/g,
-                            replacement: '$1.min.js'
-                        }
-                    ]
-                },
-                files: [
-                    {flatten: true, src: 'dev.html', dest: 'index.tmpl.html'}
-                ]
-            }
-        },
         watch: {
             scripts: {
                 files: ['app/**/*.js'],
@@ -94,7 +74,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-replace');
 
     // Default task(s).
     grunt.registerTask('default', ['build']);
