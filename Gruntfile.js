@@ -79,5 +79,5 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['build']);
     grunt.registerTask('dev', ['concat']);
     grunt.registerTask('test', ['jscs', 'karma']);
-    grunt.registerTask('build', ['test', 'concat', 'replace', 'uglify']);
+    grunt.registerTask('build', ['test', 'concat', 'uglify']);
 };
