@@ -1,5 +1,5 @@
 angular.module('pimaticApp.configuration').provider('config', function () {
-    this.environment = 'development';
+    this.environment = 'production';
 
     this.production = {
         title: '',
