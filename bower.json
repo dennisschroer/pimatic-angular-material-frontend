@@ -1,8 +1,8 @@
 {
   "name": "pimatic-angular-material-frontend",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "authors": [
-    "Dennis Schroer <dev@dennisschroer.nl"
+    "Dennis Schroer <dev@dennisschroer.nl>"
   ],
   "description": "Responsive frontend for Pimatic in material design, written using AngularJS",
   "private": true,

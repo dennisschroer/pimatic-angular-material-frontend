@@ -1,7 +1,7 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
- * Version:     0.2.1 
+ * Version:     0.3.0 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
  * Date:        2016-04-23 
  */
