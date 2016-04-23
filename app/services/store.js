@@ -7,27 +7,25 @@
 angular.module('pimaticApp.services').provider('store', function () {
     var self = this;
 
-    this.apiName = "fixtureApi";
-
-    this.$get = ['$q', '$log', '$injector', function ($q, $log, $injector) {
-        self.store.$q = $q;
-        self.store.$log = $log;
-        self.store.api = $injector.get(self.apiName);
-        return self.store;
-    }];
-
-    this.setApi = function (apiName) {
-        this.apiName = apiName;
-    };
+    this.$get = [
+        '$q',
+        '$log',
+        '$injector',
+        'config',
+        function ($q, $log, $injector, config) {
+            self.store.$q = $q;
+            self.store.$log = $log;
+            self.store.adapter = $injector.get(config.adapterName);
+            return self.store;
+        }
+    ];
 
     this.store = {
-        // Retrieve the api instance from the injector
-        api: null,
-
+        adapter: null,
         store: {},
 
         /**
-         * Reset the store and retreive all objects from the API provider again
+         * Reset the store and retrieve all objects from the API provider again
          */
         reset: function () {
             this.$log.debug('=== STORE RESET ===');
@@ -41,12 +39,12 @@ angular.module('pimaticApp.services').provider('store', function () {
                 variables: {timestamp: 0, loading: false, data: []}
             };
 
-            this.api.setStore(this);
+            this.adapter.setStore(this);
         },
 
         reload: function () {
             this.reset();
-            this.api.start();
+            this.adapter.start();
         },
 
         isLoading: function (type) {
@@ -63,7 +61,7 @@ angular.module('pimaticApp.services').provider('store', function () {
 
         /**
          * Retrieve a list of models or a single model. If the requested models are not yet loaded, either
-         * an empty list or an empty object is returned which is filled when the models are provided by the apiProvider.
+         * an empty list or an empty object is returned which is filled when the models are provided by the adapterProvider.
          * @param type The type of the model to load.
          * @param id Optional the id of the model to load. If undefined, all instances will be returned.
          * @param skipApi Optional indicates if the call to the API should be skipped. Defaults to false;
@@ -71,6 +69,8 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         get: function (type, id, skipApi) {
             var self = this;
+            var item;
+            var date;
 
             if (type in self.store) {
                 // Check if data is already fetched
@@ -79,11 +79,11 @@ angular.module('pimaticApp.services').provider('store', function () {
 
                     // Fetch data via the API
                     if (!skipApi) {
-                        self.api.load(type).then(function (data) {
+                        self.adapter.load(type).then(function (data) {
                             // Merge the objects
                             self.store[type].data = data;
 
-                            var date = new Date();
+                            date = new Date();
                             self.store[type].timestamp = date.getTime();
 
                             self.store[type].loading = false;
@@ -99,18 +99,12 @@ angular.module('pimaticApp.services').provider('store', function () {
                     return self.store[type].data;
                 } else {
                     // Return single item, or null
-                    var item = null;
+                    item = null;
                     angular.forEach(self.store[type].data, function (value) {
                         if (value.id == id) {
                             item = value;
                         }
                     });
-
-                    //if (item == null) {
-                    //item = self.createDummy(type, id);
-                    //self.store[type].data.push(item);
-                    //console.log("Dummy created", type, id);
-                    //}
                     return item;
                 }
             } else {
@@ -127,15 +121,16 @@ angular.module('pimaticApp.services').provider('store', function () {
          * the addition is originated from the server. Defaults to false
          */
         add: function (type, object, skipApi) {
-            var api = this.api;
+            var adapter = this.adapter;
             var self = this;
+            var add;
 
             this.$log.debug('store', 'add()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
             // Help function
             // This function is needed because otherwise creating a new object would result in a double addition (first
             // by calling the API and adding it on success, the by the message passed from the server via the websocket)
-            var add = function () {
+            add = function () {
                 var current = self.get(type, object.id, skipApi);
                 if (current === null) {
                     // Really new
@@ -157,7 +152,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     });
                 } else {
                     // Call the API provider
-                    api.add(type, object).then(function (resultingObject) {
+                    adapter.add(type, object).then(function (resultingObject) {
                         // Succesfully added -> add to store
                         add(resultingObject).then(function (result) {
                             resolve(result);
@@ -179,16 +174,15 @@ angular.module('pimaticApp.services').provider('store', function () {
          * the addition is originated from the server. Defaults to false
          */
         update: function (type, object, skipApi) {
-            var api = this.api;
+            var adapter = this.adapter;
             var self = this;
 
             this.$log.debug('store', 'update()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
-
             return self.$q(function (resolve, reject) {
                 var current = self.get(type, object.id);
                 if (current === null) {
-                    reject("Fatal: update called, but object does not exist");
+                    reject('Fatal: update called, but object does not exist');
                     return;
                 }
 
@@ -198,7 +192,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     resolve(current);
                 } else {
                     // Call the API provider
-                    api.update(type, object).then(function (resultingObject) {
+                    adapter.update(type, object).then(function (resultingObject) {
                         // Succesfully updated -> update in store
                         angular.merge(current, resultingObject);
                         resolve(current);
@@ -219,6 +213,7 @@ angular.module('pimaticApp.services').provider('store', function () {
          */
         remove: function (type, object, skipApi) {
             var self = this;
+            var remove;
 
             this.$log.debug('store', 'remove()', 'type=', type, 'object=', object, 'skipApi=', skipApi);
 
@@ -229,7 +224,7 @@ angular.module('pimaticApp.services').provider('store', function () {
             }
 
             // Help function
-            var remove = function () {
+            remove = function () {
                 // Find index
                 var index = -1;
                 angular.forEach(self.store[type].data, function (value, i) {
@@ -249,7 +244,7 @@ angular.module('pimaticApp.services').provider('store', function () {
                     resolve(object);
                 } else {
                     // Call the API provider
-                    self.api.remove(type, object).then(function (resultingObject) {
+                    self.adapter.remove(type, object).then(function (resultingObject) {
                         // Succesfully removed -> remove in store
                         remove(object);
                         resolve(resultingObject);

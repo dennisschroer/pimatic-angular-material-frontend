@@ -1,1 +1,44 @@
-[{"id":"favourite","name":"Favourites","devices":[{"deviceId":"dummy2"},{"deviceId":"dummy3"},{"deviceId":"dummy1"},{"deviceId":"dummy5"},{"deviceId":"dummy6"},{"deviceId":"dummy7"},{"deviceId":"dummy4"},{"deviceId":"dummy8"},{"deviceId":"dummy9"},{"deviceId":"syssensor"},{"deviceId":"google"},{"deviceId":"dummy"}]}]
+[
+  {
+    "id": "favourite",
+    "name": "Favourites",
+    "devices": [
+      {
+        "deviceId": "dummy2"
+      },
+      {
+        "deviceId": "dummy3"
+      },
+      {
+        "deviceId": "dummy1"
+      },
+      {
+        "deviceId": "dummy5"
+      },
+      {
+        "deviceId": "dummy6"
+      },
+      {
+        "deviceId": "dummy7"
+      },
+      {
+        "deviceId": "dummy4"
+      },
+      {
+        "deviceId": "dummy8"
+      },
+      {
+        "deviceId": "dummy9"
+      },
+      {
+        "deviceId": "syssensor"
+      },
+      {
+        "deviceId": "google"
+      },
+      {
+        "deviceId": "dummy"
+      }
+    ]
+  }
+]

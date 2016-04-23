@@ -1,1 +1,114 @@
-[{"name":"dummy1.state","readonly":true,"type":"attribute","value":true,"unit":""},{"name":"dummy2.dimlevel","readonly":true,"type":"attribute","value":50,"unit":"%"},{"name":"dummy2.state","readonly":true,"type":"attribute","value":true,"unit":""},{"name":"dummy3.position","readonly":true,"type":"attribute","value":"stopped","unit":""},{"name":"dummy4.temperatureSetpoint","readonly":true,"type":"attribute","value":20,"unit":"°C"},{"name":"dummy4.valve","readonly":true,"type":"attribute","value":null,"unit":"%"},{"name":"dummy4.mode","readonly":true,"type":"attribute","value":"manu","unit":""},{"name":"dummy4.battery","readonly":true,"type":"attribute","value":"ok","unit":""},{"name":"dummy4.synced","readonly":true,"type":"attribute","value":true,"unit":""},{"name":"dummy5.contact","readonly":true,"type":"attribute","value":false,"unit":""},{"name":"dummy6.presence","readonly":true,"type":"attribute","value":false,"unit":""},{"name":"dummy7.time","readonly":true,"type":"attribute","value":1713,"unit":"s"},{"name":"dummy7.running","readonly":true,"type":"attribute","value":false,"unit":""},{"name":"dummy8.button","readonly":true,"type":"attribute","value":null,"unit":""},{"name":"dummy9.Switch state","readonly":true,"type":"attribute","value":true,"unit":""},{"name":"dummy9.Dimmer level","readonly":true,"type":"attribute","value":50,"unit":""}]
+[
+  {
+    "name": "dummy1.state",
+    "readonly": true,
+    "type": "attribute",
+    "value": true,
+    "unit": ""
+  },
+  {
+    "name": "dummy2.dimlevel",
+    "readonly": true,
+    "type": "attribute",
+    "value": 50,
+    "unit": "%"
+  },
+  {
+    "name": "dummy2.state",
+    "readonly": true,
+    "type": "attribute",
+    "value": true,
+    "unit": ""
+  },
+  {
+    "name": "dummy3.position",
+    "readonly": true,
+    "type": "attribute",
+    "value": "stopped",
+    "unit": ""
+  },
+  {
+    "name": "dummy4.temperatureSetpoint",
+    "readonly": true,
+    "type": "attribute",
+    "value": 20,
+    "unit": "°C"
+  },
+  {
+    "name": "dummy4.valve",
+    "readonly": true,
+    "type": "attribute",
+    "value": null,
+    "unit": "%"
+  },
+  {
+    "name": "dummy4.mode",
+    "readonly": true,
+    "type": "attribute",
+    "value": "manu",
+    "unit": ""
+  },
+  {
+    "name": "dummy4.battery",
+    "readonly": true,
+    "type": "attribute",
+    "value": "ok",
+    "unit": ""
+  },
+  {
+    "name": "dummy4.synced",
+    "readonly": true,
+    "type": "attribute",
+    "value": true,
+    "unit": ""
+  },
+  {
+    "name": "dummy5.contact",
+    "readonly": true,
+    "type": "attribute",
+    "value": false,
+    "unit": ""
+  },
+  {
+    "name": "dummy6.presence",
+    "readonly": true,
+    "type": "attribute",
+    "value": false,
+    "unit": ""
+  },
+  {
+    "name": "dummy7.time",
+    "readonly": true,
+    "type": "attribute",
+    "value": 1713,
+    "unit": "s"
+  },
+  {
+    "name": "dummy7.running",
+    "readonly": true,
+    "type": "attribute",
+    "value": false,
+    "unit": ""
+  },
+  {
+    "name": "dummy8.button",
+    "readonly": true,
+    "type": "attribute",
+    "value": null,
+    "unit": ""
+  },
+  {
+    "name": "dummy9.Switch state",
+    "readonly": true,
+    "type": "attribute",
+    "value": true,
+    "unit": ""
+  },
+  {
+    "name": "dummy9.Dimmer level",
+    "readonly": true,
+    "type": "attribute",
+    "value": 50,
+    "unit": ""
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "preset": "crockford",
+  "validateQuoteMarks": "'",
+  "requireMultipleVarDecl": false,
+  "disallowDanglingUnderscores": {
+    "allExcept": [
+      "_store_",
+      "_$rootScope_",
+      "_baseAdapter_"
+    ]
+  }
+}

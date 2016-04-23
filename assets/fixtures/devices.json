@@ -1,1 +1,631 @@
-[{"id":"dummy1","name":"DummySwitch","template":"switch","attributes":[{"description":"The current state of the switch","type":"boolean","labels":["on","off"],"label":"State","discrete":true,"name":"state","value":true,"history":[{"t":1444944062133,"v":true},{"t":1444946758546,"v":true}],"lastUpdate":1444946758546}],"actions":[{"description":"Turns the switch on","name":"turnOn"},{"description":"Turns the switch off","name":"turnOff"},{"description":"Changes the switch to on or off","params":{"state":{"type":"boolean"}},"name":"changeStateTo"},{"description":"Toggle the state of the switch","name":"toggle"},{"description":"Returns the current state of the switch","returns":{"state":{"type":"boolean"}},"name":"getState"}],"config":{"class":"DummySwitch","id":"dummy1","name":"DummySwitch"},"configDefaults":{}},{"id":"dummy2","name":"DummyDimmer","template":"dimmer","attributes":[{"description":"The current dim level","type":"number","unit":"%","label":"Dimlevel","discrete":false,"name":"dimlevel","value":50,"history":[{"t":1444946414655,"v":50},{"t":1444946758568,"v":50}],"lastUpdate":1444946758568},{"description":"The current state of the switch","type":"boolean","labels":["on","off"],"label":"State","discrete":true,"name":"state","value":true,"history":[{"t":1443393135327,"v":true},{"t":1444946758568,"v":true}],"lastUpdate":1444946758568}],"actions":[{"description":"Sets the level of the dimmer","params":{"dimlevel":{"type":"number"}},"name":"changeDimlevelTo"},{"description":"Changes the switch to on or off","params":{"state":{"type":"boolean"}},"name":"changeStateTo"},{"description":"Turns the dim level to 100%","name":"turnOn"},{"description":"Turns the dim level to 0%","name":"turnOff"}],"config":{"class":"DummyDimmer","id":"dummy2","name":"DummyDimmer"},"configDefaults":{}},{"id":"dummy3","name":"DummyShutter","template":"shutter","attributes":[{"label":"Position","description":"State of the shutter","type":"string","enum":["up","down","stopped"],"discrete":true,"name":"position","value":"stopped","history":[{"t":1444863432749,"v":"stopped"},{"t":1444946758579,"v":"stopped"}],"lastUpdate":1444946758579}],"actions":[{"description":"Raise the shutter","name":"moveUp"},{"description":"Lower the shutter","name":"moveDown"},{"description":"Stops the shutter move","name":"stop"},{"description":"Changes the shutter state","params":{"state":{"type":"string"}},"name":"moveToPosition"}],"config":{"class":"DummyShutter","id":"dummy3","name":"DummyShutter"},"configDefaults":{}},{"id":"dummy4","name":"DummyHeatingThermostat","template":"thermostat","attributes":[{"label":"Temperature Setpoint","description":"The temp that should be set","type":"number","discrete":true,"unit":"°C","name":"temperatureSetpoint","value":20,"history":[{"t":1444944883618,"v":20},{"t":1444946758595,"v":20}],"lastUpdate":1444946758595},{"description":"Position of the valve","type":"number","discrete":true,"unit":"%","label":"Valve","name":"valve","value":null,"history":[{"t":1444946758595,"v":null}],"lastUpdate":1444946758595},{"description":"The current mode","type":"string","enum":["auto","manu","boost"],"label":"Mode","discrete":true,"name":"mode","value":"manu","history":[{"t":1444943481708,"v":"manu"},{"t":1444946758595,"v":"manu"}],"lastUpdate":1444946758595},{"description":"Battery status","type":"string","enum":["ok","low"],"label":"Battery","discrete":true,"name":"battery","value":"ok","history":[{"t":1444946758595,"v":"ok"}],"lastUpdate":1444946758595},{"description":"Pimatic and thermostat in sync","type":"boolean","labels":["true","false"],"label":"Synced","discrete":true,"name":"synced","value":true,"history":[{"t":1444946758595,"v":true}],"lastUpdate":1444946758595}],"actions":[{"params":{"mode":{"type":"string"}},"name":"changeModeTo"},{"params":{"temperatureSetpoint":{"type":"number"}},"name":"changeTemperatureTo"}],"config":{"class":"DummyHeatingThermostat","id":"dummy4","name":"DummyHeatingThermostat"},"configDefaults":{"comfyTemp":21,"ecoTemp":17,"guiShowModeControl":true,"guiShowPresetControl":true,"guiShowTemperatueInput":true}},{"id":"dummy5","name":"DummyContactSensor","template":"contact","attributes":[{"description":"State of the contact","type":"boolean","labels":["closed","opened"],"label":"Contact","discrete":true,"name":"contact","value":false,"history":[{"t":1444946758605,"v":false}],"lastUpdate":1444946758605}],"actions":[{"params":{"contact":{"type":"boolean"}},"name":"changeContactTo"}],"config":{"class":"DummyContactSensor","id":"dummy5","name":"DummyContactSensor"},"configDefaults":{}},{"id":"dummy6","name":"DummyPresenceSensor","template":"presence","attributes":[{"description":"Presence of the human/device","type":"boolean","labels":["present","absent"],"label":"Presence","discrete":true,"name":"presence","value":false,"history":[{"t":1444946758613,"v":false}],"lastUpdate":1444946758613}],"actions":[{"params":{"presence":{"type":"boolean"}},"name":"changePresenceTo"}],"config":{"class":"DummyPresenceSensor","id":"dummy6","name":"DummyPresenceSensor"},"configDefaults":{"autoReset":true,"resetTime":10000}},{"id":"dummy7","name":"Timer","template":"timer","attributes":[{"description":"The elapesed time","type":"number","unit":"s","displaySparkline":false,"label":"Time","discrete":false,"name":"time","value":1713,"history":[{"t":1444943998063,"v":1713},{"t":1444946758622,"v":1713}],"lastUpdate":1444946758622},{"description":"Is the timer running?","type":"boolean","labels":["true","false"],"label":"Running","discrete":true,"name":"running","value":false,"history":[{"t":1444943998408,"v":false},{"t":1444946758622,"v":false}],"lastUpdate":1444946758622}],"actions":[{"description":"Starts the timer","name":"startTimer"},{"description":"stops the timer","name":"stopTimer"},{"description":"reset the timer","name":"resetTimer"}],"config":{"class":"Timer","id":"dummy7","name":"Timer"},"configDefaults":{"resolution":1}},{"id":"dummy8","name":"ButtonsDevice","template":"buttons","attributes":[{"description":"The last pressed button","type":"string","label":"Button","discrete":true,"name":"button","value":null,"history":[{"t":1444945321718,"v":"button2"},{"t":1444946758631,"v":null}],"lastUpdate":1444946758631}],"actions":[{"params":{"buttonId":{"type":"string"}},"description":"Press a button","name":"buttonPressed"}],"config":{"class":"ButtonsDevice","id":"dummy8","name":"ButtonsDevice","buttons":[{"id":"button1","text":"Button 1"},{"id":"button2","text":"Button 2"}]},"configDefaults":{"buttons":[]}},{"id":"dummy9","name":"VariablesDevice","template":"device","attributes":[{"description":"Switch state","label":"$Switch state","type":"number","discrete":false,"name":"Switch state","value":true,"history":[{"t":1444945684585,"v":1},{"t":1444946758676,"v":true}],"lastUpdate":1444946758676},{"description":"Dimmer level","label":"$Dimmer level","type":"number","unit":"%","discrete":false,"name":"Dimmer level","value":50,"history":[{"t":1444946414660,"v":50},{"t":1444946758679,"v":50}],"lastUpdate":1444946758679}],"actions":[],"config":{"class":"VariablesDevice","id":"dummy9","name":"VariablesDevice","variables":[{"name":"Switch state","expression":"$dummy1.state","type":"number"},{"name":"Dimmer level","expression":"$dummy2.dimlevel","type":"number"}]},"configDefaults":{"variables":[]}}]
+[
+  {
+    "id": "dummy1",
+    "name": "DummySwitch",
+    "template": "switch",
+    "attributes": [
+      {
+        "description": "The current state of the switch",
+        "type": "boolean",
+        "labels": [
+          "on",
+          "off"
+        ],
+        "label": "State",
+        "discrete": true,
+        "name": "state",
+        "value": true,
+        "history": [
+          {
+            "t": 1444944062133,
+            "v": true
+          },
+          {
+            "t": 1444946758546,
+            "v": true
+          }
+        ],
+        "lastUpdate": 1444946758546
+      }
+    ],
+    "actions": [
+      {
+        "description": "Turns the switch on",
+        "name": "turnOn"
+      },
+      {
+        "description": "Turns the switch off",
+        "name": "turnOff"
+      },
+      {
+        "description": "Changes the switch to on or off",
+        "params": {
+          "state": {
+            "type": "boolean"
+          }
+        },
+        "name": "changeStateTo"
+      },
+      {
+        "description": "Toggle the state of the switch",
+        "name": "toggle"
+      },
+      {
+        "description": "Returns the current state of the switch",
+        "returns": {
+          "state": {
+            "type": "boolean"
+          }
+        },
+        "name": "getState"
+      }
+    ],
+    "config": {
+      "class": "DummySwitch",
+      "id": "dummy1",
+      "name": "DummySwitch"
+    },
+    "configDefaults": {}
+  },
+  {
+    "id": "dummy2",
+    "name": "DummyDimmer",
+    "template": "dimmer",
+    "attributes": [
+      {
+        "description": "The current dim level",
+        "type": "number",
+        "unit": "%",
+        "label": "Dimlevel",
+        "discrete": false,
+        "name": "dimlevel",
+        "value": 50,
+        "history": [
+          {
+            "t": 1444946414655,
+            "v": 50
+          },
+          {
+            "t": 1444946758568,
+            "v": 50
+          }
+        ],
+        "lastUpdate": 1444946758568
+      },
+      {
+        "description": "The current state of the switch",
+        "type": "boolean",
+        "labels": [
+          "on",
+          "off"
+        ],
+        "label": "State",
+        "discrete": true,
+        "name": "state",
+        "value": true,
+        "history": [
+          {
+            "t": 1443393135327,
+            "v": true
+          },
+          {
+            "t": 1444946758568,
+            "v": true
+          }
+        ],
+        "lastUpdate": 1444946758568
+      }
+    ],
+    "actions": [
+      {
+        "description": "Sets the level of the dimmer",
+        "params": {
+          "dimlevel": {
+            "type": "number"
+          }
+        },
+        "name": "changeDimlevelTo"
+      },
+      {
+        "description": "Changes the switch to on or off",
+        "params": {
+          "state": {
+            "type": "boolean"
+          }
+        },
+        "name": "changeStateTo"
+      },
+      {
+        "description": "Turns the dim level to 100%",
+        "name": "turnOn"
+      },
+      {
+        "description": "Turns the dim level to 0%",
+        "name": "turnOff"
+      }
+    ],
+    "config": {
+      "class": "DummyDimmer",
+      "id": "dummy2",
+      "name": "DummyDimmer"
+    },
+    "configDefaults": {}
+  },
+  {
+    "id": "dummy3",
+    "name": "DummyShutter",
+    "template": "shutter",
+    "attributes": [
+      {
+        "label": "Position",
+        "description": "State of the shutter",
+        "type": "string",
+        "enum": [
+          "up",
+          "down",
+          "stopped"
+        ],
+        "discrete": true,
+        "name": "position",
+        "value": "stopped",
+        "history": [
+          {
+            "t": 1444863432749,
+            "v": "stopped"
+          },
+          {
+            "t": 1444946758579,
+            "v": "stopped"
+          }
+        ],
+        "lastUpdate": 1444946758579
+      }
+    ],
+    "actions": [
+      {
+        "description": "Raise the shutter",
+        "name": "moveUp"
+      },
+      {
+        "description": "Lower the shutter",
+        "name": "moveDown"
+      },
+      {
+        "description": "Stops the shutter move",
+        "name": "stop"
+      },
+      {
+        "description": "Changes the shutter state",
+        "params": {
+          "state": {
+            "type": "string"
+          }
+        },
+        "name": "moveToPosition"
+      }
+    ],
+    "config": {
+      "class": "DummyShutter",
+      "id": "dummy3",
+      "name": "DummyShutter"
+    },
+    "configDefaults": {}
+  },
+  {
+    "id": "dummy4",
+    "name": "DummyHeatingThermostat",
+    "template": "thermostat",
+    "attributes": [
+      {
+        "label": "Temperature Setpoint",
+        "description": "The temp that should be set",
+        "type": "number",
+        "discrete": true,
+        "unit": "°C",
+        "name": "temperatureSetpoint",
+        "value": 20,
+        "history": [
+          {
+            "t": 1444944883618,
+            "v": 20
+          },
+          {
+            "t": 1444946758595,
+            "v": 20
+          }
+        ],
+        "lastUpdate": 1444946758595
+      },
+      {
+        "description": "Position of the valve",
+        "type": "number",
+        "discrete": true,
+        "unit": "%",
+        "label": "Valve",
+        "name": "valve",
+        "value": null,
+        "history": [
+          {
+            "t": 1444946758595,
+            "v": null
+          }
+        ],
+        "lastUpdate": 1444946758595
+      },
+      {
+        "description": "The current mode",
+        "type": "string",
+        "enum": [
+          "auto",
+          "manu",
+          "boost"
+        ],
+        "label": "Mode",
+        "discrete": true,
+        "name": "mode",
+        "value": "manu",
+        "history": [
+          {
+            "t": 1444943481708,
+            "v": "manu"
+          },
+          {
+            "t": 1444946758595,
+            "v": "manu"
+          }
+        ],
+        "lastUpdate": 1444946758595
+      },
+      {
+        "description": "Battery status",
+        "type": "string",
+        "enum": [
+          "ok",
+          "low"
+        ],
+        "label": "Battery",
+        "discrete": true,
+        "name": "battery",
+        "value": "ok",
+        "history": [
+          {
+            "t": 1444946758595,
+            "v": "ok"
+          }
+        ],
+        "lastUpdate": 1444946758595
+      },
+      {
+        "description": "Pimatic and thermostat in sync",
+        "type": "boolean",
+        "labels": [
+          "true",
+          "false"
+        ],
+        "label": "Synced",
+        "discrete": true,
+        "name": "synced",
+        "value": true,
+        "history": [
+          {
+            "t": 1444946758595,
+            "v": true
+          }
+        ],
+        "lastUpdate": 1444946758595
+      }
+    ],
+    "actions": [
+      {
+        "params": {
+          "mode": {
+            "type": "string"
+          }
+        },
+        "name": "changeModeTo"
+      },
+      {
+        "params": {
+          "temperatureSetpoint": {
+            "type": "number"
+          }
+        },
+        "name": "changeTemperatureTo"
+      }
+    ],
+    "config": {
+      "class": "DummyHeatingThermostat",
+      "id": "dummy4",
+      "name": "DummyHeatingThermostat"
+    },
+    "configDefaults": {
+      "comfyTemp": 21,
+      "ecoTemp": 17,
+      "guiShowModeControl": true,
+      "guiShowPresetControl": true,
+      "guiShowTemperatueInput": true
+    }
+  },
+  {
+    "id": "dummy5",
+    "name": "DummyContactSensor",
+    "template": "contact",
+    "attributes": [
+      {
+        "description": "State of the contact",
+        "type": "boolean",
+        "labels": [
+          "closed",
+          "opened"
+        ],
+        "label": "Contact",
+        "discrete": true,
+        "name": "contact",
+        "value": false,
+        "history": [
+          {
+            "t": 1444946758605,
+            "v": false
+          }
+        ],
+        "lastUpdate": 1444946758605
+      }
+    ],
+    "actions": [
+      {
+        "params": {
+          "contact": {
+            "type": "boolean"
+          }
+        },
+        "name": "changeContactTo"
+      }
+    ],
+    "config": {
+      "class": "DummyContactSensor",
+      "id": "dummy5",
+      "name": "DummyContactSensor"
+    },
+    "configDefaults": {}
+  },
+  {
+    "id": "dummy6",
+    "name": "DummyPresenceSensor",
+    "template": "presence",
+    "attributes": [
+      {
+        "description": "Presence of the human/device",
+        "type": "boolean",
+        "labels": [
+          "present",
+          "absent"
+        ],
+        "label": "Presence",
+        "discrete": true,
+        "name": "presence",
+        "value": false,
+        "history": [
+          {
+            "t": 1444946758613,
+            "v": false
+          }
+        ],
+        "lastUpdate": 1444946758613
+      }
+    ],
+    "actions": [
+      {
+        "params": {
+          "presence": {
+            "type": "boolean"
+          }
+        },
+        "name": "changePresenceTo"
+      }
+    ],
+    "config": {
+      "class": "DummyPresenceSensor",
+      "id": "dummy6",
+      "name": "DummyPresenceSensor"
+    },
+    "configDefaults": {
+      "autoReset": true,
+      "resetTime": 10000
+    }
+  },
+  {
+    "id": "dummy7",
+    "name": "Timer",
+    "template": "timer",
+    "attributes": [
+      {
+        "description": "The elapesed time",
+        "type": "number",
+        "unit": "s",
+        "displaySparkline": false,
+        "label": "Time",
+        "discrete": false,
+        "name": "time",
+        "value": 1713,
+        "history": [
+          {
+            "t": 1444943998063,
+            "v": 1713
+          },
+          {
+            "t": 1444946758622,
+            "v": 1713
+          }
+        ],
+        "lastUpdate": 1444946758622
+      },
+      {
+        "description": "Is the timer running?",
+        "type": "boolean",
+        "labels": [
+          "true",
+          "false"
+        ],
+        "label": "Running",
+        "discrete": true,
+        "name": "running",
+        "value": false,
+        "history": [
+          {
+            "t": 1444943998408,
+            "v": false
+          },
+          {
+            "t": 1444946758622,
+            "v": false
+          }
+        ],
+        "lastUpdate": 1444946758622
+      }
+    ],
+    "actions": [
+      {
+        "description": "Starts the timer",
+        "name": "startTimer"
+      },
+      {
+        "description": "stops the timer",
+        "name": "stopTimer"
+      },
+      {
+        "description": "reset the timer",
+        "name": "resetTimer"
+      }
+    ],
+    "config": {
+      "class": "Timer",
+      "id": "dummy7",
+      "name": "Timer"
+    },
+    "configDefaults": {
+      "resolution": 1
+    }
+  },
+  {
+    "id": "dummy8",
+    "name": "ButtonsDevice",
+    "template": "buttons",
+    "attributes": [
+      {
+        "description": "The last pressed button",
+        "type": "string",
+        "label": "Button",
+        "discrete": true,
+        "name": "button",
+        "value": null,
+        "history": [
+          {
+            "t": 1444945321718,
+            "v": "button2"
+          },
+          {
+            "t": 1444946758631,
+            "v": null
+          }
+        ],
+        "lastUpdate": 1444946758631
+      }
+    ],
+    "actions": [
+      {
+        "params": {
+          "buttonId": {
+            "type": "string"
+          }
+        },
+        "description": "Press a button",
+        "name": "buttonPressed"
+      }
+    ],
+    "config": {
+      "class": "ButtonsDevice",
+      "id": "dummy8",
+      "name": "ButtonsDevice",
+      "buttons": [
+        {
+          "id": "button1",
+          "text": "Button 1"
+        },
+        {
+          "id": "button2",
+          "text": "Button 2"
+        }
+      ]
+    },
+    "configDefaults": {
+      "buttons": []
+    }
+  },
+  {
+    "id": "dummy9",
+    "name": "VariablesDevice",
+    "template": "device",
+    "attributes": [
+      {
+        "description": "Switch state",
+        "label": "$Switch state",
+        "type": "number",
+        "discrete": false,
+        "name": "Switch state",
+        "value": true,
+        "history": [
+          {
+            "t": 1444945684585,
+            "v": 1
+          },
+          {
+            "t": 1444946758676,
+            "v": true
+          }
+        ],
+        "lastUpdate": 1444946758676
+      },
+      {
+        "description": "Dimmer level",
+        "label": "$Dimmer level",
+        "type": "number",
+        "unit": "%",
+        "discrete": false,
+        "name": "Dimmer level",
+        "value": 50,
+        "history": [
+          {
+            "t": 1444946414660,
+            "v": 50
+          },
+          {
+            "t": 1444946758679,
+            "v": 50
+          }
+        ],
+        "lastUpdate": 1444946758679
+      }
+    ],
+    "actions": [],
+    "config": {
+      "class": "VariablesDevice",
+      "id": "dummy9",
+      "name": "VariablesDevice",
+      "variables": [
+        {
+          "name": "Switch state",
+          "expression": "$dummy1.state",
+          "type": "number"
+        },
+        {
+          "name": "Dimmer level",
+          "expression": "$dummy2.dimlevel",
+          "type": "number"
+        }
+      ]
+    },
+    "configDefaults": {
+      "variables": []
+    }
+  }
+]

@@ -1,9 +1,12 @@
 {
   "name": "pimatic-angular-material-frontend",
   "description": "Provides an AngularJS webinterface for Pimatic with material design.",
-  "author": "Dennis Schroer <mail@dennisschroer.nl> (http://dennisschroer.nl)",
+  "author": "Dennis Schroer <dev@dennisschroer.nl> (http://dennisschroer.nl)",
+  "license": "GPL-3.0",
   "main": "angular-material-frontend.coffee",
-  "keywords": ["pimatic"],
+  "keywords": [
+    "pimatic"
+  ],
   "files": [
     "assets",
     "dist",
@@ -18,19 +21,22 @@
     "README.md",
     "LICENSE.txt"
   ],
-  "version": "0.2.1",
+  "version": "0.3.0",
   "homepage": "http://github.com/denniss17/pimatic-angular-material-frontend",
   "repository": {
     "type": "git",
     "url": "git://github.com/denniss17/pimatic-angular-material-frontend.git"
   },
+  "bugs": {
+     "url": "git://github.com/denniss17/pimatic-angular-material-frontend/issues"
+  },
   "configSchema": "angular-material-frontend-config-schema.coffee",
   "bundledDependencies": [],
   "dependencies": {
-    "bower": "^1.5.1"
+    "bower": "^1.5.0"
   },
   "peerDependencies": {
-    "pimatic": "0.8.* && >=0.8.31"
+    "pimatic": ">=0.8.31"
   },
   "engines": {
     "node": ">0.8.x",
@@ -38,19 +44,21 @@
   },
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-karma": "^0.12.0",
-    "grunt-replace": "^0.11.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-jscs": "^2.8.0",
+    "grunt-karma": "^0.12.2",
     "jasmine-core": "^2.3.4",
-    "karma": "^0.13.9",
-    "karma-firefox-launcher": "^0.1.6",
+    "karma": "^0.13.22",
+    "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.1",
-    "phantomjs": "^1.9.18"
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.7"
   },
   "scripts": {
-    "postinstall": "bower install -p --allow-root"
+    "postinstall": "bower install --production --allow-root",
+    "test": "grunt test",
+    "start": "http-server -o"
   }
 }

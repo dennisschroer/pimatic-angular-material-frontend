@@ -1,4 +1,13 @@
 # Pimatic Angular Material Frontend
+
+Master:
+[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=master)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
+[![Code Climate](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/badges/gpa.svg)](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend)
+[![Test Coverage](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/badges/coverage.svg)](https://codeclimate.com/github/denniss17/pimatic-angular-material-frontend/coverage)
+
+Development:
+[![Build Status](https://travis-ci.org/denniss17/pimatic-angular-material-frontend.svg?branch=develop)](https://travis-ci.org/denniss17/pimatic-angular-material-frontend)
+
 A web frontend build for the pimatic framework using angular and material design (angular material).
 
 ![](screenshot.png)
@@ -43,6 +52,16 @@ You can install the plugin either via npm or via git.
     		bower install -p
 
 ## Changelog
+### 0.3.0
+This update does not change much in the frontend, but has some rather big changes in the background.
+
+- Updated description to make the plugin ready for Pimatic 0.9.x (thanks to https://github.com/mwittig)
+- Updated dependencies (also fixes bug with visible scrollbar when toast message is shown)
+- Added loading page
+- Background changes:
+    - Many restructurings and refactorings of the code.
+    - Introduced config based on environment.
+    - Added CI using Travis and CodeClimate.
 
 ### 0.2.1
 Bugfixes

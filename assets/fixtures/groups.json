@@ -1,1 +1,9 @@
-[{"id":"test","name":"Test","devices":[],"rules":[],"variables":[]}]
+[
+  {
+    "id": "test",
+    "name": "Test",
+    "devices": [],
+    "rules": [],
+    "variables": []
+  }
+]

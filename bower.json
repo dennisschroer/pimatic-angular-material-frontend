@@ -1,21 +1,21 @@
 {
-  "name": "Pimatic AngularJS frontend",
-  "version": "0.2.1",
+  "name": "pimatic-angular-material-frontend",
+  "version": "0.3.0",
   "authors": [
-    "Dennis Schroer <dennisschroer@hotmail.com>"
+    "Dennis Schroer <dev@dennisschroer.nl>"
   ],
-  "description": "Responsive frontend for pimatic, written using AngularJS",
+  "description": "Responsive frontend for Pimatic in material design, written using AngularJS",
   "private": true,
   "dependencies": {
-    "angular": "~1",
-    "angular-material": "~0.11",
-    "angular-messages": "~1",
-    "angular-route": "~1",
-    "angular-translate": "~2.8.0",
-    "mdi": "~1",
+    "angular": "^1.5.5",
+    "angular-material": "^1.0.7",
+    "angular-messages": "^1.5.5",
+    "angular-route": "^1.5.5",
+    "angular-translate": "~2.11.0",
+    "mdi": "^1.5.54",
     "socket.io-client": "~1"
   },
   "devDependencies": {
-    "angular-mocks": "~1"
+    "angular-mocks": "^1.5.3"
   }
 }

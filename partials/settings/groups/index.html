@@ -1,5 +1,5 @@
 <md-list>
-    <md-list-item class="md-2-line" ng-repeat="group in store.get('groups')" ng-click="edit(group.id)">
+    <md-list-item class="md-2-line" ng-repeat="group in getGroups()" ng-click="edit(group.id)">
         <div class="md-list-item-text">
             <h3>{{group.name}}</h3>
 

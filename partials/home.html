@@ -1,7 +1,7 @@
 <md-tabs md-dynamic-height md-center-tabs class="md-primary md-w" layout-align="center end" md-selected="selectedTab">
-    <md-tab ng-repeat="page in store.get('pages')" label="{{page.name}}" md-on-select="tabSelected(page)">
+    <md-tab ng-repeat="page in getPages()" label="{{page.name}}" md-on-select="tabSelected(page)">
         <md-content layout="column">
-            <section ng-repeat="group in store.get('groups')" ng-show="getDeviceIds(page, group).length > 0">
+            <section ng-repeat="group in getGroups()" ng-show="getDeviceIds(page, group).length > 0">
                 <md-subheader class="md-primary">{{group.name}}</md-subheader>
                 <div layout="row" layout-wrap>
                     <div ng-repeat="deviceId in getDeviceIds(page, group)" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
@@ -13,7 +13,7 @@
                 <md-subheader class="md-primary">{{'UNGROUPED' | translate}}</md-subheader>
                 <div layout="row" layout-wrap>
                     <div ng-repeat="deviceId in getDeviceIds(page)" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
-                        <device-card device="store.get('devices', deviceId)"></device-card>
+                        <device-card device="getDevice(deviceId)"></device-card>
                     </div>
                 </div>
             </section>

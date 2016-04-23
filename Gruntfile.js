@@ -31,10 +31,13 @@ module.exports = function (grunt) {
             build: {
                 src: [
                     'app/app.js',
+                    'app/config/**/*.js',
+                    'app/adapters/**/*.js',
                     'app/services/**/*.js',
                     'app/filters/**/*.js',
                     'app/controllers/**/*.js',
                     'app/directives/**/*.js',
+                    'app/initializers/**/*.js',
                     '!app/**/*.test.js'
                 ],
                 dest: 'dist/<%= pkg.name %>.js'
@@ -42,91 +45,39 @@ module.exports = function (grunt) {
         },
         karma: {
             unit: {
-                options: {
-                    frameworks: ['jasmine'],
-                    singleRun: true,
-                    browsers: ['PhantomJS'],
-                    files: [
-                        'lib/bower/angular/angular.js',
-                        'lib/bower/angular/angular.min.js',
-                        'lib/bower/angular-animate/angular-animate.min.js',
-                        'lib/bower/angular-aria/angular-aria.min.js',
-                        'lib/bower/angular-messages/angular-messages.min.js',
-                        'lib/bower/angular-material/angular-material.min.js',
-                        'lib/bower/angular-route/angular-route.min.js',
-                        'lib/bower/socket.io-client/socket.io.js',
-                        'lib/bower/angular-mocks/angular-mocks.js',
-                        'app/**/*.js',
-                    ]
-                }
+                configFile: 'karma.conf.js'
             }
         },
-        jshint: {
+        jscs: {
             all: [
                 'app/**/*.js',
                 'Gruntfile.js'
             ],
             options: {
-                curly: true,
-                latedef: true,
-                //undef: true,
-                unused: true,
-                globals: {
-                    angular: true,
-                    console: true,
-                    module: true,
-                    describe: true,
-                    it: true,
-                    beforeEach: true,
-                }
+                config: '.jscsrc'
             }
         },
-        replace: {
-            // Replace the version tag
-            /*buildJS: {
+        watch: {
+            scripts: {
+                files: ['app/**/*.js'],
+                tasks: ['dev'],
                 options: {
-                    patterns: [
-                        {
-                            match: 'version',
-                            replacement: '<%= pkg.version %>'
-                        }
-                    ]
-                },
-                files: [
-                    {expand: true, flatten: true, src: 'dist/<%= pkg.name %>.js', dest: 'dist'},
-                ]
-            },*/
-            // Build index.html which uses the minified versions of the scripts
-            buildHTML: {
-                options: {
-                    patterns: [
-                        {
-                            match: 'version',
-                            replacement: '<%= pkg.version %>'
-                        },
-                        {
-                            match: /(?!\.min)([\w]{4})(\.js)/g,
-                            replacement: '$1.min.js'
-                        }
-                    ]
-                },
-                files: [
-                    {flatten: true, src: 'dev.html', dest: 'index.tmpl.html'}
-                ]
+                    livereload: true
+                }
             }
         }
     });
 
-    // Load the plugin that provides the "uglify" task.
+    // Load the plugin that provides the 'uglify' task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-replace');
 
     // Default task(s).
-    grunt.registerTask('default', ['dev']);
-    grunt.registerTask('dev', ['concat', 'replace']);
-    grunt.registerTask('test', ['karma']);
-    grunt.registerTask('build', ['jshint', 'karma', 'concat', 'replace', 'uglify']);
+    grunt.registerTask('default', ['build']);
+    grunt.registerTask('dev', ['concat']);
+    grunt.registerTask('test', ['jscs', 'karma']);
+    grunt.registerTask('build', ['test', 'concat', 'uglify']);
 };

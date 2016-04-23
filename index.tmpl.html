@@ -1,77 +1,77 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="pimaticApp" ng-controller="MainController" ng-cloak>
-<head>
-    <title>@@title</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <meta name="viewport" content="initial-scale=1"/>
-    <link rel="stylesheet" href="lib/bower/angular-material/angular-material.min.css"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
-    <link rel="stylesheet" href="lib/bower/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
-    <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
-</head>
+<html lang="en" ng-app="pimaticApp" ng-controller="ApplicationController" ng-cloak>
+    <head>
+        <title ng-bind="config.title">Pimatic</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+        <meta name="viewport" content="initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
+        <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css" media="all" type="text/css"/>
+        <link rel="stylesheet" href="assets/css/style.css" type="text/css"/>
+    </head>
 
-<body layout="column">
-
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()" ng-show="auth.isLoggedIn()">
-                <md-icon md-font-icon="mdi mdi-menu"></md-icon>
-            </md-button>
-            <a href="#/home"><h2>@@title</h2></a>
-            <!-- fill up the space between left and right area -->
-            <span flex></span>
-            <p class="md-caption"><a href="#/about">Beta</a></p>
-            <!--md-button class="md-icon-button" aria-label="Settings">
-                <md-icon md-font-icon="mdi mdi-settings"></md-icon>
-            </md-button-->
-        </div>
-    </md-toolbar>
-
-    <md-content flex ng-view>
-    </md-content>
-
-    <md-sidenav md-component-id="left" class="md-sidenav-left" ng-show="auth.isLoggedIn()">
+    <body layout="column">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>Menu</h2>
-                <span flex></span>
-                <md-button class="md-icon-button" aria-label="Toggle menu" ng-click="toggleMenu()">
-                    <md-icon md-font-icon="mdi mdi-close"></md-icon>
+                <md-button class="md-icon-button" aria-label="Menu" ng-click="toggleMenu()" ng-show="auth.isLoggedIn()">
+                    <md-icon md-font-icon="mdi mdi-menu"></md-icon>
                 </md-button>
+                <a href="#/home"><h2>{{config.title}}</h2></a>
+                <span flex></span>
+                <p class="md-caption"><a href="#/about">Beta</a></p>
             </div>
         </md-toolbar>
-        <div class="menu" layout="column">
-            <md-button href="#/home" ng-click="toggleMenu()">Home</md-button>
-            <md-subheader>Automation</md-subheader>
-            <md-button ng-disabled="true" href="#/automation/rules" ng-click="toggleMenu()">Rules</md-button>
-            <md-button ng-disabled="true" href="#/automation/variables" ng-click="toggleMenu()">Variables</md-button>
-            <md-subheader>Settings</md-subheader>
-            <md-button ng-disabled="true" href="#/settings/pages" ng-click="toggleMenu()">Pages</md-button>
-            <md-button href="#/settings/devices" ng-click="toggleMenu()">Devices</md-button>
-            <md-button href="#/settings/groups" ng-click="toggleMenu()">Groups</md-button>
-            <md-button ng-disabled="true" href="#/settings/plugins" ng-click="toggleMenu()">Plugins</md-button>
-            <md-button ng-disabled="true" href="#/settings/updates" ng-click="toggleMenu()">Updates</md-button>
-            <md-subheader>Other</md-subheader>
-            <md-button ng-click="logout()">Logout</md-button>
-            <md-button href="#/about" ng-click="toggleMenu()">About</md-button>
-        </div>
-    </md-sidenav>
 
-    <script src="lib/bower/angular/angular.min.js"></script>
-    <script src="lib/bower/angular-animate/angular-animate.min.js"></script>
-    <script src="lib/bower/angular-aria/angular-aria.min.js"></script>
-    <script src="lib/bower/angular-messages/angular-messages.min.js"></script>
-    <script src="lib/bower/angular-material/angular-material.min.js"></script>
-    <script src="lib/bower/angular-route/angular-route.min.js"></script>
-    <script src="lib/bower/angular-translate/angular-translate.min.js"></script>
-    <script src="lib/color.min.js"></script>
-    <script src="lib/bower/socket.io-client/socket.io.js"></script>
+        <md-content flex ng-view>
+        </md-content>
 
-    <script src="dist/pimatic-angular-material-frontend.min.js"></script>
-    <script src="i10n/en-US.js"></script>
-    <script>
-        angular.module('pimaticApp.configuration').constant('debug', '@@debug');
-        angular.module('pimaticApp.configuration').constant('version', '0.2.1');
-    </script>
-</body>
+        <md-sidenav md-component-id="left" class="md-sidenav-left" ng-show="auth.isLoggedIn()">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Menu</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" aria-label="Toggle menu" ng-click="toggleMenu()">
+                        <md-icon md-font-icon="mdi mdi-close"></md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <div class="menu" layout="column">
+                <md-button href="#/home" ng-click="toggleMenu()">Home</md-button>
+                <md-subheader>Automation</md-subheader>
+                <md-button ng-disabled="true" href="#/automation/rules" ng-click="toggleMenu()">Rules</md-button>
+                <md-button ng-disabled="true" href="#/automation/variables" ng-click="toggleMenu()">Variables</md-button>
+                <md-subheader>Settings</md-subheader>
+                <md-button ng-disabled="true" href="#/settings/pages" ng-click="toggleMenu()">Pages</md-button>
+                <md-button href="#/settings/devices" ng-click="toggleMenu()">Devices</md-button>
+                <md-button href="#/settings/groups" ng-click="toggleMenu()">Groups</md-button>
+                <md-button ng-disabled="true" href="#/settings/plugins" ng-click="toggleMenu()">Plugins</md-button>
+                <md-button ng-disabled="true" href="#/settings/updates" ng-click="toggleMenu()">Updates</md-button>
+                <md-subheader>Other</md-subheader>
+                <md-button ng-click="logout()">Logout</md-button>
+                <md-button href="#/about" ng-click="toggleMenu()">About</md-button>
+            </div>
+        </md-sidenav>
+
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+        <script src="bower_components/angular-aria/angular-aria.min.js"></script>
+        <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+        <script src="bower_components/angular-material/angular-material.min.js"></script>
+        <script src="bower_components/angular-route/angular-route.min.js"></script>
+        <script src="bower_components/angular-translate/angular-translate.min.js"></script>
+        <script src="lib/color.min.js"></script>
+        <script src="bower_components/socket.io-client/socket.io.js"></script>
+
+        <script src="dist/pimatic-angular-material-frontend.js"></script>
+        <script src="i10n/en-US.js"></script>
+        <script>
+            angular.module('pimaticApp.configuration').config(function(configProvider, $logProvider) {
+                configProvider.production.version = '0.3.0';
+                configProvider.production.debug = ('@@debug' != 'false');
+                $logProvider.debugEnabled(configProvider.production.debug);
+                configProvider.production.title = '@@title';
+            });
+        </script>
+    </body>
 </html>
