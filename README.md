@@ -52,6 +52,16 @@ You can install the plugin either via npm or via git.
     		bower install -p
 
 ## Changelog
+### 0.3.0
+This update does not change much in the frontend, but has some rather big changes in the background.
+
+- Updated description to make the plugin ready for Pimatic 0.9.x (thanks to https://github.com/mwittig)
+- Updated dependencies (also fixes bug with visible scrollbar when toast message is shown)
+- Added loading page
+- Background changes:
+    - Many restructurings and refactorings of the code.
+    - Introduced config based on environment.
+    - Added CI using Travis and CodeClimate.
 
 ### 0.2.1
 Bugfixes
