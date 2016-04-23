@@ -2,7 +2,9 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
-    }).when('/landing', {}).when('/about', {
+    }).when('/loading', {
+        templateUrl: 'partials/loading.html'
+    }).when('/about', {
         templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
@@ -23,6 +25,6 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
         templateUrl: 'partials/settings/devices/index.html',
         controller: 'DevicesController'
     }).otherwise({
-        redirectTo: '/landing'
+        redirectTo: '/loading'
     });
 }]);

@@ -1,7 +1,7 @@
 /*! 
  * Name:        pimatic-angular-material-frontend 
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
- * Version:     0.3.0 
+ * Version:     0.2.1 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
  * Date:        2016-04-23 
  */
@@ -66,7 +66,9 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
     $routeProvider.when('/home', {
         templateUrl: 'partials/home.html',
         controller: 'HomeController'
-    }).when('/landing', {}).when('/about', {
+    }).when('/loading', {
+        templateUrl: 'partials/loading.html'
+    }).when('/about', {
         templateUrl: 'partials/about.html'
     }).when('/login', {
         templateUrl: 'partials/login.html',
@@ -87,7 +89,7 @@ angular.module('pimaticApp').config(['$routeProvider', function ($routeProvider)
         templateUrl: 'partials/settings/devices/index.html',
         controller: 'DevicesController'
     }).otherwise({
-        redirectTo: '/landing'
+        redirectTo: '/loading'
     });
 }]);
 
@@ -306,12 +308,6 @@ angular.module('pimaticApp.adapters').factory('fixtureAdapter', [
                     return deferedPromises[name].promise
                 }
 
-            },
-
-            deviceAction: function () {
-                return $q(function (resolve, reject) {
-                    reject('This is just a demo');
-                });
             }
         });
     }
@@ -1719,10 +1715,10 @@ angular.module('pimaticApp').run([
         // register listener to watch route changes
         $rootScope.$on('$routeChangeStart', function (event, next/*, current*/) {
             if ($rootScope.state == 'starting') {
-                if (next.originalPath != '/landing') {
-                    $log.debug('App', 'Application is loading, redirecting to the landing page');
+                if (next.originalPath != '/loading') {
+                    $log.debug('App', 'Application is loading, redirecting to the loading page');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path('/landing');
+                    $location.path('/loading');
                 }
             } else {
                 if (!auth.isLoggedIn()) {

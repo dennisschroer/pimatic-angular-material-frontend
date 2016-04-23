@@ -26,10 +26,10 @@ angular.module('pimaticApp').run([
         // register listener to watch route changes
         $rootScope.$on('$routeChangeStart', function (event, next/*, current*/) {
             if ($rootScope.state == 'starting') {
-                if (next.originalPath != '/landing') {
-                    $log.debug('App', 'Application is loading, redirecting to the landing page');
+                if (next.originalPath != '/loading') {
+                    $log.debug('App', 'Application is loading, redirecting to the loading page');
                     $rootScope.redirectedFrom = next.originalPath;
-                    $location.path('/landing');
+                    $location.path('/loading');
                 }
             } else {
                 if (!auth.isLoggedIn()) {
