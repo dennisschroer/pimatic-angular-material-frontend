@@ -27,7 +27,7 @@ angular.module('pimaticApp').controller('HomeController', [
         };
 
         $scope.getGroups = function () {
-            return store.get('grpups');
+            return store.get('groups');
         };
 
         $scope.getDevice = function (deviceId) {
