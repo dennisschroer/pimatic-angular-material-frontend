@@ -2,7 +2,7 @@
   {
     "id": "test",
     "name": "Test",
-    "devices": [],
+    "devices": ["dummy1", "dummy2"],
     "rules": [],
     "variables": []
   }
