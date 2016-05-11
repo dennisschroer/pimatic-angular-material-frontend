@@ -5,7 +5,7 @@
                 <md-subheader class="md-primary">{{group.name}}</md-subheader>
                 <div layout="row" layout-wrap>
                     <div ng-repeat="deviceId in getDeviceIds(page, group)" flex-sm="100" flex-md="100" flex-lg="50" flex-gt-lg="33">
-                        <device-card device="store.get('devices', deviceId)"></device-card>
+                        <device-card device="getDevice(deviceId)"></device-card>
                     </div>
                 </div>
             </section>
