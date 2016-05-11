@@ -3,7 +3,7 @@
  * Description: Provides an AngularJS webinterface for Pimatic with material design. 
  * Version:     0.3.0 
  * Homepage:    http://github.com/denniss17/pimatic-angular-material-frontend 
- * Date:        2016-04-23 
+ * Date:        2016-05-11 
  */
 /**
  * Create the different modules.
@@ -1485,7 +1485,7 @@ angular.module('pimaticApp').controller('HomeController', [
         };
 
         $scope.getGroups = function () {
-            return store.get('grpups');
+            return store.get('groups');
         };
 
         $scope.getDevice = function (deviceId) {
@@ -1528,7 +1528,7 @@ angular.module('pimaticApp.settings').controller('DevicesController', [
         $scope.getUngroupedDeviceIds = utils.getUngroupedDeviceIds;
 
         $scope.getGroups = function () {
-            return store.get('grpups');
+            return store.get('groups');
         };
 
         $scope.getDevice = function (deviceId) {
