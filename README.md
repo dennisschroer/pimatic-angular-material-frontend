@@ -17,7 +17,7 @@ Example configuration:
 	
 	{
       	"plugin": "angular-material-frontend",
-		"mountPoint": "/material",
+		"mountPath": "/material",
 		"customTitle": "Pimatic Material",
 		"debug": false
     }
