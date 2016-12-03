@@ -61,13 +61,13 @@
         <script src="bower_components/angular-route/angular-route.min.js"></script>
         <script src="bower_components/angular-translate/angular-translate.min.js"></script>
         <script src="lib/color.min.js"></script>
-        <script src="bower_components/socket.io-client/socket.io.js"></script>
+        <script src="bower_components/socket.io-client/dist/socket.io.js"></script>
 
         <script src="dist/pimatic-angular-material-frontend.js"></script>
         <script src="i10n/en-US.js"></script>
         <script>
             angular.module('pimaticApp.configuration').config(function(configProvider, $logProvider) {
-                configProvider.production.version = '0.3.1';
+                configProvider.production.version = '0.3.2';
                 configProvider.production.debug = ('@@debug' != 'false');
                 $logProvider.debugEnabled(configProvider.production.debug);
                 configProvider.production.title = '@@title';
