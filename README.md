@@ -52,6 +52,13 @@ You can install the plugin either via npm or via git.
     		bower install -p
 
 ## Changelog
+### 0.3.2
+Fixed [issue #7](https://github.com/denniss17/pimatic-angular-material-frontend/issues/7), caused by an update of socket.io.
+
+### 0.3.1
+Fixed [issue #4](https://github.com/denniss17/pimatic-angular-material-frontend/issues/4)
+Fixed [issue #5](https://github.com/denniss17/pimatic-angular-material-frontend/issues/5)
+
 ### 0.3.0
 This update does not change much in the frontend, but has some rather big changes in the background.
 
