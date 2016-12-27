@@ -67,7 +67,7 @@
         <script src="i10n/en-US.js"></script>
         <script>
             angular.module('pimaticApp.configuration').config(function(configProvider, $logProvider) {
-                configProvider.production.version = '0.3.2';
+                configProvider.production.version = '0.3.3';
                 configProvider.production.debug = ('@@debug' != 'false');
                 $logProvider.debugEnabled(configProvider.production.debug);
                 configProvider.production.title = '@@title';
