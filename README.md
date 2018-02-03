@@ -14,7 +14,7 @@ A web frontend build for the pimatic framework using angular and material design
 
 ## Configuration
 Example configuration:
-	
+
 	{
       	"plugin": "angular-material-frontend",
 		"mountPath": "/material",
@@ -52,6 +52,13 @@ You can install the plugin either via npm or via git.
     		bower install -p
 
 ## Changelog
+### 0.3.4
+- Fixed failing builds on Travis
+	- Chrome is used instead of PhantomJS
+	- Node 4 is used instead of 0.10
+	- Yarn is used instead of npm
+- [PR 15](https://github.com/denniss17/pimatic-angular-material-frontend/pull/15) Enable web feature for Apple devices
+
 ### 0.3.3
 Fixed [Issue #10](https://github.com/denniss17/pimatic-angular-material-frontend/issues/10): Installation not working
 Fixed [Issue #9](https://github.com/denniss17/pimatic-angular-material-frontend/issues/9): Login not working
@@ -162,6 +169,6 @@ This project attempts to follow the AngularJS style guide, which can be found [h
 	you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation, version 3.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this plugin. If not, see <http://www.gnu.org/licenses/>.
