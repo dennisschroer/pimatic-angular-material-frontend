@@ -1,3 +1,6 @@
+dist: trusty
+sudo: required
+
 language: node_js
 node_js:
   - 4
@@ -6,19 +9,21 @@ addons:
   chrome: stable
 
 cache:
+  yarn: true
   directories:
+    - $HOME/.cache/bower
     - node_modules
     - bower_components
 
 before_install:
-  - npm config set spin false
-  - npm install -g grunt-cli
-  - npm install -g bower
-  - npm install phantomjs-prebuilt
-
-install:
-  - npm install
-  - bower install
+  # Yarn
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$PATH"
+  - yarn --version
+  # Bower
+  - yarn global add bower
+  # Grunt
+  - yarn global add grunt-cli
 
 addons:
     code_climate:
