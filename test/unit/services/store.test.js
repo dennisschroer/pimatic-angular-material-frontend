@@ -6,7 +6,6 @@ describe('store', function () {
         configProvider.environment = 'testing';
     }));
 
-
     beforeEach(inject(function (_store_, _$rootScope_) {
         store = _store_;
         $rootScope = _$rootScope_;
@@ -52,7 +51,7 @@ describe('store', function () {
             }, function () {
                 done.fail();
             });
-            //$rootScope.$digest();
+            $rootScope.$digest();
         });
 
         it('should correctly update partial data', function (done) {
@@ -62,7 +61,7 @@ describe('store', function () {
             }, function () {
                 done.fail();
             });
-            //$rootScope.$digest();
+            $rootScope.$digest();
         });
 
         it('should fail when updating non-existing data', function (done) {
@@ -72,6 +71,7 @@ describe('store', function () {
                 expect(store.get('devices', 2)).toBe(null);
                 done();
             });
+            $rootScope.$digest();
         });
 
         it('should also update if add() is used', function (done) {
@@ -81,6 +81,7 @@ describe('store', function () {
             }, function () {
                 done.fail();
             });
+            $rootScope.$digest();
         });
     });
 

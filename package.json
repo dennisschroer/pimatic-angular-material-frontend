@@ -28,7 +28,7 @@
     "url": "git://github.com/denniss17/pimatic-angular-material-frontend.git"
   },
   "bugs": {
-     "url": "git://github.com/denniss17/pimatic-angular-material-frontend/issues"
+    "url": "git://github.com/denniss17/pimatic-angular-material-frontend/issues"
   },
   "configSchema": "angular-material-frontend-config-schema.coffee",
   "bundledDependencies": [],
@@ -51,10 +51,8 @@
     "grunt-karma": "^0.12.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.22",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^1.0.0",
-    "phantomjs-prebuilt": "^2.1.7"
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^0.3.6"
   },
   "scripts": {
     "postinstall": "bower install --production --allow-root",
